@@ -2,6 +2,14 @@
   text-align: center;
 }
 
+.top-left-button {
+  position: fixed; /* or 'absolute' depending on your layout */
+  top: 0;
+  left: 0;
+  margin: 10px; /* Adjust margin as needed */
+  /* Add other styles like padding, font, background, etc. as per your design */
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -43,7 +51,13 @@ body {
 }
 
 
+.recordContainer{
+  margin-top: 500px;
+  height: 100px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto
 
+}
 .container {
   width: 75vw;
   margin-top: 50px;
@@ -83,7 +97,7 @@ textarea {
 button {
   background-color: #13dc19;
   color: #ed0a0a;
-  border: Edge 1;
+  border: Edge 1px;
   padding: 10px 15px;
   border-radius: 4px;
   cursor: pointer;
