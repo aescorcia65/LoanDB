@@ -21,7 +21,7 @@ function RecordInfo() {
                 <button>Add Payment</button>  <button>Edit Payment</button>
             </div>
            
-                <div className="recordBlock3" onClick={HomePagenav}>
+                <div className="recordBlock3">
             <h1>Daniel Wright ($7,400) 12/15/97</h1>
             <h3> Initial Loan Amount ($10000) on (date) 12/15/97 </h3>
             <h3> Current balance ($7400) </h3>
