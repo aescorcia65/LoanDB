@@ -1,18 +1,23 @@
 import './HomePage.css';
+import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
-
+    const navigate = useNavigate();
+  
+    // This function is responsible for navigation
+    const NewRecordnav = () => {
+      navigate('/NewRecord');
+    };
 
     return (
         <div>
             <div className={"top-left-button"}>
-            <button>New Loan</button>
+                {/* Use the NewRecordnav function here for navigation */}
+                <button onClick={NewRecordnav}>New Loan</button>
             </div>
             <div className={"searchContainer"}>
                 <button>Search</button>
-                <input
-                    placeholder="Loanee Name"
-                />
+                <input placeholder="Loanee Name" />
             </div>
             <div className="recordContainer">
                 <div className="recordBlock">
@@ -23,7 +28,7 @@ function HomePage() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default HomePage;

@@ -1,29 +1,19 @@
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import HomePage from './HomePage'; // import your components
+import NewRecord from './NewRecord';
 
 function App() {
-
-
     return (
-        <div>
-            <div className={"top-left-button"}>
-            <button>New Loan</button>
-            </div>
-            <div className={"searchContainer"}>
-                <button>Search</button>
-                <input
-                    placeholder="Loanee Name"
-                />
-            </div>
-            <div className="recordContainer">
-                <div className="recordBlock">
-                    <h1>NiggaBallshjsvjavfajhsvf</h1>
-                </div>
-                <div className="recordBlock">
-                    <h1>testrecord</h1>
-                </div>
-            </div>
-        </div>
-    )
-}
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/NewRecord" element={<NewRecord />} />
+          {/* Other routes */}
+        </Routes>
+      </Router>
+    );
+  }
+  
+  export default App;
 
-export default App;
