@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './App.css';
+import './NewRecord.css';
 
-function newRecord() {
+function NewRecord() {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -26,10 +26,11 @@ function newRecord() {
 
     return (
         <div className="container">
-            <h1 className="title">Submit A Post</h1>
+            <button>Back</button>
+            <h1 className="title">New Loan</h1>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="firstName">First Name</label>
+                    <label htmlFor="firstName">First Name  </label>
                     <input
                         type="text"
                         id="firstname"
@@ -42,7 +43,7 @@ function newRecord() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="lastName">Last Name</label>
+                    <label htmlFor="lastName">Last Name  </label>
                     <input
                         type="text"
                         id="lastname"
@@ -55,7 +56,7 @@ function newRecord() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="date">Date</label>
+                    <label htmlFor="date">Date  </label>
                     <input
                         type="date"
                         id="date"
@@ -67,7 +68,7 @@ function newRecord() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="amountOwed">Amount Owed</label>
+                    <label htmlFor="amountOwed">Amount Owed  </label>
                     <input
                         type="number"
                         id="amountowed"
@@ -80,7 +81,7 @@ function newRecord() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="nextPaymentDate">Next Payment</label>
+                    <label htmlFor="nextPaymentDate">Next Payment  </label>
                     <input
                         type="date"
                         id="nextPaymentDate"
@@ -97,4 +98,4 @@ function newRecord() {
     );
 }
 
-export default newRecord;
+export default NewRecord;
