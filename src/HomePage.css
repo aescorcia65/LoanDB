@@ -4,7 +4,7 @@
   
   .top-left-button {
     position: fixed; /* or 'absolute' depending on your layout */
-    top: -9px;
+    top: 1px;
     left: 0;
     margin: 10px; /* Adjust margin as needed */
     /* Add other styles like padding, font, background, etc. as per your design */
@@ -29,7 +29,7 @@
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
-    color: white;
+    color: #FEF9EF;
   }
   
   .App-link {
@@ -47,24 +47,30 @@
   
   body {
     font-family: 'Arial', sans-serif;
-    background-color: #42484e;
+    background-color: #FEF9EF;
   }
   
   
   .recordContainer{
     margin-top: 100px;
+    margin-left: auto;
     height: 500px;
-    width:4px;
-    box-shadow: 0 0 10px rgba(191, 191, 14, 0.1);
+    width:400px;
+    background-color: #FEF9EF;
+    box-shadow: #FFCB77;
     overflow-y: auto
   
+  }
+  .searchContainer {
+    margin-top: 12px;
+
   }
   .container {
     width: 75vw;
     margin-top: 90px;
-    background-color: #ffffff;
+    background-color: #FEF9EF;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(239, 239, 116, 0.1);
+    box-shadow: 0 0 10px #FEF9EF;
     padding: 20px;
     align-items: center;
     justify-content: center;
@@ -72,7 +78,7 @@
   
   h1 {
     text-align: center;
-    color: #cbb64c;
+    color: #FFCB77;
   }
   form{
     text-align: center;
@@ -84,7 +90,7 @@
   
   label {
     font-weight: bold;
-    color: #505714;
+    color: #FFCB77;
   }
   
   .form-control {
@@ -96,7 +102,7 @@
   }
   
   button {
-    background-color: #baaf37;
+    background-color: #FFCB77;
     color: #000000;
     border: Edge 1px;
     padding: 10px 15px;
@@ -110,7 +116,7 @@
   }
   
   body{
-    background-color: #2e3436;
+    background-color: #828489;
     display: flex;
     align-items: center;
     justify-content: center;}

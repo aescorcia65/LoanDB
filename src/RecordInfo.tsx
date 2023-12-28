@@ -1,4 +1,4 @@
-import './RecordInfo.css';
+import './HomePage.css';
 
 function RecordInfo() {
 

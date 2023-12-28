@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './NewRecord.css';
+import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
 
 function NewRecord() {

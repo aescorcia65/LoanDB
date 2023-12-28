@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import './HomePage.css';
-import './NewRecord.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './HomePage'; // import your components
 import NewRecord from './NewRecord';
