@@ -1,6 +1,6 @@
 import './RecordInfo.css';
 
-function App() {
+function RecordInfo() {
 
 
     return (
@@ -26,4 +26,4 @@ function App() {
     )
 }
 
-export default App;
+export default RecordInfo;

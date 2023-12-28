@@ -67,13 +67,13 @@
     box-shadow: 0 0 10px rgba(239, 239, 116, 0.1);
     padding: 20px;
     width: 500px;
-    align-items: center;
+    align-items: left;
     justify-content: center;
   }
   
   h1 {
     text-align: center;
-    color: #403f34;
+    color: #000000;
   }
   form{
     text-align: center;
@@ -84,9 +84,9 @@
   }
   
   label {
-    font-weight: bold;
-    color: #505714;
-    text-align: justify;
+    /* font-weight: bold; */
+    color: #000000;
+    text-align: left;
   }
   
   .form-control {
@@ -100,6 +100,7 @@
   button {
     background-color: #baaf37;
     color: #000000;
+    font-weight: bold;
     border: Edge 1px;
     padding: 10px 15px;
     border-radius: 4px;

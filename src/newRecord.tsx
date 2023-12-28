@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import './NewRecord.css';
+import { useNavigate } from 'react-router-dom';
 
 function NewRecord() {
+    const navigate = useNavigate();
+  
+    // This function is responsible for navigation
+    const HomePagenav = () => {
+      navigate('/HomePage');
+    };
+    
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -26,7 +34,7 @@ function NewRecord() {
 
     return (
         <div className="container">
-            <button>Back</button>
+            <button onClick={HomePagenav}>Back</button>
             <h1 className="title">New Loan</h1>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
@@ -34,7 +42,7 @@ function NewRecord() {
                     <input
                         type="text"
                         id="firstname"
-                        placeholder="Enter your first name"
+                        placeholder=""
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
@@ -47,7 +55,7 @@ function NewRecord() {
                     <input
                         type="text"
                         id="lastname"
-                        placeholder="Enter your last name"
+                        placeholder=""
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
@@ -68,11 +76,11 @@ function NewRecord() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="amountOwed">Amount Owed  </label>
+                    <label htmlFor="amountOwed">Loan Amount  </label>
                     <input
                         type="number"
                         id="amountowed"
-                        placeholder="Amount Owed"
+                        placeholder="Initial Amount Owed"
                         name="amountOwed"
                         value={formData.amountOwed}
                         onChange={handleChange}
@@ -81,7 +89,7 @@ function NewRecord() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="nextPaymentDate">Next Payment  </label>
+                    <label htmlFor="nextPaymentDate">First Payment  </label>
                     <input
                         type="date"
                         id="nextPaymentDate"

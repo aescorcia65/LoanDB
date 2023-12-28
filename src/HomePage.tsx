@@ -21,7 +21,7 @@ function HomePage() {
             </div>
             <div className="recordContainer">
                 <div className="recordBlock">
-                    <h1>TestRecord</h1>
+                    <h1>  This will store customer name     </h1>
                 </div>
                 <div className="recordBlock">
                     <h1>testrecord</h1>

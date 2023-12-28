@@ -47,15 +47,15 @@
   
   body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
+    background-color: #42484e;
   }
   
   
   .recordContainer{
     margin-top: 100px;
     height: 500px;
-    width:auto;
-    box-shadow: 0 0 10px rgba(236, 223, 34, 0.1);
+    width:4px;
+    box-shadow: 0 0 10px rgba(191, 191, 14, 0.1);
     overflow-y: auto
   
   }
@@ -72,7 +72,7 @@
   
   h1 {
     text-align: center;
-    color: #403f34;
+    color: #cbb64c;
   }
   form{
     text-align: center;
