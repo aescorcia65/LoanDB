@@ -25,7 +25,8 @@ function HomePage() {
             </div>
             <div className="recordContainer">
                 <div className="recordBlock1">
-                    <h2>  This will store customer name (first and last), initial loan date, and anything else you might want (last payment, remaining balance, payments made ect.)     </h2>
+                    <h2>Homepage will store customer name (first and last), initial loan date, and anything else you might want (last payment, remaining balance, payments made ect.)     </h2>
+                    <h2>*Click Daniel below*</h2>
                 </div>
                 <div className="recordBlock2" onClick={RecordInfoNav}>
             <h1>Daniel Wright ($7,400) 12/15/97</h1>

@@ -10,6 +10,14 @@
     /* Add other styles like padding, font, background, etc. as per your design */
   }
   
+  .top-middle-button {
+    position: fixed; /* or 'absolute' depending on your layout */
+    top: 12px;
+    
+     /* Adjust margin as needed */
+    /* Add other styles like padding, font, background, etc. as per your design */
+  }
+
   .App-logo {
     height: 40vmin;
     pointer-events: none;
@@ -55,11 +63,18 @@
     background-color: #e1ff1d;
     text-emphasis-color: #000000;
   }
+  .recordBlock3 {
+    border: 5px solid #e1ff1d24;
+    width:600px;
+   margin-top: 100px;
+   border-radius: 10px;
+  }
 
-  /* .recordBlock1 {
-    
-  } */
-  
+  .recordBlock2:hover {
+    background-color: #efff0b5f; /* Example: Changes background color on hover */
+    cursor: pointer; /* Changes the cursor to indicate it's clickable */
+    /* Add any other hover styles you want here */
+}
   .recordContainer{
     margin-top: 70px;
     margin-left: auto;
@@ -98,6 +113,13 @@
   h2{
     text-align: center;
     color: #000000;
+  }
+  h3{
+    color: #DCCCA3;
+  }
+  h4{
+    margin-top: 100px;
+    color:aqua;
   }
   form{
     text-align: center;

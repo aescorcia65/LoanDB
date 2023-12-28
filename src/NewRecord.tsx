@@ -7,7 +7,7 @@ function NewRecord() {
   
     // This function is responsible for navigation
     const HomePagenav = () => {
-      navigate('/HomePage');
+      navigate('/');
     };
     
     const [formData, setFormData] = useState({
