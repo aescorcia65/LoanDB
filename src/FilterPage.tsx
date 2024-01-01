@@ -6,7 +6,7 @@ const FilterPage: React.FC = () => {
 
     // Fetch names from the backend on component mount
     useEffect(() => {
-        fetch('/api/names') // Replace with your API endpoint
+        fetch('/api/names')
             .then(response => response.json())
             .then(data => {
                 setNames(data.results);
