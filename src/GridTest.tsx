@@ -31,8 +31,8 @@ function GridTest() {
     const gridRef = useRef<AgGridReact>(null);
     const navigate = useNavigate();
     
-    const onRowClicked = () => {
-        navigate('/RecordInfo/${event.data.LoanID}');
+    const onRowClicked = (event: any) => {
+        navigate(`/RecordInfo/${event.data.LoanID}`);
       };
 
 

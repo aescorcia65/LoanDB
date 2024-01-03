@@ -1,8 +1,9 @@
 import './HomePage.css';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 function RecordInfo() {
         const navigate = useNavigate();
+
       
         // This function is responsible for navigation
         const HomePagenav = () => {
