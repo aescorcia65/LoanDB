@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from "ag-grid-community";
 import React, { useEffect, useState, useRef } from 'react';
-import { GridApi, GridReadyEvent } from 'ag-grid-community';
 import './HomePage.css';
 
 function InfoGrid() {
@@ -36,15 +35,8 @@ function InfoGrid() {
             <AgGridReact
                 ref = {gridRef}
                 rowData={rowData}
-<<<<<<< HEAD
-                columnDefs={columnDefs}
-                // onRowClicked={onRowClicked} 
-                />
-=======
                 columnDefs={columnDefs}/>
->>>>>>> 780b858679d4d46cc272991c230f37cdf570f600
         </div>
     );
 }
-
 export default InfoGrid;
