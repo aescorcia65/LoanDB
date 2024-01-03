@@ -2,6 +2,7 @@ import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import GridTest from "./GridTest";
+import FilterPage from "./FilterPage";
 // import BtnCellRenderer from "./CellRender"
 
 
@@ -27,7 +28,7 @@ function HomePage() {
             </div>
             <div className={"searchContainer"}>
                 <button>Search</button>
-                <input placeholder="Loanee Name" />
+                <FilterPage/>
             </div>
             <div className="recordContainer">
                 <GridTest/>
