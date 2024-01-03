@@ -21,11 +21,14 @@ const FilterPage: React.FC = () => {
 
     return (
         <div>
+            
             <select onChange={handleDropdownChange} value={selectedName}>
                 {names.map((name, index) => (
                     <option key={index} value={name}>{name}</option>
                 ))}
             </select>
+            
+
         </div>
     );
 };

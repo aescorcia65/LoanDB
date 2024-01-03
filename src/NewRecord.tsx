@@ -11,9 +11,8 @@ function NewRecord() {
     };
     
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        date: '',
+        name: '',
+        maturitydate: '',
         amountOwed: '',
         nextPaymentDate: '',
     });
@@ -37,39 +36,44 @@ function NewRecord() {
             <button onClick={HomePagenav}>Back</button>
             <h1 className="title">New Loan</h1>
             <form onSubmit={handleSubmit}>
+                
+
+               
+
+                
                 <div className="form-group">
-                    <label htmlFor="firstName">First Name  </label>
+                    <label htmlFor="amountOwed">Loan ID  </label>
                     <input
-                        type="text"
-                        id="firstname"
-                        placeholder=""
-                        name="firstName"
-                        value={formData.firstName}
+                        type="number"
+                        id="loanID"
+                        placeholder="loanID"
+                        name="loanID"
+                        value={formData.amountOwed}
                         onChange={handleChange}
                         required
                     />
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="lastName">Last Name  </label>
+                    <label htmlFor="name">Name  </label>
                     <input
                         type="text"
-                        id="lastname"
+                        id="name"
                         placeholder=""
-                        name="lastName"
-                        value={formData.lastName}
+                        name="name"
+                        value={formData.name}
                         onChange={handleChange}
                         required
                     />
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="date">Date  </label>
+                    <label htmlFor="date">Loan Maturity Date  </label>
                     <input
                         type="date"
                         id="date"
                         name="date"
-                        value={formData.date}
+                        value={formData.maturitydate}
                         onChange={handleChange}
                         required
                     />
@@ -89,16 +93,45 @@ function NewRecord() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="nextPaymentDate">First Payment  </label>
+                    <label htmlFor="amountOwed">Interest Rate  </label>
                     <input
-                        type="date"
-                        id="nextPaymentDate"
-                        name="nextPaymentDate"
-                        value={formData.nextPaymentDate}
+                        type="number"
+                        id="amountowed"
+                        placeholder="Initial Amount Owed"
+                        name="amountOwed"
+                        value={formData.amountOwed}
                         onChange={handleChange}
                         required
                     />
                 </div>
+                <div className="form-group">
+                <label htmlFor="nextPaymentDate">Payment Frequency </label>
+                <select
+                id="nextPaymentDate"
+                name="nextPaymentDate"
+                value={formData.nextPaymentDate}
+                onChange={handleChange}
+                required
+                >
+                <option value="Monthly">Monthly  </option>
+                <option value="Quarterly">Quarterly  </option>
+                <option value="Annually">Annually</option>
+                </select>
+            </div>
+
+                <div className="form-group">
+                <label htmlFor="nextPaymentDate">Active Status </label>
+                <select
+                id="nextPaymentDate"
+                name="nextPaymentDate"
+                value={formData.nextPaymentDate}
+                onChange={handleChange}
+                required
+                >
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                </select>
+            </div>
 
                 <button type="submit">Submit</button>
             </form>

@@ -1,7 +1,11 @@
 import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
+
 
 function HomePage() {
+
+
     const navigate = useNavigate();
   
     // This function is responsible for navigation
@@ -24,6 +28,7 @@ function HomePage() {
                 <input placeholder="Loanee Name" />
             </div>
             <div className="recordContainer">
+                
                 <div className="recordBlock1">
                     <h2>Homepage will store customer name (first and last), initial loan date, and anything else you might want (last payment, remaining balance, payments made ect.)     </h2>
                     <h2>*Click Daniel below*</h2>

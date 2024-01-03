@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import HomePage from './HomePage';
-import NewRecord from './NewRecord';
+// import HomePage from './HomePage';
+// import GridTest from './GridTest';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(

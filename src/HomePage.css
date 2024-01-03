@@ -3,10 +3,10 @@
   }
   
   .top-left-button {
-    position: fixed; /* or 'absolute' depending on your layout */
+    position: dynamic; /* or 'absolute' depending on your layout */
     top: 1px;
     
-    margin-left: 219px; /* Adjust margin as needed */
+    margin-left: 100px; /* Adjust margin as needed */
     /* Add other styles like padding, font, background, etc. as per your design */
   }
   
@@ -163,4 +163,18 @@
     align-items: center;
     justify-content: center;}
   
-  
+    .simple-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    .simple-table th, .simple-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    
+    .simple-table th {
+      background-color: #f2f2f2;
+    }
