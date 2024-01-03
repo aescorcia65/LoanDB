@@ -37,8 +37,7 @@ function GridTest() {
             <AgGridReact
                 ref = {gridRef}
                 rowData={rowData}
-                columnDefs={columnDefs}
-                onRowClicked={onRowClicked} />
+                columnDefs={columnDefs}/>
         </div>
     );
 }

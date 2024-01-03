@@ -2,17 +2,19 @@ import './HomePage.css';
 import {useNavigate, useParams} from 'react-router-dom';
 
 function RecordInfo() {
-        const navigate = useNavigate();
+    const {LoanID} = useParams()
+    const navigate = useNavigate();
 
       
         // This function is responsible for navigation
-        const HomePagenav = () => {
+    const HomePagenav = () => {
           navigate('/');
         };
         
 
     return (
         <div>
+
             <div className={"top-left-button"}>
                 {/* Use the NewRecordnav function here for navigation */}
                 <button onClick={HomePagenav}>Back</button>
