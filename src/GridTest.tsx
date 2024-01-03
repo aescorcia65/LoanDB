@@ -16,16 +16,17 @@ function GridTest() {
         { LoanID: '216354', Name: 'Tony Meatballs', Principal: '$1225', Due: '1000', Status: 'n' },
     ];
 
+
     const columnDefs: ColDef[] = [
-        { field: 'LoanID' },
-        { field: 'Name' },
-        { field: 'Principal' },
-        { field: 'Due' },
-        { field: 'Status', filter:true}
+        { field: 'LoanID'},
+        { field: 'Name'},
+        { field: 'Principal'},
+        { field: 'Due'},
+        { field: 'Status'}
     ];
 
     return (
-        <div className='ag-theme-alpine-dark' style={{ width: '1000px', height: '500px' }}>
+        <div className='ag-theme-alpine-dark' style={{ width: '100%', height: '100%' }}>
             <AgGridReact
                 rowData={rowData}
                 columnDefs={columnDefs} />
