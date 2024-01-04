@@ -34,7 +34,7 @@ function GridTest() {
             try {
                 const response = await fetch('/api/search-by-fullname');
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const apiData = await response.json();
                 const gridData = mapApiResponseToGridFields(apiData.results);

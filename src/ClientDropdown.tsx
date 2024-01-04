@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const FilterPage: React.FC = () => {
+const ClientDropdown: React.FC = () => {
     const [clients, setClients] = useState<{ id: string, fullName: string }[]>([]);
     const [selectedClientId, setSelectedClientId] = useState<string>('');
 
@@ -37,5 +37,5 @@ const FilterPage: React.FC = () => {
     );
 };
 
-export default FilterPage;
+export default ClientDropdown;
 

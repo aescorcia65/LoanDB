@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './HomePage'; // import your components
 import NewRecord from './NewRecord';
 import RecordInfo from './RecordInfo';
-import FilterPage from "./FilterPage";
+import ClientDropdown from "./ClientDropdown";
 import GridTest from './GridTest';
 
 function App() {
