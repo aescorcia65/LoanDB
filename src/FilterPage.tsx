@@ -1,36 +1,41 @@
 import React, { useState, useEffect } from 'react';
 
 const FilterPage: React.FC = () => {
-    const [names, setNames] = useState<string[]>([]);
-    const [selectedName, setSelectedName] = useState<string>('');
+    const [clients, setClients] = useState<{ id: string, fullName: string }[]>([]);
+    const [selectedClientId, setSelectedClientId] = useState<string>('');
 
-    // Fetch names from the backend on component mount
+    const mapApiResponseToFields = (apiData: any) => {
+        return apiData.results.map((item: any) => ({
+            id: item.Client_id,
+            fullName: item.FirstName + " " + item.LastName
+        }));
+    };
+
     useEffect(() => {
-        fetch('/api/names')
+        fetch('/api/clients')
             .then(response => response.json())
             .then(data => {
-                setNames(data.results);
+                const mappedData = mapApiResponseToFields(data);
+                setClients(mappedData);
             })
-            .catch(error => console.error('Error fetching names:', error));
+            .catch(error => console.error('Error fetching clients:', error));
     }, []);
 
     // Handle dropdown change
     const handleDropdownChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedName(event.target.value);
+        setSelectedClientId(event.target.value);
     };
 
     return (
         <div>
-            
-            <select onChange={handleDropdownChange} value={selectedName}>
-                {names.map((name, index) => (
-                    <option key={index} value={name}>{name}</option>
+            <select value={selectedClientId} onChange={handleDropdownChange}>
+                {clients.map((client, index) => (
+                    <option key={index} value={client.id}>{client.fullName}</option>
                 ))}
             </select>
-            
-
         </div>
     );
 };
 
 export default FilterPage;
+

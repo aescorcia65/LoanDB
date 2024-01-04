@@ -25,14 +25,14 @@ function GridTest() {
             Due: item.AmountDue,
             Status: item.ActiveStatus,
             Name: item.Name,
-            Principal:item.Principal
+            Principal: item.Principal
         }));
     };
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch('/search-by-fullname?fullname=');
+                const response = await fetch('/api/search-by-fullname');
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
