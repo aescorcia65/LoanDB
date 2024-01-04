@@ -113,13 +113,14 @@
 
   .container2 {
     width: 75vw;
-    margin-top: 10px;
+    margin-top: 25px;
     background-color: #1C2541;
     border-radius: 8px;
     box-shadow: 0 0 10px #1C2541;
     padding: 20px;
     align-items: center;
     justify-content: center;
+    box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.363);
   }
 
   .sharkcage{
