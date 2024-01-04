@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import GridTest from "./GridTest";
 import FilterPage from "./FilterPage";
+import LoanShark from './LoanShark.png';
 // import BtnCellRenderer from "./CellRender"
 
 
@@ -27,7 +28,9 @@ function HomePage() {
                 <button onClick={NewRecordnav}>New Loan</button>
             </div>
             <div>
-                <h1>LoanPro™</h1>
+                <h1>LoanPro™
+                <img src={LoanShark} alt="Loan Shark" />
+                </h1>
             </div>
             <div className={"searchContainer"}>
                 

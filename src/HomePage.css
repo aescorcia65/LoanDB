@@ -81,7 +81,7 @@
     height: 600px;
     width:1100px;
     background-color: #1C2541;
-    box-shadow: #ffffff;
+    box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.363);
     overflow-y: auto;
     border-radius: 10px;
 
@@ -96,6 +96,7 @@
   display: flex; /* Enables Flexbox */
   justify-content: center; /* Centers items horizontally in the container */
   height: 1vh; /* Sets the height of the container to 100% of the viewport height */
+  
 }
 
   .container {
@@ -149,17 +150,20 @@
   button {
     background-color: #c9c9c9;
     color: #000000;
-    font: arial;
-    border-color: #e1ff1d;
-    border: 199px;
+    font-family: 'Roboto', sans-serif; /* Updated font-family */
+    font-size: 16px; /* You can adjust the size as needed */
+    border-color: #c9c9c9;
+    border-width: 2px; /* Adjusted border width */
+    border-style: solid; /* Added border style */
     padding: 10px 15px;
     border-radius: 10px;
     cursor: pointer;
     margin-top: 10px;
-  }
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.548); 
+}
 
   button:hover {
-    background-color: #6cdaff5c;
+    background-color: #b1efff;
   }
 
   body{
