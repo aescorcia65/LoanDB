@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
+import InfoGrid from './InfoGrid';
+import LoanShark from './LoanShark.png';
 
 function NewRecord() {
     const navigate = useNavigate();
@@ -33,7 +35,13 @@ function NewRecord() {
     };
 
     return (
-        <div className="container">
+        <div>
+        <div className="sharkcage">
+        <img src={LoanShark} alt="Loan Shark" />
+        </div>
+        
+   
+        <div className="container2">
             <button onClick={HomePagenav}>Back</button>
             <h1 className="title">New Loan</h1>
             <form onSubmit={handleSubmit}>
@@ -126,6 +134,7 @@ function NewRecord() {
 
                 <button type="submit">Submit</button>
             </form>
+        </div>
         </div>
     );
 }
