@@ -87,6 +87,17 @@
     border-radius: 10px;
 
   }
+  .recordContainer4{
+    margin-top: 70px;
+    margin-left: auto;
+    height: 600px;
+    width:1205px;
+    background-color: #1C2541;
+    box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.363);
+    overflow-y: auto;
+    border-radius: 10px;
+
+  }
 
   .searchContainer button {
     /* margin-right: 10px;  */

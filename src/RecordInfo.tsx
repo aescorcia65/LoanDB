@@ -29,7 +29,7 @@ function RecordInfo() {
                 <img src={LoanShark} alt="Loan Shark" />
                 </h1>
             </div>
-            <div className="recordContainer">
+            <div className="recordContainer4">
                 <InfoGrid/>
             </div>
         </div>
