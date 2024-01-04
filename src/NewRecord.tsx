@@ -13,8 +13,9 @@ function NewRecord() {
     const [formData, setFormData] = useState({
         name: '',
         maturitydate: '',
-        amountOwed: '',
-        nextPaymentDate: '',
+        interestRate: '',
+        paymentFrequency: '',
+        loanAmount: ','
     });
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -41,18 +42,7 @@ function NewRecord() {
                
 
                 
-                <div className="form-group">
-                    <label htmlFor="amountOwed">Loan ID  </label>
-                    <input
-                        type="number"
-                        id="loanID"
-                        placeholder="loanID"
-                        name="loanID"
-                        value={formData.amountOwed}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+            
 
                 <div className="form-group">
                     <label htmlFor="name">Name  </label>
@@ -80,36 +70,37 @@ function NewRecord() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="amountOwed">Loan Amount  </label>
+                    <label htmlFor="loanAmount">Loan Amount  </label>
                     <input
                         type="number"
-                        id="amountowed"
-                        placeholder="Initial Amount Owed"
-                        name="amountOwed"
-                        value={formData.amountOwed}
+                        id="loanAmount"
+                        placeholder="loanAmount"
+                        name="loanAmount"
+                        value={formData.loanAmount}
                         onChange={handleChange}
                         required
                     />
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="amountOwed">Interest Rate  </label>
+                    <label htmlFor="interestRate">Interest Rate  </label>
                     <input
                         type="number"
-                        id="amountowed"
-                        placeholder="Initial Amount Owed"
-                        name="amountOwed"
-                        value={formData.amountOwed}
+                        id="interestRate"
+                        placeholder="interestRate"
+                        name="interestRate"
+                        value={formData.interestRate}
                         onChange={handleChange}
                         required
                     />
                 </div>
+
                 <div className="form-group">
-                <label htmlFor="nextPaymentDate">Payment Frequency </label>
+                <label htmlFor="paymentFrequency">Payment Frequency </label>
                 <select
-                id="nextPaymentDate"
-                name="nextPaymentDate"
-                value={formData.nextPaymentDate}
+                id="paymentFrequency"
+                name="paymentFrequency"
+                value={formData.paymentFrequency}
                 onChange={handleChange}
                 required
                 >
@@ -120,11 +111,11 @@ function NewRecord() {
             </div>
 
                 <div className="form-group">
-                <label htmlFor="nextPaymentDate">Active Status </label>
+                <label htmlFor="paymentFrequency">Active Status </label>
                 <select
-                id="nextPaymentDate"
-                name="nextPaymentDate"
-                value={formData.nextPaymentDate}
+                id="paymentFrequency"
+                name="paymentFrequency"
+                value={formData.paymentFrequency}
                 onChange={handleChange}
                 required
                 >

@@ -88,13 +88,16 @@
   }
 
   .searchContainer button {
-    margin-right: 10px; /* Adjust the value as needed */
+    /* margin-right: 10px;  */
+    align-items: center;
 }
-  .searchContainer {
-    margin-top: 12px;
-    margin-left: 380px;
+.searchContainer {
+  margin-top: 20px;
+  display: flex; /* Enables Flexbox */
+  justify-content: center; /* Centers items horizontally in the container */
+  height: 1vh; /* Sets the height of the container to 100% of the viewport height */
+}
 
-  }
   .container {
     width: 75vw;
     margin-top: 90px;
@@ -108,14 +111,14 @@
 
   h1 {
     text-align: center;
-    color: #DCCCA3;
+    color: #c9c9c9;
   }
   h2{
     text-align: center;
     color: #000000;
   }
   h3{
-    color: #DCCCA3;
+    color: #c9c9c9;
   }
   h4{
     margin-top: 100px;
@@ -131,7 +134,8 @@
 
   label {
     font-weight: bold;
-    color: #DCCCA3;
+    font: arial;
+    color: #c9c9c9;
   }
 
   .form-control {
@@ -143,8 +147,9 @@
   }
 
   button {
-    background-color: #DCCCA3;
+    background-color: #c9c9c9;
     color: #000000;
+    font: arial;
     border-color: #e1ff1d;
     border: 199px;
     padding: 10px 15px;
@@ -154,7 +159,7 @@
   }
 
   button:hover {
-    background-color: #edff27;
+    background-color: #6cdaff5c;
   }
 
   body{

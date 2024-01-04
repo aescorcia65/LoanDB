@@ -26,8 +26,11 @@ function HomePage() {
                 {/* Use the NewRecordnav function here for navigation */}
                 <button onClick={NewRecordnav}>New Loan</button>
             </div>
+            <div>
+                <h1>LoanPro™</h1>
+            </div>
             <div className={"searchContainer"}>
-                <button>Search</button>
+                
                 <FilterPage/>
             </div>
             <div className="recordContainer">
