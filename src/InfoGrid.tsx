@@ -8,7 +8,7 @@ import './HomePage.css';
 
 function InfoGrid() {
     const rowData = [
-        { LoanID: '216354', Name: 'Tony Meatballs', Principal: '$1224565', DueDate: '12/22/24', AmountReceived: '$1200', AmountRecievedDate: '12/22/22' },
+        { LoanID: '216354', Name: 'Tony Meatballs', Principal: '$1224565', DueDate: '12/22/24', AmountReceived: '$1200', AmountReceivedDate: '12/22/22' },
        
     ];
 
@@ -19,7 +19,7 @@ function InfoGrid() {
         { field: 'Name'},
         { field: 'Principal'},
         { field: 'DueDate'},
-        { field: 'AmountRecieved'},
+        { field: 'AmountReceived'},
         { field: 'AmountReceivedDate'}
     ];
 

@@ -25,7 +25,7 @@ function RecordInfo() {
                 <button>Edit Payment</button>
             </div>
             <div>
-                <h1>Payments
+                <h1>
                 <img src={LoanShark} alt="Loan Shark" />
                 </h1>
             </div>
