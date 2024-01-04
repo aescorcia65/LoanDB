@@ -64,7 +64,8 @@
     text-emphasis-color: #000000;
   }
   .recordBlock3 {
-    border: 5px solid #e1ff1d24;
+    border: 5px solid #c9c9c93f;
+    box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.363);
     width:600px;
    margin-top: 100px;
    border-radius: 10px;
@@ -81,20 +82,35 @@
     height: 600px;
     width:1100px;
     background-color: #1C2541;
-    box-shadow: #ffffff;
+    box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.363);
+    overflow-y: auto;
+    border-radius: 10px;
+
+  }
+  .recordContainer4{
+    margin-top: 40px;
+    margin-left: auto;
+    height: 600px;
+    width:1205px;
+    background-color: #1C2541;
+    box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.363);
     overflow-y: auto;
     border-radius: 10px;
 
   }
 
   .searchContainer button {
-    margin-right: 10px; /* Adjust the value as needed */
+    /* margin-right: 10px;  */
+    align-items: center;
 }
-  .searchContainer {
-    margin-top: 12px;
-    margin-left: 380px;
+.searchContainer {
+  margin-top: 20px;
+  display: flex; /* Enables Flexbox */
+  justify-content: center; /* Centers items horizontally in the container */
+  height: 1vh; /* Sets the height of the container to 100% of the viewport height */
+  
+}
 
-  }
   .container {
     width: 75vw;
     margin-top: 90px;
@@ -106,20 +122,42 @@
     justify-content: center;
   }
 
+  .container2 {
+    width: 75vw;
+    margin-top: 25px;
+    background-color: #1C2541;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #1C2541;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.363);
+  }
+
+  .sharkcage{
+    margin-top: 10px;
+    display:flex;
+    justify-content: center; 
+  }
+
   h1 {
     text-align: center;
-    color: #DCCCA3;
+    font-family: 'Roboto', sans-serif;
+    color: #c9c9c9;
   }
   h2{
     text-align: center;
+    font-family: 'Roboto', sans-serif;
     color: #000000;
   }
   h3{
-    color: #DCCCA3;
+    color: #c9c9c9;
+    font-family: 'Roboto', sans-serif;
   }
   h4{
     margin-top: 100px;
     color:aqua;
+    font-family: 'Roboto', sans-serif;
   }
   form{
     text-align: center;
@@ -130,8 +168,10 @@
   }
 
   label {
+    font-family: 'Roboto', sans-serif;
     font-weight: bold;
-    color: #DCCCA3;
+    font: arial;
+    color: #c9c9c9;
   }
 
   .form-control {
@@ -143,18 +183,22 @@
   }
 
   button {
-    background-color: #DCCCA3;
+    background-color: #c9c9c9;
     color: #000000;
-    border-color: #e1ff1d;
-    border: 199px;
+    font-family: 'Roboto', sans-serif; /* Updated font-family */
+    font-size: 16px; /* You can adjust the size as needed */
+    border-color: #c9c9c9;
+    border-width: 2px; /* Adjusted border width */
+    border-style: solid; /* Added border style */
     padding: 10px 15px;
     border-radius: 10px;
     cursor: pointer;
     margin-top: 10px;
-  }
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.548); 
+}
 
   button:hover {
-    background-color: #edff27;
+    background-color: #b1efff;
   }
 
   body{
