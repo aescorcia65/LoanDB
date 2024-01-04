@@ -1,49 +1,55 @@
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
-import { ColDef } from "ag-grid-community";
+import { ColDef } from 'ag-grid-community';
 import React, { useEffect, useState, useRef } from 'react';
-import { GridApi, GridReadyEvent } from 'ag-grid-community';
-
 import './HomePage.css';
 
 function GridTest() {
-    const rowData = [
-        { LoanID: '216354', Name: 'Tony Meatballs', Principal: '$1224565', Due: '1000', Status: 'Y' },
-        { LoanID: '216123', Name: 'Joey Spaghetti', Principal: '$1462254', Due: '1000', Status: 'Y' },
-        { LoanID: '216634', Name: 'Chris Lasagna', Principal: '$02568', Due: '10a00', Status: 'Y' },
-        { LoanID: '216354', Name: 'Tony Meatballs', Principal: '$1225', Due: '1000', Status: 'Y' },
-        { LoanID: '216354', Name: 'Tony Meatballs', Principal: '$1225', Due: '1000', Status: 'Y' },
-        { LoanID: '216354', Name: 'Tony Meatballs', Principal: '$1225', Due: '1000', Status: 'n' },
-    ];
-
+    const [rowData, setRowData] = useState([]);
 
     const columnDefs: ColDef[] = [
-        
-        { field: 'LoanID', filter: true},
-        { field: 'Name'},
-        { field: 'Principal'},
-        { field: 'Due'},
-        { field: 'Status'}
+        { field: 'LoanID', filter: true },
+        { field: 'Name' },
+        { field: 'Principal' },
+        { field: 'Due' },
+        { field: 'Status' },
     ];
 
     const gridRef = useRef<AgGridReact>(null);
-    const navigate = useNavigate();
-    
-    const onRowClicked = (event: any) => {
-        navigate(`/RecordInfo/${event.data.LoanID}`);
-      };
 
+    // Define a mapping function to map API response fields to grid fields
+    const mapApiResponseToGridFields = (apiData: any) => {
+        return apiData.map((item : any) => ({
+            LoanID: item.RecordId,
+            Due: item.AmountDue,
+            Status: item.ActiveStatus,
+            Name: item.Name,
+            Principal:item.Principal
+        }));
+    };
 
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await fetch('/search-by-fullname?fullname=');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const apiData = await response.json();
+                const gridData = mapApiResponseToGridFields(apiData.results);
+                setRowData(gridData);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        fetchData();
+    }, []);
 
     return (
-        <div className='ag-theme-alpine-dark' style={{ width: '100%', height: '100%' }}>
-            <AgGridReact
-                ref = {gridRef}
-                rowData={rowData}
-                columnDefs={columnDefs}
-                onRowClicked={onRowClicked} />
+        <div className="ag-theme-alpine-dark" style={{ width: '100%', height: '100%' }}>
+            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} />
         </div>
     );
 }
