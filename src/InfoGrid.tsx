@@ -5,7 +5,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from "ag-grid-community";
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
-const InfoGrid = forwardRef(({ loanId }: any, ref) => {
+const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
     const [rowData, setRowData] = useState<any>([]);
     const columnDefs: ColDef[] = [
         { field: 'PaymentDue', editable:true },
@@ -16,63 +16,82 @@ const InfoGrid = forwardRef(({ loanId }: any, ref) => {
 
     const gridRef = useRef<AgGridReact>(null);
     const navigate = useNavigate();
-    const addNewRow = () => {
-        const newRowData = {
-            PaymentDue: '',
-            PaymentDueDate: '',
-            PaymentReceived: '',
-            PaymentReceivedDate: '',
-            isNew: true
+
+    const postNewPayment = async (paymentData: any) => {
+        const newPayment = {
+            RecordId: loanRecord.RecordId,
+            PaymentDueDate: paymentData.PaymentDueDate,
+            PaymentDueAmount: parseFloat(paymentData.PaymentDue),
+            PaymentRecDate: paymentData.PaymentReceivedDate,
+            PaymentRecAmount: parseFloat(paymentData.PaymentReceived),
         };
+
+        try {
+            const response = await fetch('/api/new-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newPayment),
+            });
+
+            if (response.ok) {
+                console.log('New payment record created successfully');
+                // Additional logic on success
+            } else {
+                console.error('Failed to create payment record:', response.status);
+                // Error handling logic
+            }
+        } catch (error) {
+            console.error('Error in creating payment record:', error);
+            // Error handling logic
+        }
+    };
+
+    const addNewRow = () => {
+        // Find the highest PaymentDueDate in the existing rowData
+        const latestDate = rowData.reduce((latest: any, row: any) => {
+            const rowDate = new Date(row.PaymentDueDate);
+            return rowDate > latest ? rowDate : latest;
+        }, new Date(loanRecord.LoanMaturity)); // Start with epoch date
+
+        // Calculate the date 30 days later
+        const newDueDate = new Date(latestDate);
+
+        if (loanRecord.PaymentFrequency === "Monthly") {
+            newDueDate.setDate(newDueDate.getDate() + 30);
+        } else if (loanRecord.PaymentFrequency === "Quarterly") {
+            newDueDate.setDate(newDueDate.getDate() + 90); // Approximate quarter
+        } else if (loanRecord.PaymentFrequency === "Annually") {
+            newDueDate.setFullYear(newDueDate.getFullYear() + 1); // Add one year
+        }
+
+
+        // Format the newDueDate back to the same format as your rowData dates
+        const formattedDate = newDueDate.toISOString().split('T')[0];
+
+        const newRowData = {
+            PaymentDue: 0,
+            PaymentDueDate: formattedDate,
+            PaymentReceived: 0,
+            PaymentReceivedDate: '',
+        };
+        postNewPayment(newRowData);
+
         setRowData([...rowData, newRowData]);
     };
+
 
     // Expose addNewRow function to parent via ref
     useImperativeHandle(ref, () => ({
         addNewRow
     }));
-    const onCellEditingStopped = async (params:any) => {
-        const updatedRowData = params.data;
-
-        // Define the endpoint and method based on whether the row is new
-        let endpoint = "/new-payment";
-        let method = "POST";
-
-        if (!updatedRowData.isNew) {
-            // Update existing payment
-            endpoint = `/api/update-payment?payment_id=${updatedRowData.PaymentId}`;
-            method = "PUT";
-        }
-
-        try {
-            const response = await fetch(endpoint, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedRowData)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('Operation result:', result);
-
-            // If this was a new row, remove the isNew flag
-            if (updatedRowData.isNew) {
-                delete updatedRowData.isNew;
-            }
-
-        } catch (error) {
-            console.error('Error updating/creating payment:', error);
-        }
-    };
 
 
     useEffect(() => {
         const fetchPayments = async () => {
             try {
-                const response = await fetch(`/api/search-payments-by-record-id?payment_id=${loanId}`);
+                const response = await fetch(`/api/search-payments-by-record-id?record_id=${loanRecord.RecordId || 1}`);
                 const data = await response.json();
                 if (data && data.results) {
                     setRowData(data.results.map((payment: any) => ({
@@ -89,7 +108,7 @@ const InfoGrid = forwardRef(({ loanId }: any, ref) => {
         };
 
         fetchPayments();
-    }, [loanId]);
+    }, [loanRecord.RecordID]);
 
     return (
         <div className='ag-theme-alpine-dark' style={{ width: '100%', height: '100%' }}>
@@ -97,7 +116,6 @@ const InfoGrid = forwardRef(({ loanId }: any, ref) => {
                 ref={gridRef}
                 rowData={rowData}
                 columnDefs={columnDefs}
-                onCellEditingStopped={onCellEditingStopped}
             />
         </div>
     );

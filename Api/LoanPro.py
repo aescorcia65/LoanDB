@@ -63,7 +63,7 @@ class Payment(BaseModel):
     PaymentDueAmount: float
     PaymentRecDate: str
     PaymentRecAmount: float
-    Paymentid: str
+    PaymentId: str
 
 class NewPayment(BaseModel):
     RecordId: int
@@ -71,7 +71,6 @@ class NewPayment(BaseModel):
     PaymentDueAmount: float
     PaymentRecDate: str
     PaymentRecAmount: float
-    Paymentid: str = str(uuid.uuid4())
 
 class UpdatePayment(BaseModel):
     PaymentDueDate: str
@@ -80,12 +79,12 @@ class UpdatePayment(BaseModel):
     PaymentRecAmount: float
 
 @app.get("/api/search-payments-by-record-id")
-async def search_by_client_id(payment_id: str = None):
+async def search_by_client_id(record_id: int = None):
     query = f"""
             SELECT * FROM {PAYMENT_TABLE_NAME}
             WHERE RecordId = :record_id
         """
-    values = {"record_id": payment_id}
+    values = {"record_id": record_id}
     result = await database.fetch_all(query, values=values)
 
     # Convert each ClientRecord object to a dictionary
@@ -93,7 +92,7 @@ async def search_by_client_id(payment_id: str = None):
     return JSONResponse(content={"results": records}, status_code=200)
 
 @app.put("/api/update-payment")
-async def update_record(record: UpdatePayment, payment_id: int = Query(...)):
+async def update_record(record: UpdatePayment, payment_id: str = Query(...)):
     query = f"""
     UPDATE {PAYMENT_TABLE_NAME}
     SET PaymentDueDate = :PaymentDueDate,
@@ -117,8 +116,9 @@ async def update_record(record: UpdatePayment, payment_id: int = Query(...)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.post("/new-payment")
+@app.post("/api/new-payment")
 async def create_new_payment(payment: NewPayment):
+    payment_id = str(uuid.uuid4())
     query = f"""
     INSERT INTO {PAYMENT_TABLE_NAME}
     (RecordId, PaymentDueDate, PaymentDueAmount, PaymentRecDate, PaymentRecAmount, PaymentId)
@@ -130,10 +130,10 @@ async def create_new_payment(payment: NewPayment):
         "payment_due_amount": payment.PaymentDueAmount,
         "payment_rec_date": payment.PaymentRecDate,
         "payment_rec_amount": payment.PaymentRecAmount,
-        "payment_id": payment.PaymentId
+        "payment_id": payment_id
     }
     await database.execute(query, values)
-    return {"message": "New payment created successfully", "PaymentId": payment.PaymentId}
+    return {"message": "New payment created successfully", "PaymentId": payment_id}
 
 @app.put("/api/update-record")
 async def update_record(record: UpdateRecord, record_id: int = Query(...)):

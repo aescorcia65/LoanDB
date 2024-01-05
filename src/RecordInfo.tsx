@@ -78,7 +78,8 @@ function RecordInfo() {
                 <h3>{loanInfo.PaymentFrequency}</h3>
             </div>
             <div className="recordContainer4">
-                <InfoGrid ref={infoGridRef}/>
+                <InfoGrid ref={infoGridRef}
+                loanRecord={loanInfo}/>
             </div>
         </div>
     </div>
