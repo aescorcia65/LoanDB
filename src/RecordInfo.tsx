@@ -15,18 +15,17 @@ function RecordInfo() {
 
     return (
         <div className="header-container">
-        <div className="buttons-container">
-            <div className="top-left-button2">
-                <button onClick={navigateToHomePage}>Back</button>
-            </div>
-            <div className="top-middle-button">
+            
+            <div className="top-middle-button3">
+            <button onClick={navigateToHomePage}>Back</button>
                 <button>Edit Payment</button>
                 <button>Add Payment</button>
+                <img src={LoanShark} alt="Loan Shark" />
             </div>
-        </div>
-        <h1>
-            <img src={LoanShark} alt="Loan Shark" />
-        </h1>
+        
+       
+           
+        
         <div className="main-container">
             <div className="left-side-bar">
                <h3>Joey Spaghetti</h3>
