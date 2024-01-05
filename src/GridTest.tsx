@@ -15,7 +15,7 @@ function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
         { field: 'Name' },
         { field: 'Principal' },
         { field: 'Due' },
-        { field: 'Status' },
+        { field: 'Status', editable:true },
     ];
 
     const gridRef = useRef<AgGridReact>(null);
