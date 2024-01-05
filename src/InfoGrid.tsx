@@ -8,7 +8,7 @@ import './HomePage.css';
 
 function InfoGrid({loanId} : any) {
     const rowData = [
-        { LoanID: '216354', Name: 'Tony Meatballs', Principal: '$1224565', DueDate: '12/22/24', AmountReceived: '$1200', AmountReceivedDate: '12/22/22' },
+        {   AmountReceived: '$1200', AmountReceivedDate: '12/22/22', RemainingBalance: '40000' },
        
     ];
 
@@ -17,7 +17,8 @@ function InfoGrid({loanId} : any) {
         
     
         { field: 'AmountReceived'},
-        { field: 'AmountReceivedDate'}
+        { field: 'AmountReceivedDate'},
+        { field : 'RemainingBalance'}
     ];
 
     const gridRef = useRef<AgGridReact>(null);
