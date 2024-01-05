@@ -5,26 +5,23 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from "ag-grid-community";
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
-import any = jasmine.any;
-
 const InfoGrid = forwardRef(({ loanId }: any, ref) => {
     const [rowData, setRowData] = useState<any>([]);
-
     const columnDefs: ColDef[] = [
-        { field: 'AmountDue' },
-        { field: 'AmountDueDate' },
-        { field: 'AmountReceived' },
-        { field: 'AmountReceivedDate' },
+        { field: 'PaymentDue', editable:true },
+        { field: 'PaymentDueDate' , editable:true},
+        { field: 'PaymentReceived' , editable:true},
+        { field: 'PaymentReceivedDate' , editable:true},
     ];
 
     const gridRef = useRef<AgGridReact>(null);
     const navigate = useNavigate();
     const addNewRow = () => {
         const newRowData = {
-            AmountDue: '',
-            AmountDueDate: '',
-            AmountReceived: '',
-            AmountReceivedDate: '',
+            PaymentDue: '',
+            PaymentDueDate: '',
+            PaymentReceived: '',
+            PaymentReceivedDate: '',
             isNew: true
         };
         setRowData([...rowData, newRowData]);
@@ -34,6 +31,43 @@ const InfoGrid = forwardRef(({ loanId }: any, ref) => {
     useImperativeHandle(ref, () => ({
         addNewRow
     }));
+    const onCellEditingStopped = async (params:any) => {
+        const updatedRowData = params.data;
+
+        // Define the endpoint and method based on whether the row is new
+        let endpoint = "/new-payment";
+        let method = "POST";
+
+        if (!updatedRowData.isNew) {
+            // Update existing payment
+            endpoint = `/api/update-payment?payment_id=${updatedRowData.PaymentId}`;
+            method = "PUT";
+        }
+
+        try {
+            const response = await fetch(endpoint, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedRowData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('Operation result:', result);
+
+            // If this was a new row, remove the isNew flag
+            if (updatedRowData.isNew) {
+                delete updatedRowData.isNew;
+            }
+
+        } catch (error) {
+            console.error('Error updating/creating payment:', error);
+        }
+    };
+
 
     useEffect(() => {
         const fetchPayments = async () => {
@@ -42,10 +76,11 @@ const InfoGrid = forwardRef(({ loanId }: any, ref) => {
                 const data = await response.json();
                 if (data && data.results) {
                     setRowData(data.results.map((payment: any) => ({
-                        AmountDue: payment.PaymentDueAmount,
-                        AmountDueDate: payment.PaymentDueDate,
-                        AmountReceived: payment.PaymentRecAmount,
-                        AmountReceivedDate: payment.PaymentRecDate,
+                        PaymentDue: payment.PaymentDueAmount,
+                        PaymentDueDate: payment.PaymentDueDate,
+                        PaymentReceived: payment.PaymentRecAmount,
+                        PaymentReceivedDate: payment.PaymentRecDate,
+                        PaymentId : payment.Paymentid
                     })));
                 }
             } catch (error) {
@@ -61,7 +96,9 @@ const InfoGrid = forwardRef(({ loanId }: any, ref) => {
             <AgGridReact
                 ref={gridRef}
                 rowData={rowData}
-                columnDefs={columnDefs} />
+                columnDefs={columnDefs}
+                onCellEditingStopped={onCellEditingStopped}
+            />
         </div>
     );
 })

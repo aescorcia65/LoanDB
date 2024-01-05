@@ -8,21 +8,20 @@ function RecordInfo() {
     const location = useLocation(); // Use useParams hook here
     const queryParams = new URLSearchParams(location.search);
     const loanId = queryParams.get('loanId');// Access loanId from params
+    const infoGridRef:any = useRef(null); // Create a ref for InfoGrid
+
+    const handleAddPayment = () => {
+        infoGridRef.current?.addNewRow();
+    };
     console.log(loanId)
     const [loanInfo, setLoanInfo] = useState<any>({
         ClientName: "NULL",
         RecordID: loanId
     });
-    const infoGridRef = useRef(null);
-
-    const handleAddPayment = () => {
-        // Assuming you have access to a function from InfoGrid to add a new row
-        // You may need to use a React context or lift state up to communicate between components
-        infoGridRef.current;
-    };
 
 
     const navigate = useNavigate();
+
 
 
 
@@ -60,7 +59,7 @@ function RecordInfo() {
             <div className="top-middle-button3">
             <button onClick={navigateToHomePage}>Back</button>
                 <button>Edit Payment</button>
-                <button>Add Payment</button>
+                <button onClick={handleAddPayment}>Add Payment</button>
                 <img src={LoanShark} alt="Loan Shark" />
             </div>
         

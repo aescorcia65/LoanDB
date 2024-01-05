@@ -21,7 +21,7 @@ app.add_middleware(
 DATABASE_NAME = "TestDB"
 CLIENT_TABLE_NAME = "Client"
 CLIENT_RECORDS_TABLE_NAME = "ClientRecord"
-PAYMENT_TABLE_NAME = "Payment"
+PAYMENT_TABLE_NAME = "PaymentRecord"
 DATABASE_URL = "mysql://admin:admin1234@testdb.c7jfeg3symat.us-east-2.rds.amazonaws.com:3306/" + DATABASE_NAME
 database = Database(DATABASE_URL)
 
@@ -57,6 +57,83 @@ class UpdateRecord(BaseModel):
     LoanAmount: float
     ActiveStatus: bool
 
+class Payment(BaseModel):
+    RecordId: int
+    PaymentDueDate: str
+    PaymentDueAmount: float
+    PaymentRecDate: str
+    PaymentRecAmount: float
+    Paymentid: str
+
+class NewPayment(BaseModel):
+    RecordId: int
+    PaymentDueDate: str
+    PaymentDueAmount: float
+    PaymentRecDate: str
+    PaymentRecAmount: float
+    Paymentid: str = str(uuid.uuid4())
+
+class UpdatePayment(BaseModel):
+    PaymentDueDate: str
+    PaymentDueAmount: float
+    PaymentRecDate: str
+    PaymentRecAmount: float
+
+@app.get("/api/search-payments-by-record-id")
+async def search_by_client_id(payment_id: str = None):
+    query = f"""
+            SELECT * FROM {PAYMENT_TABLE_NAME}
+            WHERE RecordId = :record_id
+        """
+    values = {"record_id": payment_id}
+    result = await database.fetch_all(query, values=values)
+
+    # Convert each ClientRecord object to a dictionary
+    records = [Payment(**row).model_dump() for row in result]
+    return JSONResponse(content={"results": records}, status_code=200)
+
+@app.put("/api/update-payment")
+async def update_record(record: UpdatePayment, payment_id: int = Query(...)):
+    query = f"""
+    UPDATE {PAYMENT_TABLE_NAME}
+    SET PaymentDueDate = :PaymentDueDate,
+        PaymentDueAmount = :PaymentDueAmount,
+        PaymentRecDate = :ActiveStatus,
+        PaymentRecAmount = :PaymentRecAmount
+    WHERE Paymentid = :payment_id
+    """
+
+    values = {
+        "payment_id": payment_id,
+        "PaymentDueDate": record.PaymentDueDate,
+        "PaymentDueAmount": record.PaymentDueAmount,
+        "PaymentRecDate": record.PaymentRecDate,
+        "PaymentRecAmount": record.PaymentRecAmount,
+    }
+
+    try:
+        await database.execute(query, values)
+        return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/new-payment")
+async def create_new_payment(payment: NewPayment):
+    query = f"""
+    INSERT INTO {PAYMENT_TABLE_NAME}
+    (RecordId, PaymentDueDate, PaymentDueAmount, PaymentRecDate, PaymentRecAmount, PaymentId)
+    VALUES (:record_id, :payment_due_date, :payment_due_amount, :payment_rec_date, :payment_rec_amount, :payment_id)
+    """
+    values = {
+        "record_id": payment.RecordId,
+        "payment_due_date": payment.PaymentDueDate,
+        "payment_due_amount": payment.PaymentDueAmount,
+        "payment_rec_date": payment.PaymentRecDate,
+        "payment_rec_amount": payment.PaymentRecAmount,
+        "payment_id": payment.PaymentId
+    }
+    await database.execute(query, values)
+    return {"message": "New payment created successfully", "PaymentId": payment.PaymentId}
 
 @app.put("/api/update-record")
 async def update_record(record: UpdateRecord, record_id: int = Query(...)):
@@ -186,6 +263,15 @@ async def create_tables():
         InterestRate DECIMAL(10, 4) NOT NULL,
         FOREIGN KEY (Client_id) REFERENCES {CLIENT_TABLE_NAME}(Client_id)
     );
+
+    CREATE TABLE IF NOT EXISTS {PAYMENT_TABLE_NAME} (
+        RecordId INT NOT NULL,
+        PaymentDueDate VARCHAR(50) NOT NULL,
+        PaymentDueAmount DECIMAL(10, 2) NOT NULL,
+        PaymentRecDate VARCHAR(50) NOT NULL,
+        PaymentRecAmount DECIMAL(10, 2) NOT NULL,
+        PaymentId VARCHAR(50) NOT NULL PRIMARY KEY,
+        FOREIGN KEY (RecordId) REFERENCES {CLIENT_RECORDS_TABLE_NAME}(RecordId));
     """
     await database.execute(query)
 
