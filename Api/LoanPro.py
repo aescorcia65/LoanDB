@@ -171,23 +171,24 @@ async def create_tables():
     query = f"""
     CREATE DATABASE IF NOT EXISTS {DATABASE_NAME};
     CREATE TABLE IF NOT EXISTS {CLIENT_TABLE_NAME} (
-        Client_id VARCHAR(50) PRIMARY KEY,
-        ClientName VARCHAR(50)
+        Client_id VARCHAR(50) NOT NULL PRIMARY KEY,
+        ClientName VARCHAR(50) NOT NULL
     );
 
     CREATE TABLE IF NOT EXISTS {CLIENT_RECORDS_TABLE_NAME} (
-        RecordId INT PRIMARY KEY,
-        Client_id VARCHAR(50),
-        LoanAmount DECIMAL(10, 2),
-        ActiveStatus BOOLEAN,
-        ClientName VARCHAR(50),
-        LoanMaturity VARCHAR(50),
-        PaymentFrequency VARCHAR(50),
-        InterestRate DECIMAL(10, 4),
+        RecordId INT NOT NULL PRIMARY KEY,
+        Client_id VARCHAR(50) NOT NULL,
+        LoanAmount DECIMAL(10, 2) NOT NULL,
+        ActiveStatus BOOLEAN NOT NULL,
+        ClientName VARCHAR(50) NOT NULL,
+        LoanMaturity VARCHAR(50) NOT NULL,
+        PaymentFrequency VARCHAR(50) NOT NULL,
+        InterestRate DECIMAL(10, 4) NOT NULL,
         FOREIGN KEY (Client_id) REFERENCES {CLIENT_TABLE_NAME}(Client_id)
     );
     """
     await database.execute(query)
+
 
 
 @app.on_event("startup")
