@@ -2,7 +2,7 @@ import './HomePage.css';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import InfoGrid from './InfoGrid';
 import LoanShark from './LoanShark.png';
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 function RecordInfo() {
     const location = useLocation(); // Use useParams hook here
@@ -13,9 +13,17 @@ function RecordInfo() {
         ClientName: "NULL",
         RecordID: loanId
     });
+    const infoGridRef = useRef(null);
+
+    const handleAddPayment = () => {
+        // Assuming you have access to a function from InfoGrid to add a new row
+        // You may need to use a React context or lift state up to communicate between components
+        infoGridRef.current;
+    };
 
 
     const navigate = useNavigate();
+
 
 
     useEffect(() => {
@@ -63,15 +71,15 @@ function RecordInfo() {
             <div className="left-side-bar">
                 <h1>Loan ID: {loanId || "Loading..."}</h1>
                 <h3>{loanInfo.ClientName || "Loading..."}</h3>
-                <h3>Loan amount (no Interest)
+                <h3>${loanInfo.LoanAmount}
                 </h3>
-                <h3>Interest Rate</h3>
-                <h3>Loan Maturity Date</h3>
+                <h3>{loanInfo.InterestRate}%</h3>
+                <h3>{loanInfo.LoanMaturity}</h3>
                 
-                <h3>Payment Frequency</h3>
+                <h3>{loanInfo.PaymentFrequency}</h3>
             </div>
             <div className="recordContainer4">
-                <InfoGrid/>
+                <InfoGrid ref={infoGridRef}/>
             </div>
         </div>
     </div>
