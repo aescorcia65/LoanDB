@@ -15,7 +15,6 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/NewRecord" element={<NewRecord />} />
           <Route path="/RecordInfo" element={<RecordInfo />} />
-          <Route path="/GridTest" element={<GridTest />} />
 
           {/* Other routes */}
         </Routes>

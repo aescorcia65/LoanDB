@@ -5,7 +5,7 @@ import { ColDef } from 'ag-grid-community';
 import React, { useEffect, useState, useRef } from 'react';
 import './HomePage.css';
 
-function GridTest() {
+function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
     const [rowData, setRowData] = useState([]);
 
     const columnDefs: ColDef[] = [
@@ -32,9 +32,11 @@ function GridTest() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch('/api/search-by-fullname');
+                // Construct the API URL based on the selected client
+                const apiUrl = `/api/search-by-client-id?client_id=${selectedClient}`;
+                const response = await fetch(apiUrl);
                 if (!response.ok) {
-                     throw new Error(`HTTP error! Status: ${response.status}`);
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const apiData = await response.json();
                 const gridData = mapApiResponseToGridFields(apiData.results);
@@ -45,7 +47,7 @@ function GridTest() {
         }
 
         fetchData();
-    }, []);
+    }, [selectedClient]); // Listen for changes in selectedClient
 
     return (
         <div className="ag-theme-alpine-dark" style={{ width: '100%', height: '100%' }}>
