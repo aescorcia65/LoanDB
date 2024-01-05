@@ -22,10 +22,10 @@ function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
     const mapApiResponseToGridFields = (apiData: any) => {
         return apiData.map((item : any) => ({
             LoanID: item.RecordId,
-            Due: item.AmountDue,
+            Due: item.LoanMaturity,
             Status: item.ActiveStatus,
-            Name: item.Name,
-            Principal: item.Principal
+            Name: item.ClientName,
+            Principal: item.LoanAmount
         }));
     };
 

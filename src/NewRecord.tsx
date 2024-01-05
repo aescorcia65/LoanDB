@@ -13,11 +13,12 @@ function NewRecord() {
     };
     
     const [formData, setFormData] = useState({
-        name: '',
-        maturitydate: '',
-        interestRate: '',
-        paymentFrequency: '',
-        loanAmount: ','
+        name: "",
+        maturitydate: "",
+        interestRate: "",
+        paymentFrequency: 'Monthly',
+        loanAmount: "",
+        activeStatus: 'yes'
     });
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -28,10 +29,40 @@ function NewRecord() {
         }));
     };
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
-        // Handle form submission logic here
-        console.log('Form submitted:', formData);
+
+        // Create the request body object with the form data
+        const requestBody = {
+            ClientName: formData.name,// Assuming the name format is "First Last"
+            PaymentFrequency: formData.paymentFrequency,
+            LoanMaturity: formData.maturitydate,
+            LoanAmount: parseFloat(formData.loanAmount),
+            InterestRate: parseFloat(formData.interestRate),
+            ActiveStatus: formData.activeStatus === "true", // Adjust as needed
+        };
+
+        try {
+            console.log(requestBody)
+            // Send a POST request with the request body
+            const response = await fetch('/api/new-record', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
+            });
+
+            if (response.ok) {
+                // Handle success here, e.g., show a success message or redirect
+                console.log('Record created successfully');
+            } else {
+                // Handle errors here, e.g., show an error message
+                console.error('Error creating record:', response.status);
+            }
+        } catch (error) {
+            console.error('Error creating record:', error);
+        }
     };
 
     return (
@@ -70,7 +101,7 @@ function NewRecord() {
                     <input
                         type="date"
                         id="date"
-                        name="date"
+                        name="maturitydate"
                         value={formData.maturitydate}
                         onChange={handleChange}
                         required
@@ -119,16 +150,16 @@ function NewRecord() {
             </div>
 
                 <div className="form-group">
-                <label htmlFor="paymentFrequency">Active Status </label>
+                <label htmlFor="activeStatus">Active Status </label>
                 <select
-                id="paymentFrequency"
-                name="paymentFrequency"
-                value={formData.paymentFrequency}
+                id="activeStatus"
+                name="activeStatus"
+                value={formData.activeStatus}
                 onChange={handleChange}
                 required
                 >
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
                 </select>
             </div>
 
