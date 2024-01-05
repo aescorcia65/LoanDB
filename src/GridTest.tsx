@@ -14,7 +14,7 @@ function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
         { field: 'LoanID', filter: true },
         { field: 'Name' },
         { field: 'Principal' },
-        { field: 'Due' },
+        { field: 'Due' , filter: true},
         { field: 'Status', editable:true },
     ];
 
@@ -57,9 +57,35 @@ function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
         fetchData();
     }, [selectedClient]); // Listen for changes in selectedClient
 
+    const updateRecord = async (event: any) => {
+        try {
+            const loanid = event.data.LoanID
+            const updatedData = {
+                    ActiveStatus: event.data.Status,
+                LoanMaturity: event.data.Due,
+                LoanAmount: event.data.Principal
+                    // Include other fields if necessary
+            };
+            console.log(updatedData)
+            const response = await fetch(`/api/update-record?record_id=${loanid}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            console.log('Record updated successfully');
+        } catch (error) {
+            console.error('Error updating record:', error);
+        }
+    };
+
     return (
         <div className="ag-theme-alpine-dark" style={{ width: '100%', height: '100%' }}>
-            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked} />
+            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked} onCellEditingStopped={updateRecord}/>
         </div>
     );
 }

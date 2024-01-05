@@ -18,7 +18,7 @@ function NewRecord() {
         interestRate: "",
         paymentFrequency: 'Monthly',
         loanAmount: "",
-        activeStatus: 'yes'
+        activeStatus: 'true'
     });
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -56,6 +56,7 @@ function NewRecord() {
             if (response.ok) {
                 // Handle success here, e.g., show a success message or redirect
                 console.log('Record created successfully');
+                navigate('/')
             } else {
                 // Handle errors here, e.g., show an error message
                 console.error('Error creating record:', response.status);

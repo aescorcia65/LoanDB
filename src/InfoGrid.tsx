@@ -6,7 +6,7 @@ import { ColDef } from "ag-grid-community";
 import React, { useEffect, useState, useRef } from 'react';
 import './HomePage.css';
 
-function InfoGrid() {
+function InfoGrid({loanId} : any) {
     const rowData = [
         { LoanID: '216354', Name: 'Tony Meatballs', Principal: '$1224565', DueDate: '12/22/24', AmountReceived: '$1200', AmountReceivedDate: '12/22/22' },
        
@@ -22,8 +22,7 @@ function InfoGrid() {
 
     const gridRef = useRef<AgGridReact>(null);
     const navigate = useNavigate();
-    
-   
+ // Listen for changes in selectedClient
 
 
 

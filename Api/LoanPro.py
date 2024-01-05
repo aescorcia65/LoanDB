@@ -2,7 +2,7 @@ import random
 import uuid
 from datetime import date
 from typing import Optional
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException, Body, Query
 from databases import Database
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
@@ -52,6 +52,36 @@ class NewRecord(BaseModel):
     ActiveStatus: bool
 
 
+class UpdateRecord(BaseModel):
+    LoanMaturity: str
+    LoanAmount: float
+    ActiveStatus: bool
+
+
+@app.put("/api/update-record")
+async def update_record(record: UpdateRecord, record_id: int = Query(...)):
+    query = f"""
+    UPDATE {CLIENT_RECORDS_TABLE_NAME}
+    SET LoanMaturity = :LoanMaturity,
+        LoanAmount = :LoanAmount,
+        ActiveStatus = :ActiveStatus
+    WHERE RecordId = :record_id
+    """
+
+    values = {
+        "record_id": record_id,
+        "LoanMaturity": record.LoanMaturity,
+        "LoanAmount": record.LoanAmount,
+        "ActiveStatus": record.ActiveStatus,
+    }
+
+    try:
+        await database.execute(query, values)
+        return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @app.get("/api/clients")
 async def get_all_clients():
     query = f"SELECT * FROM {CLIENT_TABLE_NAME}"
@@ -72,6 +102,20 @@ async def search_by_client_id(client_id: str = None):
         """
         values = {"client_id": client_id}
         result = await database.fetch_all(query, values=values)
+
+    # Convert each ClientRecord object to a dictionary
+    records = [ClientRecord(**row).model_dump() for row in result]
+    return JSONResponse(content={"results": records}, status_code=200)
+
+@app.get("/api/search-by-record-id")
+async def search_by_client_id(record_id: str = None):
+
+    query = f"""
+            SELECT * FROM {CLIENT_RECORDS_TABLE_NAME}
+            WHERE RecordId = :record_id
+        """
+    values = {"record_id": record_id}
+    result = await database.fetch_all(query, values=values)
 
     # Convert each ClientRecord object to a dictionary
     records = [ClientRecord(**row).model_dump() for row in result]
