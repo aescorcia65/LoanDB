@@ -4,9 +4,11 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import React, { useEffect, useState, useRef } from 'react';
 import './HomePage.css';
+import {useNavigate} from "react-router-dom";
 
 function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
     const [rowData, setRowData] = useState([]);
+    const navigate = useNavigate();
 
     const columnDefs: ColDef[] = [
         { field: 'LoanID', filter: true },
@@ -17,6 +19,12 @@ function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
     ];
 
     const gridRef = useRef<AgGridReact>(null);
+    const onRowClicked = (event: any) => {
+        const loanId = event.data.LoanID;
+        // Perform navigation using your preferred method
+        // For example, using window.location for redirection
+        navigate(`/recordInfo?loanId=${loanId}`);
+    };
 
     // Define a mapping function to map API response fields to grid fields
     const mapApiResponseToGridFields = (apiData: any) => {
@@ -51,7 +59,7 @@ function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
 
     return (
         <div className="ag-theme-alpine-dark" style={{ width: '100%', height: '100%' }}>
-            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} />
+            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked} />
         </div>
     );
 }
