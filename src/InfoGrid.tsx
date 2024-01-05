@@ -8,17 +8,18 @@ import './HomePage.css';
 
 function InfoGrid({loanId} : any) {
     const rowData = [
-        {   AmountReceived: '$1200', AmountReceivedDate: '12/22/22', RemainingBalance: '40000' },
+        {  AmountDue:'1200', AmountDueDate: '12/20/22', AmountReceived: '$1200', AmountReceivedDate: '12/22/22' },
        
     ];
 
 
     const columnDefs: ColDef[] = [
         
-    
+        { field : 'AmountDue'},
+        { field : 'AmountDueDate'},
         { field: 'AmountReceived'},
         { field: 'AmountReceivedDate'},
-        { field : 'RemainingBalance'}
+    
     ];
 
     const gridRef = useRef<AgGridReact>(null);
