@@ -15,10 +15,7 @@ function InfoGrid() {
 
     const columnDefs: ColDef[] = [
         
-        { field: 'LoanID', filter: true},
-        { field: 'Name'},
-        { field: 'Principal'},
-        { field: 'DueDate'},
+    
         { field: 'AmountReceived'},
         { field: 'AmountReceivedDate'}
     ];

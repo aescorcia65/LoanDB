@@ -9,10 +9,31 @@
     margin-left: 100px; /* Adjust margin as needed */
     /* Add other styles like padding, font, background, etc. as per your design */
   }
+  .top-left-button2 {
+    position: absolute; /* or 'absolute' depending on your layout */
+    top: 1px;
 
-  .top-middle-button {
-    position: fixed; /* or 'absolute' depending on your layout */
-    top: 12px;
+    margin-left: 100px; /* Adjust margin as needed */
+    /* Add other styles like padding, font, background, etc. as per your design */
+  }
+
+  .left-side-bar {
+    /* Add styles for the left-side bar */
+    width: 20%; /* Example width */
+    padding: 10px;
+    margin-right: 10%;
+    /* Add more styles as needed */
+}
+
+.main-container {
+  display: flex; /* Enables Flexbox */
+}
+
+  .top-middle-button button{
+    display: flex;
+    justify-content: center; /* Center buttons horizontally */
+    margin-bottom: 10px; /* 
+
 
      /* Adjust margin as needed */
     /* Add other styles like padding, font, background, etc. as per your design */
@@ -91,7 +112,7 @@
     margin-top: 40px;
     margin-left: auto;
     height: 600px;
-    width:1205px;
+    width:605px;
     background-color: #1C2541;
     box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.363);
     overflow-y: auto;

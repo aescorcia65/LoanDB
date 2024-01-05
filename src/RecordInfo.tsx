@@ -14,25 +14,28 @@ function RecordInfo() {
 
 
     return (
-        <div>
-            <div className="top-left-button">
-                {/* Use the NewRecordnav function here for navigation */}
+        <div className="header-container">
+        <div className="buttons-container">
+            <div className="top-left-button2">
                 <button onClick={navigateToHomePage}>Back</button>
             </div>
             <div className="top-middle-button">
-                {/* Use the NewRecordnav function here for navigation */}
-                <button>Add Payment</button>
                 <button>Edit Payment</button>
+                <button>Add Payment</button>
             </div>
-            <div>
-                <h1>
-                <img src={LoanShark} alt="Loan Shark" />
-                </h1>
+        </div>
+        <h1>
+            <img src={LoanShark} alt="Loan Shark" />
+        </h1>
+        <div className="main-container">
+            <div className="left-side-bar">
+               <h3>Joey Spaghetti</h3>
             </div>
             <div className="recordContainer4">
                 <InfoGrid/>
             </div>
         </div>
+    </div>
     );
 }
 
