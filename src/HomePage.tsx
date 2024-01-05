@@ -1,25 +1,23 @@
 import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
+import React, { useState } from 'react';
 import GridTest from "./GridTest";
-import FilterPage from "./FilterPage";
+import ClientDropdown from "./ClientDropdown";
 import LoanShark from './LoanShark.png';
-// import BtnCellRenderer from "./CellRender"
-
 
 function HomePage() {
-
-
     const navigate = useNavigate();
-  
-    // This function is responsible for navigation
+    const [selectedClient, setSelectedClient] = useState("*"); // State to store the selected client
+
+    // This function is responsible for navigation to the NewRecord page
     const NewRecordnav = () => {
-      navigate('/NewRecord');
+        navigate('/NewRecord');
     };
 
-    const RecordInfoNav = () => {
-        navigate('/RecordInfo');
-      };
+    // Function to handle the selection change in the ClientDropdown
+    const handleClientSelection = (selectedValue: any) => {
+        setSelectedClient(selectedValue); // Update the selected client in state
+    };
 
     return (
         <div>
@@ -29,15 +27,16 @@ function HomePage() {
             </div>
             <div>
                 <h1>LoanPro™
-                <img src={LoanShark} alt="Loan Shark" />
+                    <img src={LoanShark} alt="Loan Shark"/>
                 </h1>
             </div>
-            <div className={"searchContainer"}>
-                
-                <FilterPage/>
+            <div
+                className={"searchContainer"}>{/* Pass the handleClientSelection function as a prop to ClientDropdown */}
+                <ClientDropdown onSelectClient={handleClientSelection}/>
             </div>
             <div className="recordContainer">
-                <GridTest/>
+                {/* Pass the selectedClient as a prop to the GridTest component */}
+                <GridTest selectedClient={selectedClient}/>
             </div>
         </div>
     );
