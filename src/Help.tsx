@@ -33,9 +33,9 @@ function Help() {
             <div className="recordContainer">
                 <h1> Hello User, Welcome to LoanPro™</h1>
                 <h3>Home Page will show you every loan you have ever entered, active or not. You can click on the column headers to sort or filter any field that you desire </h3>
-               <h3>New Loan page allows you enter loanee informtion, then hit submit to create a new entry</h3>
+               <h3>New Loan page allows you enter loanee information, then hit submit to create a new entry</h3>
                <h3>Upcoming Payments will show you every auto generated interest payment. These Payments are auto generated when the loan is created, and every time a payment is received in full.</h3>
-               <h4>For assistance contact ADMIN call or text 516-946-1116</h4>
+               <h4>For assistance call or text 516-946-1116</h4>
             </div>
         </div>
     );

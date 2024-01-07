@@ -11,9 +11,9 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
     const navigate = useNavigate();
 
     const columnDefs: ColDef[] = [
-        { field: 'LoanID', filter: true },
+        { field: 'LoanID', filter: true, width: 100 },
         { field: 'Name' },
-        { field: 'AmountDue' },
+        { field: 'PaymentDue', width: 190 },
         { field: 'DueDate' , filter: true},
         { field: 'PaymentReceived', editable:true },
         { field: 'PaymentReceivedDate', editable:true },
@@ -34,7 +34,7 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
             DueDate: item.LoanMaturity,
             Status: item.ActiveStatus,
             Name: item.ClientName,
-            AmountDue: item.LoanAmount
+            PaymentDue: item.LoanAmount
         }));
     };
 
@@ -64,7 +64,7 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
             const updatedData = {
                     ActiveStatus: event.data.Status,
                 LoanMaturity: event.data.Due,
-                LoanAmount: event.data.AmountDue
+                LoanAmount: event.data.PaymentDue
                     // Include other fields if necessary
             };
             console.log(updatedData)

@@ -12,8 +12,8 @@ function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
 
     const columnDefs: ColDef[] = [
         { field: 'LoanID', filter: true },
-        { field: 'Name' },
-        { field: 'Principal' },
+        { field: 'Name', width: 250 },
+        { field: 'Principal', width: 240 },
         { field: 'Due' , filter: true},
         { field: 'Status', editable:true },
     ];
