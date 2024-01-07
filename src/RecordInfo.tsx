@@ -58,9 +58,10 @@ function RecordInfo() {
             
             <div className="top-middle-button3">
             <button onClick={navigateToHomePage}>Back</button>
-                <button>Edit Payment</button>
                 <button onClick={handleAddPayment}>Add Payment</button>
-                <img src={LoanShark} alt="Loan Shark" />
+                <div className="sharkspacer"> <img src={LoanShark} alt="Loan Shark" />
+                
+                </div>
             </div>
         
        
