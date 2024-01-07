@@ -6,6 +6,7 @@ import HomePage from './HomePage'; // import your components
 import NewRecord from './NewRecord';
 import UpcomingPayments from './UpcomingPayments'
 import RecordInfo from './RecordInfo';
+import Help from './Help';
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/NewRecord" element={<NewRecord />} />
           <Route path="/RecordInfo" element={<RecordInfo />} />
           <Route path="/UpcomingPayments" element={<UpcomingPayments />} />
+          <Route path="/Help" element={<Help />} />
 
           {/* Other routes */}
         </Routes>

@@ -17,6 +17,10 @@ function HomePage() {
         navigate('/UpcomingPayments');
     };
 
+    const HelpNav = () => {
+        navigate('/Help');
+    };
+
     // Function to handle the selection change in the ClientDropdown
     const handleClientSelection = (selectedValue: any) => {
         setSelectedClient(selectedValue); // Update the selected client in state
@@ -27,7 +31,10 @@ function HomePage() {
             <div className={"top-left-button"}>
                 
                 <button onClick={NewRecordnav}>New Loan</button>
-                <button onClick={UpcomingPaymentsNav}>Upcoming Payments</button>
+                <button onClick={UpcomingPaymentsNav}>Upcoming Payments</button> <div className={"helpSpacer"}>  <button onClick={HelpNav}>Help</button>
+                    
+               
+                </div>
             </div>
             <div>
                 <h1>LoanPro™

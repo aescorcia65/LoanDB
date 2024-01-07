@@ -9,7 +9,15 @@
   .top-middle-button3{
     margin-right: 70%;
   }
+  .helpSpacer {
+    margin-left: 850px; /* Pushes the Help button to the far right */
+    /* Additional styling if needed */
+}
+
   .top-left-button {
+    display: flex; /* Enables Flexbox for the container */
+    align-items: center; /* Align items vertically */
+    justify-content: flex-start;
     position: absolute; /* or 'absolute' depending on your layout */
     top: 1px;
 
