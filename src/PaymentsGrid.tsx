@@ -31,10 +31,10 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
     const mapApiResponseToGridFields = (apiData: any) => {
         return apiData.map((item : any) => ({
             LoanID: item.RecordId,
-            DueDate: item.LoanMaturity,
-            Status: item.ActiveStatus,
-            Name: item.ClientName,
-            PaymentDue: item.LoanAmount
+            DueDate: item.PaymentDueDate,
+            PaymentDue: item.PaymentDueAmount,
+            PaymentReceived: item.PaymentRecAmount,
+            PaymentReceivedDate: item.PaymentRecDate
         }));
     };
 
@@ -42,13 +42,14 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
         async function fetchData() {
             try {
                 // Construct the API URL based on the selected client
-                const apiUrl = `/api/search-by-client-id?client_id=${selectedClient}`;
+                const apiUrl = `/api/get_all_upcoming_payments`;
                 const response = await fetch(apiUrl);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const apiData = await response.json();
                 const gridData = mapApiResponseToGridFields(apiData.results);
+                console.log(gridData);
                 setRowData(gridData);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -58,35 +59,14 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
         fetchData();
     }, [selectedClient]); // Listen for changes in selectedClient
 
-    const updateRecord = async (event: any) => {
-        try {
-            const loanid = event.data.LoanID
-            const updatedData = {
-                    ActiveStatus: event.data.Status,
-                LoanMaturity: event.data.Due,
-                LoanAmount: event.data.PaymentDue
-                    // Include other fields if necessary
-            };
-            console.log(updatedData)
-            const response = await fetch(`/api/update-record?record_id=${loanid}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedData)
-            });
+    function OnRowEdit(event:any) {
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
 
-            console.log('Record updated successfully');
-        } catch (error) {
-            console.error('Error updating record:', error);
-        }
-    };
+    }
 
     return (
         <div className="ag-theme-alpine-dark" style={{ width: '100%', height: '100%' }}>
-            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked} onCellEditingStopped={updateRecord}/>
+            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked} onCellEditingStopped={OnRowEdit}/>
         </div>
     );
 }

@@ -91,6 +91,17 @@ async def search_by_client_id(record_id: int = None):
     records = [Payment(**row).model_dump() for row in result]
     return JSONResponse(content={"results": records}, status_code=200)
 
+@app.get("/api/get_all_upcoming_payments")
+async def get_all_upcoming_payments():
+    query = f"""
+            SELECT * FROM {PAYMENT_TABLE_NAME}
+            WHERE PaymentRecAmount = 0
+        """
+    result = await database.fetch_all(query)
+
+    records = [Payment(**row).model_dump() for row in result]
+    return JSONResponse(content={"results": records}, status_code=200)
+
 @app.put("/api/update-payment")
 async def update_record(record: UpdatePayment, payment_id: str = Query(...)):
     query = f"""
