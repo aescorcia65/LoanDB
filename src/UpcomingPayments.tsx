@@ -31,10 +31,12 @@ function HomePage() {
                     <img src={LoanShark} alt="Loan Shark"/>
                 </h1>
             </div>
-            {/* <div
+            <div
                 className={"searchContainer"}>
                 <ClientDropdown onSelectClient={handleClientSelection}/>
-            </div> */}
+            </div>
+           
+
             <div className="recordContainer">
                 {/* Pass the selectedClient as a prop to the GridTest component */}
                 <PayementsGrid selectedClient={selectedClient}/>
