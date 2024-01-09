@@ -21,10 +21,11 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
 
     const gridRef = useRef<AgGridReact>(null);
     const onRowClicked = (event: any) => {
-        const loanId = event.data.LoanID;
-        // Perform navigation using your preferred method
-        // For example, using window.location for redirection
-        navigate(`/recordInfo?loanId=${loanId}`);
+        // if (event.colDef.field === 'RecordId') {
+            const RecordId = event.data.RecordId;
+            navigate(`/recordInfo?RecordId=${RecordId}`);
+        
+        
     };
 
     // Define a mapping function to map API response fields to grid fields
