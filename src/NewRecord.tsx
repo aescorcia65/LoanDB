@@ -15,6 +15,7 @@ function NewRecord() {
     const [formData, setFormData] = useState({
         name: "",
         maturitydate: "",
+        issuedate: "",
         interestRate: "",
         paymentFrequency: 'Monthly',
         loanAmount: "",
@@ -37,6 +38,7 @@ function NewRecord() {
             ClientName: formData.name,// Assuming the name format is "First Last"
             PaymentFrequency: formData.paymentFrequency,
             LoanMaturity: formData.maturitydate,
+            IssueDate: formData.issuedate,
             LoanAmount: parseFloat(formData.loanAmount),
             InterestRate: parseFloat(formData.interestRate),
             ActiveStatus: formData.activeStatus === "true", // Adjust as needed
@@ -92,6 +94,18 @@ function NewRecord() {
                         placeholder=""
                         name="name"
                         value={formData.name}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="date">Loan Issue Date  </label>
+                    <input
+                        type="date"
+                        id="date"
+                        name="issuedate"
+                        value={formData.issuedate}
                         onChange={handleChange}
                         required
                     />

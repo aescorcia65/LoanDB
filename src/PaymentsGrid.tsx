@@ -14,7 +14,7 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
         { field: 'LoanID', filter: true, width: 100 },
         { field: 'Name' },
         { field: 'PaymentDue', width: 190 },
-        { field: 'DueDate' , filter: true},
+        { field: 'DueDate' , filter: true, width: 190},
         { field: 'PaymentReceived', editable:true },
         { field: 'PaymentReceivedDate', editable:true },
     ];
