@@ -6,7 +6,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import './HomePage.css';
 import {useNavigate} from "react-router-dom";
 
-function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a prop
+function PayementsGrid() { // Accept selectedClient as a prop
     const [rowData, setRowData] = useState([]);
     const navigate = useNavigate();
 
@@ -22,8 +22,9 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
     const gridRef = useRef<AgGridReact>(null);
     const onRowClicked = (event: any) => {
         // if (event.colDef.field === 'RecordId') {
-            const RecordId = event.data.RecordId;
-            navigate(`/recordInfo?RecordId=${RecordId}`);
+            const LoanID = event.data.LoanID;
+            console.log(LoanID)
+            navigate(`/recordInfo?RecordId=${LoanID}`);
         
         
     };
@@ -35,11 +36,26 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
             DueDate: item.PaymentDueDate,
             PaymentDue: item.PaymentDueAmount,
             PaymentReceived: item.PaymentRecAmount,
-            PaymentReceivedDate: item.PaymentRecDate
+            PaymentReceivedDate: item.PaymentRecDate,
+            Name: item.Name
         }));
     };
 
     useEffect(() => {
+        async function addName(item: any) {
+            const response = await fetch(`/api/search-by-record-id?record_id=${item.RecordId}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const record = await response.json();
+            item = {
+                ...item,
+                Name: record.results[0].ClientName
+
+            };
+            return item;
+        }
+
         async function fetchData() {
             try {
                 // Construct the API URL based on the selected client
@@ -49,16 +65,21 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const apiData = await response.json();
-                const gridData = mapApiResponseToGridFields(apiData.results);
-                console.log(gridData);
-                setRowData(gridData);
+
+                // Use map to transform each item in apiData.results
+                const gridData = await Promise.all(apiData.results.map(addName));
+
+                // Assuming mapApiResponseToGridFields is a valid function
+                const transformedGridData = mapApiResponseToGridFields(gridData);
+                setRowData(transformedGridData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
 
         fetchData();
-    }, [selectedClient]); // Listen for changes in selectedClient
+    }, []); // Listen for changes in selectedClient
+
 
 
     return (
