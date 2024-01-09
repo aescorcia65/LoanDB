@@ -59,14 +59,10 @@ function PayementsGrid({selectedClient} : any) { // Accept selectedClient as a p
         fetchData();
     }, [selectedClient]); // Listen for changes in selectedClient
 
-    function OnRowEdit(event:any) {
-
-
-    }
 
     return (
         <div className="ag-theme-alpine-dark" style={{ width: '100%', height: '100%' }}>
-            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked} onCellEditingStopped={OnRowEdit}/>
+            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked} />
         </div>
     );
 }

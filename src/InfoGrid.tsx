@@ -99,7 +99,7 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
                         PaymentDueDate: payment.PaymentDueDate,
                         PaymentReceived: payment.PaymentRecAmount,
                         PaymentReceivedDate: payment.PaymentRecDate,
-                        PaymentId : payment.Paymentid
+                        PaymentId : payment.PaymentId
                     })));
                 }
             } catch (error) {
@@ -110,12 +110,49 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
         fetchPayments();
     }, [loanRecord.RecordID]);
 
+    async function onRowEdit(event:any) {
+        if(event.data.PaymentDue <= event.data.PaymentReceived){
+            addNewRow()
+
+
+        }
+        updatePayment(event)
+
+    }
+
+    const updatePayment = async (event: any) => {
+        try {
+            const payid = event.data.PaymentId
+            console.log(payid)
+            const updatedData = {
+                PaymentRecAmount: event.data.PaymentReceived,
+                PaymentRecDate: event.data.PaymentReceivedDate
+                // Include other fields if necessary
+            };
+            console.log(updatedData)
+            const response = await fetch(`/api/update-payment?payment_id=${payid}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            console.log('Record updated successfully');
+        } catch (error) {
+            console.error('Error updating record:', error);
+        }
+    };
+
     return (
         <div className='ag-theme-alpine-dark' style={{ width: '100%', height: '100%' }}>
             <AgGridReact
                 ref={gridRef}
                 rowData={rowData}
                 columnDefs={columnDefs}
+                onCellEditingStopped={onRowEdit}
             />
         </div>
     );

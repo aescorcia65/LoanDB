@@ -73,8 +73,6 @@ class NewPayment(BaseModel):
     PaymentRecAmount: float
 
 class UpdatePayment(BaseModel):
-    PaymentDueDate: str
-    PaymentDueAmount: float
     PaymentRecDate: str
     PaymentRecAmount: float
 
@@ -95,7 +93,7 @@ async def search_by_client_id(record_id: int = None):
 async def get_all_upcoming_payments():
     query = f"""
             SELECT * FROM {PAYMENT_TABLE_NAME}
-            WHERE PaymentRecAmount = 0
+            WHERE PaymentRecAmount <= PaymentDueAmount
         """
     result = await database.fetch_all(query)
 
@@ -106,19 +104,15 @@ async def get_all_upcoming_payments():
 async def update_record(record: UpdatePayment, payment_id: str = Query(...)):
     query = f"""
     UPDATE {PAYMENT_TABLE_NAME}
-    SET PaymentDueDate = :PaymentDueDate,
-        PaymentDueAmount = :PaymentDueAmount,
-        PaymentRecDate = :ActiveStatus,
+    SET PaymentRecDate = :PaymentRecDate,
         PaymentRecAmount = :PaymentRecAmount
     WHERE Paymentid = :payment_id
     """
 
     values = {
-        "payment_id": payment_id,
-        "PaymentDueDate": record.PaymentDueDate,
-        "PaymentDueAmount": record.PaymentDueAmount,
         "PaymentRecDate": record.PaymentRecDate,
         "PaymentRecAmount": record.PaymentRecAmount,
+        "payment_id": payment_id
     }
 
     try:
