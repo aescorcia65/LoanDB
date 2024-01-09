@@ -71,12 +71,14 @@ function RecordInfo() {
             <div className="left-side-bar">
                 <h1>Loan ID: {loanId || "Loading..."}</h1>
                 <h3>{loanInfo.ClientName || "Loading..."}</h3>
-                <h3>${loanInfo.LoanAmount}
+                <h3>Principal: ${loanInfo.LoanAmount}
                 </h3>
-                <h3>{loanInfo.InterestRate}%</h3>
-                <h3>{loanInfo.LoanMaturity}</h3>
+                <h3>Interest Rate: {loanInfo.InterestRate}%</h3>
+                <h3>Issue Date: {loanInfo.LoanIssue}</h3>
+                <h3>Maturity: {loanInfo.LoanMaturity}</h3>
                 
-                <h3>{loanInfo.PaymentFrequency}</h3>
+                
+                <h3>Payment Frequency: {loanInfo.PaymentFrequency}</h3>
             </div>
             <div className="recordContainer4">
                 <InfoGrid ref={infoGridRef}

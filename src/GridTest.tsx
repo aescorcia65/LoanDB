@@ -12,10 +12,11 @@ function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
 
     const columnDefs: ColDef[] = [
         { field: 'LoanID', filter: true },
-        { field: 'Name', width: 250 },
-        { field: 'Principal', width: 240 },
-        { field: 'Due' , filter: true},
-        { field: 'Status', editable:true },
+        { field: 'Name', width: 275 },
+        { field: 'Principal', width: 200 },
+        { field: 'Due' , filter: true, width: 170},
+        { field: 'Issued', filter: true, width: 170},
+        { field: 'Status', editable:true, width: 80 },
     ];
 
     const gridRef = useRef<AgGridReact>(null);
@@ -31,6 +32,7 @@ function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
         return apiData.map((item : any) => ({
             LoanID: item.RecordId,
             Due: item.LoanMaturity,
+            Issue: item.LoanIssue,
             Status: item.ActiveStatus,
             Name: item.ClientName,
             Principal: item.LoanAmount
