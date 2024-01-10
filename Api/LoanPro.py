@@ -7,6 +7,7 @@ from databases import Database
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime, timedelta
 
 app = FastAPI()
 app.add_middleware(
@@ -41,6 +42,8 @@ class ClientRecord(BaseModel):
     ActiveStatus: bool
     PaymentFrequency: str
     ClientName: str
+    IssueDate: Optional[str] = "1/1/1"
+
 
 
 class NewRecord(BaseModel):
@@ -50,6 +53,7 @@ class NewRecord(BaseModel):
     LoanAmount: float
     InterestRate: float
     ActiveStatus: bool
+    IssueDate: str
 
 
 class UpdateRecord(BaseModel):
@@ -233,8 +237,8 @@ async def create_new_record(record: NewRecord):
 
     # Insert the new record
     insert_query = f"""
-    INSERT INTO {CLIENT_RECORDS_TABLE_NAME} (RecordId, Client_id, LoanAmount, ActiveStatus, LoanMaturity, ClientName, PaymentFrequency, InterestRate)
-    VALUES (:record_id, :client_id, :loan_amount, :active_status, :loan_maturity, :name, :payment_frequency, :interest_rate)
+    INSERT INTO {CLIENT_RECORDS_TABLE_NAME} (RecordId, Client_id, LoanAmount, ActiveStatus, LoanMaturity, ClientName, PaymentFrequency, InterestRate, IssueDate)
+    VALUES (:record_id, :client_id, :loan_amount, :active_status, :loan_maturity, :name, :payment_frequency, :interest_rate, :issue_date)
     """
     await database.execute(insert_query, {
         "record_id": record_id,
@@ -244,8 +248,33 @@ async def create_new_record(record: NewRecord):
         "loan_maturity": record.LoanMaturity,
         "name": record.ClientName,
         "payment_frequency": record.PaymentFrequency,
-        "interest_rate": record.InterestRate
+        "interest_rate": record.InterestRate,
+        "issue_date": record.IssueDate
     })
+    date_format = "%Y-%m-%d"
+
+    # Convert the string to a datetime object
+    payment_date = datetime.strptime(record.IssueDate, date_format)
+
+    # Rest of the code remains the same
+    if record.PaymentFrequency == "Monthly":
+        new_due_date = payment_date + timedelta(days=30)
+        div = 12
+    elif record.PaymentFrequency == "Quarterly":
+        new_due_date = payment_date + timedelta(days=90)
+        div=4
+    elif record.PaymentFrequency == "Annually":
+        new_due_date = datetime(payment_date.year + 1, payment_date.month, payment_date.day)
+        div=1
+
+    new_payment = NewPayment(
+        RecordId=record_id,
+        PaymentDueDate=new_due_date.strftime(date_format),
+        PaymentDueAmount=(record.LoanAmount * (record.InterestRate * .01))/div,
+        PaymentRecDate= " ",
+        PaymentRecAmount=0
+    )
+    await create_new_payment(new_payment)
     return JSONResponse(content={"message": "New record created successfully", "RecordId": record_id}, status_code=200)
 
 
@@ -266,6 +295,7 @@ async def create_tables():
         LoanMaturity VARCHAR(50) NOT NULL,
         PaymentFrequency VARCHAR(50) NOT NULL,
         InterestRate DECIMAL(10, 4) NOT NULL,
+        IssueDate VARCHAR(50) NOT NULL,
         FOREIGN KEY (Client_id) REFERENCES {CLIENT_TABLE_NAME}(Client_id)
     );
 

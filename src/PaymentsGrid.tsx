@@ -83,13 +83,87 @@ function PayementsGrid() { // Accept selectedClient as a prop
         }
 
         fetchData();
-    }, []); // Listen for changes in selectedClient
+    }, []);
+
+    const postNewPayment = async (paymentData: any, event:any) => {
+        const newPayment = {
+            RecordId: event.LoanId,
+            PaymentDueDate: paymentData.PaymentDueDate,
+            PaymentDueAmount: parseFloat(paymentData.PaymentDue),
+            PaymentRecDate: paymentData.PaymentReceivedDate,
+            PaymentRecAmount: parseFloat(paymentData.PaymentReceived),
+        };
+
+        try {
+            const response = await fetch('/api/new-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newPayment),
+            });
+
+            if (response.ok) {
+                console.log('New payment record created successfully');
+                // Additional logic on success
+            } else {
+                console.error('Failed to create payment record:', response.status);
+                // Error handling logic
+            }
+        } catch (error) {
+            console.error('Error in creating payment record:', error);
+            // Error handling logic
+        }
+    };
+
+    async function onRowEdit(event:any) {
+        if(event.data.PaymentDue <= event.data.PaymentReceived){
+            const newPayment = {
+                PaymentDue: event.data.PaymentDue,
+                PaymentDueDate: event.data.PaymentDueDate,
+                PaymentReceived: 0,
+                PaymentReceivedDate: '',
+            };
+            postNewPayment(newPayment, event.data);
+
+
+
+        }
+        updatePayment(event)
+
+    }
+
+    const updatePayment = async (event: any) => {
+        try {
+            const payid = event.data.PaymentId
+            console.log(payid)
+            const updatedData = {
+                PaymentRecAmount: event.data.PaymentReceived,
+                PaymentRecDate: event.data.PaymentReceivedDate
+                // Include other fields if necessary
+            };
+            console.log(updatedData)
+            const response = await fetch(`/api/update-payment?payment_id=${payid}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            console.log('Record updated successfully');
+        } catch (error) {
+            console.error('Error updating record:', error);
+        }
+    };
 
 
 
     return (
         <div className="ag-theme-alpine-dark" style={{ width: '100%', height: '100%' }}>
-            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked}/>
+            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked} onCellEditingStopped={onRowEdit}/>
         </div>
     );}
 

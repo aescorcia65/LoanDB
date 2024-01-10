@@ -60,10 +60,13 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
 
         if (loanRecord.PaymentFrequency === "Monthly") {
             newDueDate.setDate(newDueDate.getDate() + 30);
+            let divi = 12
         } else if (loanRecord.PaymentFrequency === "Quarterly") {
             newDueDate.setDate(newDueDate.getDate() + 90); // Approximate quarter
+            let divi = 4
         } else if (loanRecord.PaymentFrequency === "Annually") {
             newDueDate.setFullYear(newDueDate.getFullYear() + 1); // Add one year
+            let divi = 1
         }
 
 
@@ -71,7 +74,7 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
         const formattedDate = newDueDate.toISOString().split('T')[0];
 
         const newRowData = {
-            PaymentDue: 0,
+            PaymentDue: 1,
             PaymentDueDate: formattedDate,
             PaymentReceived: 0,
             PaymentReceivedDate: '',
