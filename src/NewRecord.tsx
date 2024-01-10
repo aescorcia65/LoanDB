@@ -47,7 +47,7 @@ function NewRecord() {
         try {
             console.log(requestBody)
             // Send a POST request with the request body
-            const response = await fetch('/api/new-record', {
+            const response = await fetch('/api/new-loan', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

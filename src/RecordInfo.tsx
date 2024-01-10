@@ -16,7 +16,7 @@ function RecordInfo() {
     console.log(loanId)
     const [loanInfo, setLoanInfo] = useState<any>({
         ClientName: "NULL",
-        RecordID: loanId
+        LoanId: loanId
     });
 
 
@@ -29,7 +29,7 @@ function RecordInfo() {
         async function fetchData() {
             try {
                 // Construct the API URL based on the selected client
-                const apiUrl = `/api/search-by-record-id?record_id=${loanId}`;
+                const apiUrl = `/api/search-by-loan-id?loan_id=${loanId}`;
                 const response = await fetch(apiUrl);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);

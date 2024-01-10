@@ -94,7 +94,7 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
     useEffect(() => {
         const fetchPayments = async () => {
             try {
-                const response = await fetch(`/api/search-payments-by-record-id?record_id=${loanRecord.RecordId || 1}`);
+                const response = await fetch(`/api/search-payments-by-loan-id?loan_id=${loanRecord.LoanId || 1}`);
                 const data = await response.json();
                 if (data && data.results) {
                     setRowData(data.results.map((payment: any) => ({
@@ -111,7 +111,7 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
         };
 
         fetchPayments();
-    }, [loanRecord.RecordID]);
+    }, [loanRecord.loanId]);
 
     async function onRowEdit(event:any) {
         if(event.data.PaymentDue <= event.data.PaymentReceived){

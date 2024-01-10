@@ -10,7 +10,7 @@ const ClientDropdown: React.FC<ClientDropdownProps> = ({ onSelectClient }) => {
 
     const mapApiResponseToFields = (apiData: any) => {
         return apiData.results.map((item: any) => ({
-            id: item.Client_id,
+            id: item.ClientId,
             fullName: item.ClientName
         }));
     };
