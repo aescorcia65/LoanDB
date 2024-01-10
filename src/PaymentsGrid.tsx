@@ -20,14 +20,19 @@ function PayementsGrid() { // Accept selectedClient as a prop
     ];
 
     const gridRef = useRef<AgGridReact>(null);
-    const onRowClicked = (event: any) => {
-        // if (event.colDef.field === 'RecordId') {
-            const LoanID = event.data.LoanID;
-            console.log(LoanID)
-            navigate(`/recordInfo?RecordId=${LoanID}`);
-        
-        
+    const onRowClicked = (event:any) => {
+        console.log('Row clicked:', event);
+        // First, ensure that event.colDef is defined
+        if (event.columnDefs) {
+            console.log(event.columnDefs.field); // Logging the field name
+            if (event.colDef.field === 'LoanID') { // Checking if the clicked column is 'LoanID'
+                const LoanID = event.data.LoanID;
+                console.log(LoanID);
+                navigate(`/recordInfo?RecordId=${LoanID}`);
+            }
+        }
     };
+
 
     // Define a mapping function to map API response fields to grid fields
     const mapApiResponseToGridFields = (apiData: any) => {
@@ -84,9 +89,8 @@ function PayementsGrid() { // Accept selectedClient as a prop
 
     return (
         <div className="ag-theme-alpine-dark" style={{ width: '100%', height: '100%' }}>
-            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked} />
+            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked}/>
         </div>
-    );
-}
+    );}
 
 export default PayementsGrid;
