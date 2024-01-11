@@ -8,6 +8,7 @@ import {useNavigate} from "react-router-dom";
 
 function PayementsGrid() { // Accept selectedClient as a prop
     const [rowData, setRowData] = useState([]);
+    const [updateCount, setUpdateCount] = useState(0);
     const navigate = useNavigate();
 
     const columnDefs: ColDef[] = [
@@ -21,19 +22,6 @@ function PayementsGrid() { // Accept selectedClient as a prop
 
     const gridRef = useRef<AgGridReact>(null);
 
-
-    // Define a mapping function to map API response fields to grid fields
-    const mapApiResponseToGridFields = (apiData: any) => {
-        return apiData.map((item : any) => ({
-            LoanID: item.LoanId,
-            DueDate: item.PaymentDueDate,
-            PaymentDue: item.PaymentDueAmount,
-            PaymentReceived: item.PaymentRecAmount,
-            PaymentReceivedDate: item.PaymentRecDate,
-            Name: item.ClientName
-        }));
-    };
-
     useEffect(() => {
 
         async function fetchData() {
@@ -44,68 +32,42 @@ function PayementsGrid() { // Accept selectedClient as a prop
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-                const apiData = await response.json();
+                const data = await response.json();
 
-                // Use map to transform each item in apiData.results
+                if (data && data.results) {
+                    setRowData(data.results.map((item: any) => ({
+                        LoanID: item.LoanId,
+                        DueDate: item.PaymentDueDate,
+                        PaymentDue: item.PaymentDueAmount,
+                        PaymentReceived: item.PaymentRecAmount,
+                        PaymentReceivedDate: item.PaymentRecDate,
+                        PaidStatus: item.PaidStatus,
+                        Name: item.ClientName,
+                        PaymentId: item.PaymentId
+                    })));
+                }
 
                 // Assuming mapApiResponseToGridFields is a valid function
-                const transformedGridData = mapApiResponseToGridFields(apiData.results);
-                setRowData(transformedGridData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
 
         fetchData();
-    }, []);
-
-
-    async function closePayment(payment:any) {
-        try {
-            // Construct the API URL based on the selected client
-            const apiUrl = `/api/close-payment`;
-            const response = await fetch(apiUrl, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payment)
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const apiData = await response.json();
-
-            // Use map to transform each item in apiData.results
-
-            // Assuming mapApiResponseToGridFields is a valid function
-            const transformedGridData = mapApiResponseToGridFields(apiData.results);
-            setRowData(transformedGridData);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-
-    }
-
-    async function onRowEdit(event:any) {
-        if(event.data.PaymentDue <= event.data.PaymentReceived){
-            closePayment(event.data);
-
-
-
-        }
-        updatePayment(event)
-
-    }
+    }, [updateCount]);
 
     const updatePayment = async (event: any) => {
         try {
             const payid = event.data.PaymentId
-            console.log(payid)
             const updatedData = {
-                PaymentRecAmount: event.data.PaymentReceived,
-                PaymentRecDate: event.data.PaymentReceivedDate
-                // Include other fields if necessary
+                PaymentRecAmount: parseFloat(event.data.PaymentReceived),
+                PaymentRecDate: event.data.PaymentReceivedDate,
+                PaymentDueAmount: event.data.PaymentDue,
+                PaymentDueDate : event.data.DueDate,
+                LoanId: event.data.LoanID,
+                PaidStatus: event.data.PaidStatus
+
             };
-            console.log(updatedData)
             const response = await fetch(`/api/update-payment?payment_id=${payid}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -115,12 +77,19 @@ function PayementsGrid() { // Accept selectedClient as a prop
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
+            else if(response.ok){
+                setUpdateCount(prevCount => prevCount + 1);
+            }
 
             console.log('Record updated successfully');
         } catch (error) {
             console.error('Error updating record:', error);
         }
     };
+
+    async function onRowEdit(event:any) {
+        updatePayment(event)
+    }
 
 
 

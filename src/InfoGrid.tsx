@@ -5,8 +5,10 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from "ag-grid-community";
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
-const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
+const InfoGrid = ({loanRecord}:any) => {
     const [rowData, setRowData] = useState<any>([]);
+    const [updateCount, setUpdateCount] = useState(0);
+
     const columnDefs: ColDef[] = [
         { field: 'PaymentDue', editable:true },
         { field: 'PaymentDueDate' , editable:true},
@@ -17,78 +19,9 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
     const gridRef = useRef<AgGridReact>(null);
     const navigate = useNavigate();
 
-    const postNewPayment = async (paymentData: any) => {
-        const newPayment = {
-            RecordId: loanRecord.RecordId,
-            PaymentDueDate: paymentData.PaymentDueDate,
-            PaymentDueAmount: parseFloat(paymentData.PaymentDue),
-            PaymentRecDate: paymentData.PaymentReceivedDate,
-            PaymentRecAmount: parseFloat(paymentData.PaymentReceived),
-        };
-
-        try {
-            const response = await fetch('/api/new-payment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newPayment),
-            });
-
-            if (response.ok) {
-                console.log('New payment record created successfully');
-                // Additional logic on success
-            } else {
-                console.error('Failed to create payment record:', response.status);
-                // Error handling logic
-            }
-        } catch (error) {
-            console.error('Error in creating payment record:', error);
-            // Error handling logic
-        }
-    };
-
-    const addNewRow = () => {
-        // Find the highest PaymentDueDate in the existing rowData
-        const latestDate = rowData.reduce((latest: any, row: any) => {
-            const rowDate = new Date(row.PaymentDueDate);
-            return rowDate > latest ? rowDate : latest;
-        }, new Date(loanRecord.LoanMaturity)); // Start with epoch date
-
-        // Calculate the date 30 days later
-        const newDueDate = new Date(latestDate);
-
-        if (loanRecord.PaymentFrequency === "Monthly") {
-            newDueDate.setDate(newDueDate.getDate() + 30);
-            let divi = 12
-        } else if (loanRecord.PaymentFrequency === "Quarterly") {
-            newDueDate.setDate(newDueDate.getDate() + 90); // Approximate quarter
-            let divi = 4
-        } else if (loanRecord.PaymentFrequency === "Annually") {
-            newDueDate.setFullYear(newDueDate.getFullYear() + 1); // Add one year
-            let divi = 1
-        }
-
-
-        // Format the newDueDate back to the same format as your rowData dates
-        const formattedDate = newDueDate.toISOString().split('T')[0];
-
-        const newRowData = {
-            PaymentDue: 1,
-            PaymentDueDate: formattedDate,
-            PaymentReceived: 0,
-            PaymentReceivedDate: '',
-        };
-        postNewPayment(newRowData);
-
-        setRowData([...rowData, newRowData]);
-    };
 
 
     // Expose addNewRow function to parent via ref
-    useImperativeHandle(ref, () => ({
-        addNewRow
-    }));
 
 
     useEffect(() => {
@@ -102,7 +35,8 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
                         PaymentDueDate: payment.PaymentDueDate,
                         PaymentReceived: payment.PaymentRecAmount,
                         PaymentReceivedDate: payment.PaymentRecDate,
-                        PaymentId : payment.PaymentId
+                        PaymentId : payment.PaymentId,
+                        PaidStatus: payment.PaidStatus
                     })));
                 }
             } catch (error) {
@@ -111,14 +45,9 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
         };
 
         fetchPayments();
-    }, [loanRecord.loanId]);
+    }, [loanRecord, updateCount]);
 
     async function onRowEdit(event:any) {
-        if(event.data.PaymentDue <= event.data.PaymentReceived){
-            addNewRow()
-
-
-        }
         updatePayment(event)
 
     }
@@ -126,13 +55,15 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
     const updatePayment = async (event: any) => {
         try {
             const payid = event.data.PaymentId
-            console.log(payid)
             const updatedData = {
                 PaymentRecAmount: event.data.PaymentReceived,
-                PaymentRecDate: event.data.PaymentReceivedDate
-                // Include other fields if necessary
+                PaymentRecDate: event.data.PaymentReceivedDate,
+                PaymentDueAmount: event.data.PaymentDue,
+                PaymentDueDate : event.data.PaymentDueDate,
+                LoanId: loanRecord.LoanId,
+                PaidStatus: event.data.PaidStatus
+
             };
-            console.log(updatedData)
             const response = await fetch(`/api/update-payment?payment_id=${payid}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -141,6 +72,9 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            else if(response.ok){
+                setUpdateCount(prevCount => prevCount + 1);
             }
 
             console.log('Record updated successfully');
@@ -159,6 +93,6 @@ const InfoGrid = forwardRef(({ loanRecord }: any, ref) => {
             />
         </div>
     );
-})
+}
 
 export default InfoGrid;

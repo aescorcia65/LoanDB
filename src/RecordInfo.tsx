@@ -10,9 +10,6 @@ function RecordInfo() {
     const loanId = queryParams.get('loanId');// Access loanId from params
     const infoGridRef:any = useRef(null); // Create a ref for InfoGrid
 
-    const handleAddPayment = () => {
-        infoGridRef.current?.addNewRow();
-    };
     console.log(loanId)
     const [loanInfo, setLoanInfo] = useState<any>({
         ClientName: "NULL",
@@ -58,7 +55,6 @@ function RecordInfo() {
             
             <div className="top-middle-button3">
             <button onClick={navigateToHomePage}>Back</button>
-                <button onClick={handleAddPayment}>Add Payment</button>
                 <div className="sharkspacer"> <img src={LoanShark} alt="Loan Shark" />
                 
                 </div>
@@ -81,7 +77,7 @@ function RecordInfo() {
                 <h3>Payment Frequency: {loanInfo.PaymentFrequency}</h3>
             </div>
             <div className="recordContainer4">
-                <InfoGrid ref={infoGridRef}
+                <InfoGrid
                 loanRecord={loanInfo}/>
             </div>
         </div>
