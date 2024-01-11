@@ -42,7 +42,7 @@ class Payment(BaseModel):
     PaymentDueAmount: float
     PaymentRecDate: Optional[date] = None
     PaymentRecAmount: Optional[float] = None
-    PaymentId: str
+    PaymentId: Optional[str] = None
     PaidStatus: bool
 
 class NewPayment(BaseModel):
@@ -51,7 +51,3 @@ class NewPayment(BaseModel):
     PaymentDueAmount: float
     PaymentRecDate: Optional[date] = None
     PaymentRecAmount: Optional[float] = None
-
-class UpdatePayment(BaseModel):
-    PaymentRecDate: str
-    PaymentRecAmount: float
