@@ -1,6 +1,7 @@
 import decimal
 import json
 from datetime import datetime, timedelta, date
+from dateutil.relativedelta import relativedelta
 import random
 import uuid
 from decimal import Decimal
@@ -94,8 +95,7 @@ async def create_new_loan(loan: NewLoan):
         amtpayments = total_days // 90
 
     elif loan.PaymentFrequency == "Annually":
-        new_due_date = datetime(loan.IssueDate.year + 1, loan.IssueDate.month,
-                                loan.IssueDate.day)
+        new_due_date = loan.IssueDate + relativedelta(years=1)
         new_due_date = min(new_due_date, loan_maturity)
         amtpayments = total_days // 365
 
