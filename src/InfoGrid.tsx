@@ -30,12 +30,18 @@ const InfoGrid = ({loanRecord}:any) => {
                 const response = await fetch(`/api/search-payments-by-loan-id?loan_id=${loanRecord.LoanId || 1}`);
                 const data = await response.json();
                 if (data && data.results) {
-                    setRowData(data.results.map((payment: any) => ({
+                    const sortedPayments = data.results.sort((a: any, b: any) => {
+                        // Convert dates to Date objects for comparison
+                        const dateA = new Date(a.PaymentDueDate);
+                        const dateB = new Date(b.PaymentDueDate);
+                        return dateB.getTime() - dateA.getTime(); // Sort in descending order (newest first)
+                    });
+                    setRowData(sortedPayments.map((payment: any) => ({
                         PaymentDue: payment.PaymentDueAmount,
                         PaymentDueDate: payment.PaymentDueDate,
                         PaymentReceived: payment.PaymentRecAmount,
                         PaymentReceivedDate: payment.PaymentRecDate,
-                        PaymentId : payment.PaymentId,
+                        PaymentId: payment.PaymentId,
                         PaidStatus: payment.PaidStatus
                     })));
                 }

@@ -9,19 +9,25 @@ import MonthsDropdown from './MonthDropdown';
 import YearDropown from './YearDropdown';
 import YearDropdown from './YearDropdown';
 
-function HomePage() {
+function UpcomingPayments() {
     const navigate = useNavigate();
-    const [selectedClient, setSelectedClient] = useState("*"); // State to store the selected client
+    const [selectedMonth, setSelectedMonth] = useState("");
+    const [selectedYear, setSelectedYear] = useState("");// State to store the selected client
 
     // This function is responsible for navigation to the HomePage page
     const HomePagenav = () => {
         navigate('/');
     };
 
-    // Function to handle the selection change in the ClientDropdown
-    const handleClientSelection = (selectedValue: any) => {
-        setSelectedClient(selectedValue); // Update the selected client in state
-    };
+
+    function handleMonthSelection(selectedValue: any) {
+        setSelectedMonth(selectedValue);
+    }
+
+    function handleYearSelection(selectedValue: any) {
+        setSelectedYear(selectedValue);
+
+    }
 
     return (
         <div>
@@ -37,16 +43,16 @@ function HomePage() {
 
             <div>
             
-            <h5><MonthsDropdown />           <YearDropdown /></h5>
+            <h5><MonthsDropdown onSelectMonth={handleMonthSelection} />           <YearDropdown onSelectYear={handleYearSelection}/></h5>
         </div>
             
 
             <div className="recordContainer">
                 
-                <PayementsGrid/>
+                <PayementsGrid monthSelection={selectedMonth} yearSelection={selectedYear}/>
             </div>
         </div>
     );
 }
 
-export default HomePage;
+export default UpcomingPayments;

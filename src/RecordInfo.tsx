@@ -70,7 +70,7 @@ function RecordInfo() {
                 <h3>Principal: ${loanInfo.LoanAmount}
                 </h3>
                 <h3>Interest Rate: {loanInfo.InterestRate}%</h3>
-                <h3>Issue Date: {loanInfo.LoanIssue}</h3>
+                <h3>Issue Date: {loanInfo.IssueDate}</h3>
                 <h3>Maturity: {loanInfo.LoanMaturity}</h3>
                 
                 

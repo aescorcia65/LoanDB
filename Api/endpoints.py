@@ -78,24 +78,32 @@ async def create_new_loan(loan: NewLoan):
         "issue_date": loan.IssueDate
     })
 
+    issue_date = loan.IssueDate
+    loan_maturity = loan.LoanMaturity
 
-    # Rest of the code remains the same
+    total_days = (loan_maturity - issue_date).days
+
     if loan.PaymentFrequency == "Monthly":
         new_due_date = loan.IssueDate + timedelta(days=30)
-        div = 12
+        new_due_date = min(new_due_date, loan_maturity)
+        amtpayments = total_days // 30
+
     elif loan.PaymentFrequency == "Quarterly":
         new_due_date = loan.IssueDate + timedelta(days=90)
-        div=4
+        new_due_date = min(new_due_date, loan_maturity)
+        amtpayments = total_days // 90
+
     elif loan.PaymentFrequency == "Annually":
-        new_due_date = datetime(loan.IssueDate.year + 1, loan.IssueDate.month, loan.IssueDate.day)
-        div=1
+        new_due_date = datetime(loan.IssueDate.year + 1, loan.IssueDate.month,
+                                loan.IssueDate.day)
+        new_due_date = min(new_due_date, loan_maturity)
+        amtpayments = total_days // 365
 
     new_payment = NewPayment(
         LoanId=record_id,
         PaymentDueDate=new_due_date,
-        PaymentDueAmount=(loan.LoanAmount * (loan.InterestRate * .01))/div
+        PaymentDueAmount=(loan.LoanAmount * (loan.InterestRate * .01)) / amtpayments
     )
-    print(new_payment)
     await create_new_payment(new_payment)
     return JSONResponse(content={"message": "New record created successfully", "LoanId": record_id}, status_code=200)
 
@@ -209,14 +217,15 @@ async def update_record(record: UpdateLoan, loan_id: str = Query(...)):
     await database.execute(query, values)
     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
 
-@app.get("/api/get_all_upcoming_payments")
-async def get_all_upcoming_payments():
+@app.get("/api/get_upcoming_payments")
+async def get_all_upcoming_payments(month: str = Query(...), year: str = Query(...)):
     query = f"""
-            SELECT {PAYMENT_TABLE_NAME}.*, {CLIENT_RECORDS_TABLE_NAME}.ClientName FROM {PAYMENT_TABLE_NAME}
-            JOIN {CLIENT_RECORDS_TABLE_NAME} ON {PAYMENT_TABLE_NAME}.LoanId = {CLIENT_RECORDS_TABLE_NAME}.LoanId
-            WHERE PaymentRecAmount < PaymentDueAmount OR PaymentRecAmount IS NULL;
-        """
-    result = await database.fetch_all(query)
+        SELECT {PAYMENT_TABLE_NAME}.*, {CLIENT_RECORDS_TABLE_NAME}.ClientName FROM {PAYMENT_TABLE_NAME}
+        JOIN {CLIENT_RECORDS_TABLE_NAME} ON {PAYMENT_TABLE_NAME}.LoanId = {CLIENT_RECORDS_TABLE_NAME}.LoanId
+        WHERE (PaymentRecAmount < PaymentDueAmount OR PaymentRecAmount IS NULL) AND MONTH(PaymentDueDate) = :month AND YEAR(PaymentDueDate) = :year;
+    """
+    values = {"month": month, "year": year}
+    result = await database.fetch_all(query, values=values)
 
     converted_rows = []
     for row in result:
@@ -254,22 +263,39 @@ async def update_payment(record: Payment, payment_id: str = Query(...)):
         print(loan)
         loan = loan["results"][0]
         print(loan)
+        issue_date = datetime.strptime(loan["IssueDate"], '%Y-%m-%d').date()
+        loan_maturity = datetime.strptime(loan["LoanMaturity"], '%Y-%m-%d').date()
+
+        total_days = (loan_maturity - issue_date).days
+
         if loan["PaymentFrequency"] == "Monthly":
             new_due_date = record.PaymentDueDate + timedelta(days=30)
-            div = 12
+            new_due_date = min(new_due_date, loan_maturity)
+            amtpayments = total_days // 30
+
         elif loan["PaymentFrequency"] == "Quarterly":
             new_due_date = record.PaymentDueDate + timedelta(days=90)
-            div = 4
+            new_due_date = min(new_due_date, loan_maturity)
+            amtpayments = total_days // 90
+
         elif loan["PaymentFrequency"] == "Annually":
-            new_due_date = datetime(record.PaymentDueDate.year + 1, record.PaymentDueDate.month, record.PaymentDueDate.day)
-            div = 1
+            new_due_date = datetime(record.PaymentDueDate.year + 1, record.PaymentDueDate.month,
+                                    record.PaymentDueDate.day)
+            new_due_date = min(new_due_date, loan_maturity)
+            amtpayments = total_days // 365
 
         new_payment = NewPayment(
             LoanId=record.LoanId,
             PaymentDueDate=new_due_date,
-            PaymentDueAmount=(loan["LoanAmount"] * (loan["InterestRate"] * .01)) / div
+            PaymentDueAmount=(loan["LoanAmount"] * (loan["InterestRate"] * .01)) / amtpayments
         )
-        print(new_payment)
+        if new_due_date == loan_maturity:
+            principal_payment = NewPayment(
+                LoanId=record.LoanId,
+                PaymentDueDate=loan_maturity,
+                PaymentDueAmount=loan["LoanAmount"]
+            )
+            await create_new_payment(principal_payment)
         await create_new_payment(new_payment)
         return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
     else:

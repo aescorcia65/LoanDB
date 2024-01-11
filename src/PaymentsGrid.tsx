@@ -7,7 +7,7 @@ import './HomePage.css';
 import {useNavigate} from "react-router-dom";
 
 
-function PayementsGrid() { // Accept selectedClient as a prop
+function PayementsGrid({monthSelection, yearSelection}:any) {
     const [rowData, setRowData] = useState([]);
     const [updateCount, setUpdateCount] = useState(0);
     const navigate = useNavigate();
@@ -26,9 +26,10 @@ function PayementsGrid() { // Accept selectedClient as a prop
     useEffect(() => {
 
         async function fetchData() {
+            console.log(yearSelection)
             try {
                 // Construct the API URL based on the selected client
-                const apiUrl = `/api/get_all_upcoming_payments`;
+                const apiUrl = `/api/get_upcoming_payments?month=${monthSelection}&year=${yearSelection}`;
                 const response = await fetch(apiUrl);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -55,7 +56,7 @@ function PayementsGrid() { // Accept selectedClient as a prop
         }
 
         fetchData();
-    }, [updateCount]);
+    }, [updateCount, monthSelection, yearSelection]);
 
     const updatePayment = async (event: any) => {
         try {
