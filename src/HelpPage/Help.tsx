@@ -1,10 +1,10 @@
-import './HomePage.css';
+import '../HomePage/HomePage.css';
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
-import GridTest from "./GridTest";
-import ClientDropdown from "./ClientDropdown";
-import LoanShark from './LoanShark.png';
-import PayementsGrid from './PaymentsGrid';
+import HomeGrid from "../HomePage/HomeGrid";
+import ClientDropdown from "../HomePage/ClientDropdown";
+import LoanShark from '../LoanShark.png';
+import PayementsGrid from '../UpcomingPaymentsPage/PaymentsGrid';
  
 
 function Help() {

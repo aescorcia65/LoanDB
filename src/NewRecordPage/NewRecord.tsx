@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import './HomePage.css';
+import '../HomePage/HomePage.css';
 import { useNavigate } from 'react-router-dom';
-import InfoGrid from './InfoGrid';
-import LoanShark from './LoanShark.png';
+import InfoGrid from '../RecordInfoPage/InfoGrid';
+import LoanShark from '../LoanShark.png';
 
 function NewRecord() {
     const navigate = useNavigate();

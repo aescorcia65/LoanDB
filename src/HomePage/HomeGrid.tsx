@@ -6,7 +6,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import './HomePage.css';
 import {useNavigate} from "react-router-dom";
 
-function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
+function HomeGrid({selectedClient} : any) { // Accept selectedClient as a prop
     const [rowData, setRowData] = useState([]);
     const navigate = useNavigate();
 
@@ -89,4 +89,4 @@ function GridTest({selectedClient} : any) { // Accept selectedClient as a prop
     );
 }
 
-export default GridTest;
+export default HomeGrid;

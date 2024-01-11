@@ -3,7 +3,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import React, { useEffect, useState, useRef } from 'react';
-import './HomePage.css';
+import '../HomePage/HomePage.css';
 import {useNavigate} from "react-router-dom";
 
 

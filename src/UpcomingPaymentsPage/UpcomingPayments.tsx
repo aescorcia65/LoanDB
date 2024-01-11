@@ -1,12 +1,9 @@
-import './HomePage.css';
+import '../HomePage/HomePage.css';
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
-import GridTest from "./GridTest";
-import ClientDropdown from "./ClientDropdown";
-import LoanShark from './LoanShark.png';
+import LoanShark from '../LoanShark.png';
 import PayementsGrid from './PaymentsGrid';
 import MonthsDropdown from './MonthDropdown';
-import YearDropown from './YearDropdown';
 import YearDropdown from './YearDropdown';
 
 function UpcomingPayments() {

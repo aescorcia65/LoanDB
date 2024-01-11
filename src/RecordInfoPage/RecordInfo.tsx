@@ -1,7 +1,7 @@
-import './HomePage.css';
+import '../HomePage/HomePage.css';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import InfoGrid from './InfoGrid';
-import LoanShark from './LoanShark.png';
+import LoanShark from '../LoanShark.png';
 import {useEffect, useRef, useState} from "react";
 
 function RecordInfo() {

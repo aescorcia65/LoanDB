@@ -4,7 +4,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from "ag-grid-community";
 import { useNavigate } from 'react-router-dom';
-import './HomePage.css';
+import '../HomePage/HomePage.css';
 const InfoGrid = ({loanRecord}:any) => {
     const [rowData, setRowData] = useState<any>([]);
     const [updateCount, setUpdateCount] = useState(0);

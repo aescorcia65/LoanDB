@@ -1,9 +1,9 @@
 import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
-import GridTest from "./GridTest";
+import HomeGrid from "./HomeGrid";
 import ClientDropdown from "./ClientDropdown";
-import LoanShark from './LoanShark.png';
+import LoanShark from '../LoanShark.png';
 
 function HomePage() {
     const navigate = useNavigate();
@@ -46,8 +46,8 @@ function HomePage() {
                 <ClientDropdown onSelectClient={handleClientSelection}/>
             </div>
             <div className="recordContainer">
-                {/* Pass the selectedClient as a prop to the GridTest component */}
-                <GridTest selectedClient={selectedClient}/>
+                {/* Pass the selectedClient as a prop to the HomeGrid component */}
+                <HomeGrid selectedClient={selectedClient}/>
             </div>
         </div>
     );
