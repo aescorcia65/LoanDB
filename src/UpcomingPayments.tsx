@@ -5,6 +5,9 @@ import GridTest from "./GridTest";
 import ClientDropdown from "./ClientDropdown";
 import LoanShark from './LoanShark.png';
 import PayementsGrid from './PaymentsGrid';
+import MonthsDropdown from './MonthDropdown';
+import YearDropown from './YearDropdown';
+import YearDropdown from './YearDropdown';
 
 function HomePage() {
     const navigate = useNavigate();
@@ -31,6 +34,11 @@ function HomePage() {
                     <img src={LoanShark} alt="Loan Shark"/>
                 </h1>
             </div>
+
+            <div>
+            
+            <h5><MonthsDropdown />           <YearDropdown /></h5>
+        </div>
             
 
             <div className="recordContainer">

@@ -6,6 +6,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import './HomePage.css';
 import {useNavigate} from "react-router-dom";
 
+
 function PayementsGrid() { // Accept selectedClient as a prop
     const [rowData, setRowData] = useState([]);
     const [updateCount, setUpdateCount] = useState(0);
