@@ -21,9 +21,6 @@ const MonthsDropdown: React.FC<MonthDropdownProps> = ({ onSelectMonth }) => {
             <option value="" disabled>
                 Select a Month
             </option>
-            <option value="*">
-                ALL
-            </option>
             {months.map((month, index) => (
                 <option key={index} value={index+1}>
                     {month}

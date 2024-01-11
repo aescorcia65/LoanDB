@@ -20,9 +20,6 @@ const YearDropdown: React.FC<YearDropdownProps> = ({ onSelectYear }) => {
             <option value="" disabled>
                 Select a Year
             </option>
-            <option value="*">
-                ALL
-            </option>
             {years.map((year, index) => (
                 <option key={index} value={year}>
                     {year}
