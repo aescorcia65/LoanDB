@@ -13,12 +13,13 @@ function PayementsGrid({monthSelection, yearSelection}:any) {
     const navigate = useNavigate();
 
     const columnDefs: ColDef[] = [
-        { field: 'LoanID', filter: true, width: 100 },
+        { field: 'LoanID', filter: true, width: 120 },
         { field: 'Name' },
-        { field: 'PaymentDue', width: 190 },
-        { field: 'DueDate' , filter: true, width: 190},
-        { field: 'PaymentReceived', editable:true },
-        { field: 'PaymentReceivedDate', editable:true },
+        { field: 'PaymentDue', width: 160 },
+        { field: 'DueDate' , filter: true, width: 140},
+        { field: 'PaymentReceived', editable:true, width: 160 },
+        { field: 'PaymentReceivedDate', editable:true, width: 180 },
+        { field: 'PaymentStatus', editable:true, width: 135 },
     ];
 
     const gridRef = useRef<AgGridReact>(null);
@@ -43,9 +44,10 @@ function PayementsGrid({monthSelection, yearSelection}:any) {
                         PaymentDue: item.PaymentDueAmount,
                         PaymentReceived: item.PaymentRecAmount,
                         PaymentReceivedDate: item.PaymentRecDate,
-                        PaidStatus: item.PaidStatus,
+                        PaymentStatus: Boolean(item.PaidStatus),
                         Name: item.ClientName,
-                        PaymentId: item.PaymentId
+                        PaymentId: item.PaymentId,
+                        
                     })));
                 }
 

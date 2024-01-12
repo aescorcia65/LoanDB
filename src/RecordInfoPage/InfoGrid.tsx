@@ -14,6 +14,8 @@ const InfoGrid = ({loanRecord}:any) => {
         { field: 'PaymentDueDate' , editable:true},
         { field: 'PaymentReceived' , editable:true},
         { field: 'PaymentReceivedDate' , editable:true},
+        { field: 'PaymentStatus', editable:true, width: 135 },
+        
     ];
 
     const gridRef = useRef<AgGridReact>(null);
@@ -42,7 +44,7 @@ const InfoGrid = ({loanRecord}:any) => {
                         PaymentReceived: payment.PaymentRecAmount,
                         PaymentReceivedDate: payment.PaymentRecDate,
                         PaymentId: payment.PaymentId,
-                        PaidStatus: payment.PaidStatus
+                        PaymentStatus: Boolean(payment.PaidStatus),
                     })));
                 }
             } catch (error) {
