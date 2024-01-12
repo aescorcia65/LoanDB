@@ -239,81 +239,118 @@ async def get_all_upcoming_payments(month: str = Query(...), year: str = Query(.
         converted_rows.append(converted_row)
     return JSONResponse(content={"results": converted_rows}, status_code=200)
 
-@app.put("/api/update-payment")
-async def update_payment(record: Payment, payment_id: str = Query(...)):
-    paid_status = record.PaidStatus
-    if record.PaymentRecAmount is not None and record.PaymentRecAmount >= record.PaymentDueAmount and not paid_status:
-        query = f"""
+async def get_payment_by_paymentid(payment_id: str):
+    query = f"""
+        SELECT * FROM {PAYMENT_TABLE_NAME}
+        WHERE PaymentId = :payment_id"""
+    values = {"payment_id": payment_id}
+    result = await database.fetch_all(query, values=values)
+    converted_rows = []
+    for row in result:
+        row_dict = dict(row)
+        converted_row = {
+            key: value
+            for key, value in row_dict.items()
+        }
+        converted_rows.append(converted_row)
+        return converted_rows[0]
+
+@app.put("/api/update-payment-status")
+async def update_payment_status(payment_id: str = Query(...), paid_staus: bool = Query(...)):
+    record = await get_payment_by_paymentid(payment_id)
+    if record["PaidStatus"] == paid_staus:
+        return JSONResponse(content={"message": "Payment Status is already updated"}, status_code=200)
+    elif record["PaidStatus"]:
+        return JSONResponse(content={"message": "Payment Status can not be changed after closed"}, status_code=200)
+    query = f"""
         UPDATE {PAYMENT_TABLE_NAME}
-        SET PaymentRecDate = :PaymentRecDate,
-            PaymentRecAmount = :PaymentRecAmount,
-            PaidStatus = true
+        SET PaidStatus = :paid_status
         WHERE PaymentId = :payment_id
         """
 
-        values = {
-            "PaymentRecDate": record.PaymentRecDate,
-            "PaymentRecAmount": record.PaymentRecAmount,
-            "payment_id": payment_id
-        }
+    values = {
+        "payment_id": payment_id,
+        "paid_status": paid_staus
+    }
 
-        await database.execute(query, values)
-        loan = await search_by_client_id(record.LoanId)
-        loan = json.loads(loan.body)
-        print(loan)
-        loan = loan["results"][0]
-        print(loan)
-        issue_date = datetime.strptime(loan["IssueDate"], '%Y-%m-%d').date()
-        loan_maturity = datetime.strptime(loan["LoanMaturity"], '%Y-%m-%d').date()
+    await database.execute(query, values)
+    loan = await search_by_client_id(record["LoanId"])
+    loan = json.loads(loan.body)
+    loan = loan["results"][0]
+    issue_date = datetime.strptime(loan["IssueDate"], '%Y-%m-%d').date()
+    loan_maturity = datetime.strptime(loan["LoanMaturity"], '%Y-%m-%d').date()
 
-        total_days = (loan_maturity - issue_date).days
+    total_days = (loan_maturity - issue_date).days
 
-        if loan["PaymentFrequency"] == "Monthly":
-            new_due_date = record.PaymentDueDate + timedelta(days=30)
-            new_due_date = min(new_due_date, loan_maturity)
-            amtpayments = total_days // 30
+    if loan["PaymentFrequency"] == "Monthly":
+        new_due_date = record["PaymentDueDate"] + timedelta(days=30)
+        new_due_date = min(new_due_date, loan_maturity)
+        amtpayments = total_days // 30
 
-        elif loan["PaymentFrequency"] == "Quarterly":
-            new_due_date = record.PaymentDueDate + timedelta(days=90)
-            new_due_date = min(new_due_date, loan_maturity)
-            amtpayments = total_days // 90
+    elif loan["PaymentFrequency"] == "Quarterly":
+        new_due_date = record["PaymentDueDate"] + timedelta(days=90)
+        new_due_date = min(new_due_date, loan_maturity)
+        amtpayments = total_days // 90
 
-        elif loan["PaymentFrequency"] == "Annually":
-            new_due_date = datetime(record.PaymentDueDate.year + 1, record.PaymentDueDate.month,
-                                    record.PaymentDueDate.day)
-            new_due_date = min(new_due_date, loan_maturity)
-            amtpayments = total_days // 365
+    elif loan["PaymentFrequency"] == "Annually":
+        new_due_date = datetime(record["PaymentDueDate"].year + 1, record["PaymentDueDate"].month,
+                                record["PaymentDueDate"].day)
+        new_due_date = min(new_due_date, loan_maturity)
+        amtpayments = total_days // 365
 
-        new_payment = NewPayment(
-            LoanId=record.LoanId,
-            PaymentDueDate=new_due_date,
-            PaymentDueAmount=(loan["LoanAmount"] * (loan["InterestRate"] * .01)) / amtpayments
+    new_payment = NewPayment(
+        LoanId=record["LoanId"],
+        PaymentDueDate=new_due_date,
+        PaymentDueAmount=(loan["LoanAmount"] * (loan["InterestRate"] * .01)) / amtpayments
+    )
+    if new_due_date == loan_maturity:
+        principal_payment = NewPayment(
+            LoanId=record["LoanId"],
+            PaymentDueDate=loan_maturity,
+            PaymentDueAmount=loan["LoanAmount"]
         )
-        if new_due_date == loan_maturity:
-            principal_payment = NewPayment(
-                LoanId=record.LoanId,
-                PaymentDueDate=loan_maturity,
-                PaymentDueAmount=loan["LoanAmount"]
-            )
-            await create_new_payment(principal_payment)
-        await create_new_payment(new_payment)
-        return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
-    else:
-        query = f"""
+        await create_new_payment(principal_payment)
+    await create_new_payment(new_payment)
+    return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
+
+
+@app.put("/api/update-payment")
+async def update_payment(record: Payment, payment_id: str = Query(...)):
+    paid_status = record.PaidStatus
+    await update_payment_status(payment_id, paid_status)
+    # if record.PaymentRecAmount is not None and record.PaymentRecAmount >= record.PaymentDueAmount and not paid_status:
+    #     query = f"""
+    #     UPDATE {PAYMENT_TABLE_NAME}
+    #     SET PaymentRecDate = :PaymentRecDate,
+    #         PaymentRecAmount = :PaymentRecAmount,
+    #         PaidStatus = true
+    #     WHERE PaymentId = :payment_id
+    #     """
+    #
+    #     values = {
+    #         "PaymentRecDate": record.PaymentRecDate,
+    #         "PaymentRecAmount": record.PaymentRecAmount,
+    #         "payment_id": payment_id
+    #     }
+    #
+    #     await database.execute(query, values)
+    #     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
+    # else:
+    query = f"""
                     UPDATE {PAYMENT_TABLE_NAME}
                     SET PaymentRecDate = :PaymentRecDate,
                         PaymentRecAmount = :PaymentRecAmount
                     WHERE PaymentId = :payment_id
                     """
 
-        values = {
+    values = {
             "PaymentRecDate": record.PaymentRecDate,
             "PaymentRecAmount": record.PaymentRecAmount,
             "payment_id": payment_id
         }
 
-        await database.execute(query, values)
-        return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
+    await database.execute(query, values)
+    return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
 async def create_tables():
     query = f"""
     CREATE DATABASE IF NOT EXISTS {DATABASE_NAME};

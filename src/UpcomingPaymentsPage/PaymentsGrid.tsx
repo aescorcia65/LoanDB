@@ -69,7 +69,7 @@ function PayementsGrid({monthSelection, yearSelection}:any) {
                 PaymentDueAmount: event.data.PaymentDue,
                 PaymentDueDate : event.data.DueDate,
                 LoanId: event.data.LoanID,
-                PaidStatus: event.data.PaidStatus
+                PaidStatus: event.data.PaymentStatus
 
             };
             const response = await fetch(`/api/update-payment?payment_id=${payid}`, {

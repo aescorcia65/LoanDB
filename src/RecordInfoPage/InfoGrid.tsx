@@ -69,7 +69,7 @@ const InfoGrid = ({loanRecord}:any) => {
                 PaymentDueAmount: event.data.PaymentDue,
                 PaymentDueDate : event.data.PaymentDueDate,
                 LoanId: loanRecord.LoanId,
-                PaidStatus: event.data.PaidStatus
+                PaidStatus: event.data.PaymentStatus
 
             };
             const response = await fetch(`/api/update-payment?payment_id=${payid}`, {
