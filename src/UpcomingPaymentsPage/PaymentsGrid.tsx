@@ -1,5 +1,5 @@
 import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
+import 'ag-grid-community/styles/ag-theme-balham.css';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import React, { useEffect, useState, useRef } from 'react';
@@ -98,7 +98,7 @@ function PayementsGrid({monthSelection, yearSelection}:any) {
 
 
     return (
-        <div className="ag-theme-alpine-dark" style={{ width: '100%', height: '100%' }}>
+        <div className="ag-theme-balham" style={{ width: '100%', height: '100%' }}>
             <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onCellEditingStopped={onRowEdit}/>
         </div>
     );}

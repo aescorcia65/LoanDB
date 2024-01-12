@@ -37,9 +37,8 @@ function HomePage() {
                 </div>
             </div>
             <div>
-                <h1>LoanPro™
-                    <img src={LoanShark} alt="Loan Shark"/>
-                </h1>
+                <h1>LMS - Loan Managment System
+    </h1>
             </div>
             <div
                 className={"searchContainer"}>

@@ -31,11 +31,11 @@ function Help() {
                 <ClientDropdown onSelectClient={handleClientSelection}/>
             </div> */}
             <div className="recordContainer">
-                <h1> Hello User, Welcome to LoanPro™</h1>
+                <h1> Hello User, Welcome to Loan Managment System™</h1>
                 <h3>Home Page will show you every loan you have ever entered, active or not. You can click on the column headers to sort or filter any field that you desire. Click on any loan to get payment history of that specific loan, with details on the left. </h3>
                <h3>New Loan page allows you enter loanee information, then hit submit to create a new entry. These entries are stored on the cloud and instantly added to your homepage.</h3>
                <h3>Upcoming Payments will show you every auto generated interest payment. These Payments are auto generated when the loan is created. Also every time an interest payment is received in full, it will dissapear from the upcoming payments page, and a new payment will appear based on your selected payment frequency. Your payments which have been received are still accessible from the record info page for that specific loan.</h3>
-               <h4>For assistance call or text 516-946-1116 or 516-680-5367</h4>
+               <h4>For assistance, call or text 516-946-1116 or 516-680-5367</h4>
             </div>
         </div>
     );
