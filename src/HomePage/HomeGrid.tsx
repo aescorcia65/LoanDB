@@ -1,24 +1,37 @@
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import { AgGridReact } from 'ag-grid-react';
-import { ColDef } from 'ag-grid-community';
+import {
+    ColGroupDef,
+    createGrid,
+    GridApi,
+    GridOptions,
+    ColDef,
+  } from 'ag-grid-community';
 import React, { useEffect, useState, useRef } from 'react';
 import './HomePage.css';
+
 import {useNavigate} from "react-router-dom";
 
 function HomeGrid({selectedClient} : any) { // Accept selectedClient as a prop
     const [rowData, setRowData] = useState([]);
     const navigate = useNavigate();
 
-    const columnDefs: ColDef[] = [
+    const columnDefs: ColGroupDef[] = [
+        {
+        headerName: 'Loaninfo',
+        
+        children: [
         { field: 'LoanID', filter: true },
         { field: 'Name', width: 275 },
         { field: 'Principal', width: 200 },
         { field: 'Due' , filter: true, width: 170},
         { field: 'Issued', filter: true, width: 170},
         { field: 'Status', editable:true, width: 80 },
+    ],
+        },
     ];
-
+    
     const gridRef = useRef<AgGridReact>(null);
     const onRowClicked = (event: any) => {
         const loanId = event.data.LoanID;

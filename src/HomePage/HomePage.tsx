@@ -37,7 +37,7 @@ function HomePage() {
                 </div>
             </div>
             <div>
-                <h1>LMS - Loan Managment System
+                <h1>LMS - Loan Management System
     </h1>
             </div>
             <div
