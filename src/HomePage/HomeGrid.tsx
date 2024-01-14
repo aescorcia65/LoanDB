@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import './HomePage.css';
+import {isBoolean} from "node:util";
 
 function HomeGrid({ selectedClient, selectedMonths, selectedYears }:any) {
     const [rowData, setRowData] = useState([]);
@@ -16,12 +17,12 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears }:any) {
             headerName: 'LoanInformation',
 
             children: [
-                { field: 'LoanID', width: 150, filter: true, },
-                { field: 'Name', width: 150 },
-                { field: 'Principal', width: 150 ,columnGroupShow: 'open' },
-                { field: 'Due' , filter: true, width: 150, columnGroupShow: 'open'},
-                { field: 'Issued', filter: true, width: 150, columnGroupShow: 'open'},
-                { field: 'Status', editable:true, width: 80,  columnGroupShow: 'open' },
+                { field: 'LoanID', width: 150, filter: true, autoHeight:true},
+                { field: 'Name', width: 150, autoHeight:true },
+                { field: 'Principal', width: 150 ,columnGroupShow: 'open', autoHeight:true },
+                { field: 'Due' , filter: true, width: 150, columnGroupShow: 'open', autoHeight:true},
+                { field: 'Issued', filter: true, width: 150, columnGroupShow: 'open', autoHeight:true},
+                { field: 'Status', editable:true, width: 80,  columnGroupShow: 'open', autoHeight:true },
             ],
         },
         {
@@ -30,7 +31,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears }:any) {
                 { field: 'PaymentDue', width: 150 },
                 { field: 'DueDate' , filter: true, width: 150},
                 { field: 'PaymentReceived', editable:true, width: 150 },
-                { field: 'PaymentReceivedDate', editable:true, width: 160 },
+                { field: 'PaymentReceivedDate', editable:true, width: 160},
                 { field: 'PaymentStatus', editable:true, width: 150},
             ]
         },

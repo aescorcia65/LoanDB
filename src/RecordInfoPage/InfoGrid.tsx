@@ -12,7 +12,7 @@ const InfoGrid = ({loanRecord}:any) => {
     const columnDefs: ColDef[] = [
         { field: 'PaymentDue', editable:true },
         { field: 'PaymentDueDate' , editable:true},
-        { field: 'PaymentReceived' , editable:true},
+        { field: 'PaymentReceived' , editable:true,},
         { field: 'PaymentReceivedDate' , editable:true},
         { field: 'PaymentStatus', editable:true, width: 135 },
         
