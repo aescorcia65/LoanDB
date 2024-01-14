@@ -75,7 +75,7 @@ function HomePage() {
             </div>
             <div className="recordContainer">
                 {/* Pass the selectedClient as a prop to the HomeGrid component */}
-                <HomeGrid selectedClient={selectedClient} selectedMonths={selectedMonths} selectedYears={selectedYears}/>
+                <HomeGrid selectedClient={selectedClient} selectedMonths={selectedMonths} selectedYears={selectedYears} selectedStatus={selectedstatuss}/>
             </div>
         </div>
     );

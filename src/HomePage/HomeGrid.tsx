@@ -5,10 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import './HomePage.css';
-import {isBoolean} from "node:util";
-import {compose} from "ag-grid-community/dist/lib/utils/function";
 
-function HomeGrid({ selectedClient, selectedMonths, selectedYears }:any) {
+
+function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatus }:any) {
     const [rowData, setRowData] = useState([]);
     const navigate = useNavigate();
     const [gridApi, setGridApi] = useState(null);
@@ -48,30 +47,59 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears }:any) {
             Name: item.ClientName,
             Principal: item.LoanAmount,
             PaymentDue: item.PaymentDueAmount,
-            DueDate: item.PaymentDueAmount,
+            DueDate: item.PaymentDueDate,
             PaymentReceived: item.PaymentRecAmount,
-            PaymentRecievedDate: item.PaymentRecDate,
-            PaymentStatus: item.PaidStatus
+            PaymentReceivedDate: item.PaymentRecDate,
+            PaymentStatus: Boolean(item.PaidStatus)
         }));
     };
 
     // Fetch data whenever selectedClient, selectedMonths, or selectedYears changes
     useEffect(() => {
-        console.log(selectedYears)
-        console.log(selectedMonths)
+        console.log(selectedYears);
+        console.log(selectedMonths);
+
         const fetchData = async () => {
             try {
+                // Map selectedMonths and selectedYears to their respective integer representations
+                const mappedMonths = selectedMonths
+                    .map((selected:any, index:any) => selected ? index + 1 : null)
+                    .filter((month: any) => month !== null);
+                const currentYear = new Date().getFullYear();
+                const mappedYears = selectedYears
+                    .map((selected:any, index:any) => selected ? currentYear + index : null)
+                    .filter((year:any) => year !== null);
+
+
                 // Construct the API URL
-                const apiUrl = `/api/search-by-client-id?client_id=${selectedClient}`;
-                const response = await fetch(apiUrl);
+                const apiUrl = `/api/filter-data`;
+
+                // Prepare the request body
+                const requestBody = {
+                    Months: mappedMonths,
+                    Years: mappedYears,
+                    ActiveStatus: selectedStatus  // Assuming you have this variable in your state
+                };
+                console.log(requestBody)
+
+                // Make the POST request
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                console.log(requestBody)
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
                 const apiData = await response.json();
-                if(gridApi != null){
-                setRowData(mapApiResponseToGridFields(apiData.results));}
+                if (gridApi != null) {
+                    setRowData(mapApiResponseToGridFields(apiData.results));
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
                 // Consider setting an error state and displaying it in the UI
@@ -79,7 +107,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears }:any) {
         };
 
         fetchData();
-    }, [selectedClient, selectedMonths, selectedYears, gridApi]);
+    }, [selectedMonths, selectedYears, gridApi, selectedStatus]);
 
     // Handle updating active status
     const updateActiveStatus = async (event:any) => {
