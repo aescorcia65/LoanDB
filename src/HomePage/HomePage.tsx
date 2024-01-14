@@ -1,6 +1,6 @@
 import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import HomeGrid from "./HomeGrid";
 import ClientDropdown from "./ClientDropdown";
 import MonthButtons from './MonthsButton';
@@ -11,7 +11,7 @@ function HomePage() {
     const [selectedClient, setSelectedClient] = useState("*"); // State to store the selected client
     const [selectedMonths, setSelectedMonths] = useState(Array(12).fill(false));
     const [selectedYears, setSelectedYears] = useState(Array(11).fill(false));
-    const [allToggle, setAllToggle] = useState(false)
+    const [allToggle, setAllToggle] = useState(true)
 
     // This function is responsible for navigation to the NewRecord page
     const NewRecordnav = () => {
@@ -29,11 +29,15 @@ function HomePage() {
     const handleClientSelection = (selectedValue: any) => {
         setSelectedClient(selectedValue); // Update the selected client in state
     };
+    useEffect(() => {
+        console.log(allToggle)
+    }, [allToggle]);
 
-    const handleAllSelection = () => {
-        setAllToggle(!allToggle)
-        setSelectedMonths(Array(12).fill(allToggle));
-        setSelectedYears(Array(11).fill(allToggle));
+
+    const handleToggle = () => {
+         setAllToggle(!allToggle);
+         setSelectedMonths(Array(12).fill(allToggle));
+         setSelectedYears(Array(11).fill(allToggle));
     };
 
     return (
@@ -56,7 +60,7 @@ function HomePage() {
 
 
             <div className={"topbuttons"}>
-                <button onClick={handleAllSelection}>ALL</button>
+                <button onClick={handleToggle}>ALL</button>
             </div>
             
             <div className={"monthbuttons"}>

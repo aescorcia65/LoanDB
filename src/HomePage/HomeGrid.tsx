@@ -6,6 +6,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import './HomePage.css';
 import {isBoolean} from "node:util";
+import {compose} from "ag-grid-community/dist/lib/utils/function";
 
 function HomeGrid({ selectedClient, selectedMonths, selectedYears }:any) {
     const [rowData, setRowData] = useState([]);
@@ -51,9 +52,9 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears }:any) {
 
     // Fetch data whenever selectedClient, selectedMonths, or selectedYears changes
     useEffect(() => {
+        console.log(selectedYears)
+        console.log(selectedMonths)
         const fetchData = async () => {
-            console.log(selectedMonths)
-            console.log(selectedYears)
             try {
                 // Construct the API URL
                 const apiUrl = `/api/search-by-client-id?client_id=${selectedClient}`;
