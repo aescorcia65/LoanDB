@@ -5,6 +5,7 @@ import HomeGrid from "./HomeGrid";
 import ClientDropdown from "./ClientDropdown";
 import MonthButtons from './MonthsButton';
 import YearButtons from './YearButtons';
+import StatusButtons from './StatusButtons';
 
 
 function HomePage() {
@@ -12,7 +13,7 @@ function HomePage() {
     const [selectedClient, setSelectedClient] = useState("*"); // State to store the selected client
     const [selectedMonths, setSelectedMonths] = useState(Array(12).fill(true));
     const [selectedYears, setSelectedYears] = useState(Array(11).fill(true));
-    const [selectedStatus, setSelectedStatus] = useState(Array(2).fill(true));
+    const [selectedstatuss, setSelectedstatuss] = useState(Array(2).fill(true));
     const [allToggle, setAllToggle] = useState(true)
 
     // This function is responsible for navigation to the NewRecord page
@@ -40,6 +41,7 @@ function HomePage() {
          setAllToggle(!allToggle);
          setSelectedMonths(Array(12).fill(allToggle));
          setSelectedYears(Array(11).fill(allToggle));
+         setSelectedstatuss(Array(2).fill(allToggle));
     };
 
     return (
@@ -62,7 +64,7 @@ function HomePage() {
 
 
             <div className={"topbuttons"}>
-                <button onClick={handleToggle}>ALL</button> <button>Active</button> <button>Inactive</button>
+                <button onClick={handleToggle}>*ALL*</button> <StatusButtons selectedstatuss={selectedstatuss} setSelectedstatuss={setSelectedstatuss}/>
             </div>
             
             <div className={"monthbuttons"}>
