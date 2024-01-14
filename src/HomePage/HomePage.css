@@ -247,7 +247,9 @@
   }
   h2{
     text-align: center;
-    font-family: 'Roboto', sans-serif;
+    font: arial;
+    font-weight: 100;
+    font-size: 20px;
     color: #000000;
   }
   h3{
@@ -328,8 +330,10 @@
     font: times;
     color: #000000;
     text-align: end;
+    margin-left: 1%;
   }
 
+  
   .form-control {
     width: 100%;
   }
@@ -396,7 +400,12 @@ button:active{
       background-color: #f2f2f2;
     }
 
-    .ag-cell-value {
+.ag-cell {
       align-items: center;
       justify-content: center;
     }
+
+.radio {
+  margin-top: 2%;
+  margin-bottom: 3%;
+}

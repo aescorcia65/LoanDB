@@ -3,6 +3,7 @@ import '../HomePage/HomePage.css';
 import { useNavigate } from 'react-router-dom';
 import InfoGrid from '../RecordInfoPage/InfoGrid';
 import LoanShark from '../LoanShark.png';
+import PaymentTypeSelector from '../HomePage/PaymentSelectors';
 
 function NewRecord() {
     const navigate = useNavigate();
@@ -147,6 +148,7 @@ function NewRecord() {
                         onChange={handleChange}
                         required
                     />
+                    <PaymentTypeSelector/>
                 </div>
 
                 <div className="form-group6">
