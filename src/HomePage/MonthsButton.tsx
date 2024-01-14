@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import './HomePage.css';
 
-function MonthButtons() {
+function MonthButtons({ selectedMonths, setSelectedMonths}:any) {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const [selectedMonths, setSelectedMonths] = useState(Array(12).fill(false));
 
     const toggleMonth = (index: any) => {
         const newSelectedMonths = [...selectedMonths];

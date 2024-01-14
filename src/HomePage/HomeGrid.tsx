@@ -13,7 +13,7 @@ import './HomePage.css';
 
 import {useNavigate} from "react-router-dom";
 
-function HomeGrid({selectedClient} : any) { // Accept selectedClient as a prop
+function HomeGrid({selectedClient, selectedMonths, selectedYears} : any) { // Accept selectedClient as a prop
     const [rowData, setRowData] = useState([]);
     const navigate = useNavigate();
 

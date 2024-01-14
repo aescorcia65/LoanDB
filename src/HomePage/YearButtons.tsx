@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import './HomePage.css';
 
-function YearButtons() {
+function YearButtons({ selectedYears, setSelectedYears}:any) {
     const years = ["2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034"];
-    const [selectedYears, setSelectedYears] = useState(Array(12).fill(false));
 
     const toggleYears = (index: any) => {
         const newSelectedYears = [...selectedYears];
@@ -15,6 +14,7 @@ function YearButtons() {
         <div>
             {years.map((year, index) => (
                 <button
+                    value={year}
                     key={year}
                     className={selectedYears[index] ? 'selected' : ''}
                     onClick={() => toggleYears(index)}

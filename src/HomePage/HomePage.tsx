@@ -9,6 +9,8 @@ import YearButtons from './YearButtons';
 function HomePage() {
     const navigate = useNavigate();
     const [selectedClient, setSelectedClient] = useState("*"); // State to store the selected client
+    const [selectedMonths, setSelectedMonths] = useState(Array(12).fill(false));
+    const [selectedYears, setSelectedYears] = useState(Array(11).fill(false));
 
     // This function is responsible for navigation to the NewRecord page
     const NewRecordnav = () => {
@@ -47,14 +49,14 @@ function HomePage() {
             
             
             <div className={"monthbuttons"}>
-                <MonthButtons/>
+                <MonthButtons selectedMonths={selectedMonths} setSelectedMonths={setSelectedMonths}/>
             </div>
             <div className={"yearbuttons"}>
-                <YearButtons/>
+                <YearButtons selectedYears={selectedYears} setSelectedYears={setSelectedYears}/>
             </div>
             <div className="recordContainer">
                 {/* Pass the selectedClient as a prop to the HomeGrid component */}
-                <HomeGrid selectedClient={selectedClient}/>
+                <HomeGrid selectedClient={selectedClient} selectedMonths={selectedMonths} selectedYears={selectedYears}/>
             </div>
         </div>
     );
