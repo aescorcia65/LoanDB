@@ -46,7 +46,11 @@ function HomePage() {
                 <h1>LMS - Loan Management System
     </h1>
             </div>
-            
+
+
+            <div className={"topbuttons"}>
+                <button>ALL</button>
+            </div>
             
             <div className={"monthbuttons"}>
                 <MonthButtons selectedMonths={selectedMonths} setSelectedMonths={setSelectedMonths}/>

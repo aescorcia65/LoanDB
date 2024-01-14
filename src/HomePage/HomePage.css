@@ -1,7 +1,4 @@
-.ag-cell {
-  white-space: normal !important; /* Allows text to wrap */
-  line-height: normal; /* Adjust line height as needed */
-}
+
 .App {
     text-align: center;
   }
@@ -43,8 +40,22 @@
     position: absolute; /* or 'absolute' depending on your layout */
     top: 1px;
 
-    margin-left: -23%;
-    margin-top: 6%;
+    margin-left: -20%;
+    margin-top: 6.5%;
+    /* Adjust margin as needed */
+    /* Add other styles like padding, font, background, etc. as per your design */
+  }
+
+  .topbuttons {
+    display: flex; /* Enables Flexbox for the container */
+    align-items: center; /* Align items vertically */
+    justify-content: flex-start;
+    position: absolute; /* or 'absolute' depending on your layout */
+    top: 1px;
+
+    margin-left: -10%;
+    margin-top: 3.5%;
+   
     /* Adjust margin as needed */
     /* Add other styles like padding, font, background, etc. as per your design */
   }
@@ -167,9 +178,9 @@
 
   .recordContainer{
     margin-top: 160px;
-    margin-left: -63%;
+    margin-left: -100%;
     height: 600px;
-    width:225%;
+    width:300%;
     background-color: #1C2541;
     overflow-y: auto;
     border-radius: 10px;
@@ -331,7 +342,8 @@
     background-color: #c9c9c9;
     color: #000000;
     font: arial; /* Updated font-family */
-    font-size: 16px; /* You can adjust the size as needed */
+    font-size: 12px; /* You can adjust the size as needed */
+    font-weight: 600;
     border-color: #a8a8a8;
     border-width: 2px; /* Adjusted border width */
     border-style: solid; /* Added border style */
@@ -382,4 +394,9 @@ button:active{
 
     .simple-table th {
       background-color: #f2f2f2;
+    }
+
+    .ag-cell-value {
+      align-items: center;
+      justify-content: center;
     }
