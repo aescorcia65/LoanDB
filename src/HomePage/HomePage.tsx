@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import HomeGrid from "./HomeGrid";
 import ClientDropdown from "./ClientDropdown";
-import LoanShark from '../LoanShark.png';
+import MonthButtons from './MonthsButton';
 
 function HomePage() {
     const navigate = useNavigate();
@@ -28,21 +28,25 @@ function HomePage() {
 
     return (
         <div>
+            
+           
             <div className={"top-left-button"}>
                 
-                <button onClick={NewRecordnav}>New Loan</button>
-                <button onClick={UpcomingPaymentsNav}>Upcoming Payments</button> <div className={"helpSpacer"}>  <button onClick={HelpNav}>Help</button>
+                <button onClick={NewRecordnav}>New Loan / New Payment</button>
+                
                     
                
-                </div>
+                
             </div>
+
             <div>
                 <h1>LMS - Loan Management System
     </h1>
             </div>
-            <div
-                className={"searchContainer"}>
-                <ClientDropdown onSelectClient={handleClientSelection}/>
+            
+            
+            <div className={"monthbuttons"}>
+                <MonthButtons/>
             </div>
             <div className="recordContainer">
                 {/* Pass the selectedClient as a prop to the HomeGrid component */}

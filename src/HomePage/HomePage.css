@@ -27,8 +27,21 @@
   .top-left-button2 {
     position: absolute; /* or 'absolute' depending on your layout */
     top: 1px;
+    
 
     margin-left: 100px; /* Adjust margin as needed */
+    /* Add other styles like padding, font, background, etc. as per your design */
+  }
+  .monthbuttons {
+    display: flex; /* Enables Flexbox for the container */
+    align-items: center; /* Align items vertically */
+    justify-content: flex-start;
+    position: absolute; /* or 'absolute' depending on your layout */
+    top: 1px;
+
+    margin-left: -30%;
+    margin-top: 5%;
+    /* Adjust margin as needed */
     /* Add other styles like padding, font, background, etc. as per your design */
   }
 
@@ -117,13 +130,26 @@
 }
 .ag-header-cell-label {
   justify-content: center !important;
+  font-weight: 700;
+  color: #000000;
 }
 
 .ag-header-group-cell {
   justify-content: center !important;
+  font-weight: 700;
+  color: #000000;
 }
+
+.ag-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: normal !important;
+  line-height: 1.5; /* Adjust for better text readability */
+}
+
   .recordContainer{
-    margin-top: 70px;
+    margin-top: 140px;
     margin-left: -100%;
     height: 600px;
     width:300%;
@@ -170,7 +196,7 @@
   .container2 {
     width: 75vw;
     margin-top: 25px;
-    background-color: #1C2541;
+    background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 0 10px #1C2541;
     padding: 20px;
@@ -227,14 +253,53 @@
   }
   .form-group {
     margin-bottom: 20px;
-    text-align: center;
+    font-weight: 100;
   }
 
+  .form-group2 {
+    margin-bottom: 20px;
+    font-weight: 100;
+    margin-left: -11%;
+  }
+  .form-group3 {
+    margin-bottom: 20px;
+    font-weight: 100;
+    margin-left: -12%;
+  }
+  .form-group4 {
+    margin-bottom: 20px;
+    font-weight: 100;
+    margin-left: -4%;
+  }
+  .form-group5 {
+    margin-bottom: 20px;
+    font-weight: 100;
+    margin-left: -4%;
+  }
+  .form-group6 {
+    margin-bottom: 20px;
+    font-weight: 100; 
+    margin-left: -16%;
+  }
+  .form-group7 {
+    margin-bottom: 20px;
+    font-weight: 100;
+    margin-left: -15%;
+  }
+  .form-group8 {
+    margin-bottom: 20px;
+    font-weight: 100;
+  }
+  .form-group9 {
+    margin-bottom: 20px;
+    font-weight: 100;
+  }
   label {
-    font-family: 'Roboto', sans-serif;
-    font-weight: bold;
-    font: arial;
-    color: #c9c9c9;
+    
+    font-weight: 500;
+    font: times;
+    color: #000000;
+    text-align: end;
   }
 
   .form-control {
@@ -248,7 +313,7 @@
   button {
     background-color: #c9c9c9;
     color: #000000;
-    font-family: 'Roboto', sans-serif; /* Updated font-family */
+    font: arial; /* Updated font-family */
     font-size: 16px; /* You can adjust the size as needed */
     border-color: #c9c9c9;
     border-width: 2px; /* Adjusted border width */
@@ -259,14 +324,22 @@
     margin-top: 10px;
     box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.548); 
     margin-right: 10px;
+    
 }
+
+button.selected {
+  background-color: #b1efff;
+  
+  
+}
+
 
   button:hover {
     background-color: #b1efff;
   }
 
   body{
-    background-color: #33fc4420;
+    background-color: #f9f9f9;
     display: flex;
     align-items: center;
     justify-content: center;}

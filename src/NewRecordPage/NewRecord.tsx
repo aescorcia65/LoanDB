@@ -99,7 +99,7 @@ function NewRecord() {
                     />
                 </div>
 
-                <div className="form-group">
+                <div className="form-group2">
                     <label htmlFor="date">Loan Issue Date  </label>
                     <input
                         type="date"
@@ -111,7 +111,7 @@ function NewRecord() {
                     />
                 </div>
 
-                <div className="form-group">
+                <div className="form-group3">
                     <label htmlFor="date">Loan Maturity Date  </label>
                     <input
                         type="date"
@@ -123,12 +123,12 @@ function NewRecord() {
                     />
                 </div>
 
-                <div className="form-group">
+                <div className="form-group4">
                     <label htmlFor="loanAmount">Loan Amount  </label>
                     <input
                         type="number"
                         id="loanAmount"
-                        placeholder="loanAmount"
+                        placeholder=""
                         name="loanAmount"
                         value={formData.loanAmount}
                         onChange={handleChange}
@@ -136,12 +136,12 @@ function NewRecord() {
                     />
                 </div>
 
-                <div className="form-group">
+                <div className="form-group5">
                     <label htmlFor="interestRate">Interest Rate  </label>
                     <input
                         type="number"
                         id="interestRate"
-                        placeholder="interestRate"
+                        placeholder=""
                         name="interestRate"
                         value={formData.interestRate}
                         onChange={handleChange}
@@ -149,7 +149,7 @@ function NewRecord() {
                     />
                 </div>
 
-                <div className="form-group">
+                <div className="form-group6">
                 <label htmlFor="paymentFrequency">Payment Frequency </label>
                 <select
                 id="paymentFrequency"
@@ -164,7 +164,7 @@ function NewRecord() {
                 </select>
             </div>
 
-                <div className="form-group">
+                <div className="form-group7">
                 <label htmlFor="activeStatus">Active Status </label>
                 <select
                 id="activeStatus"

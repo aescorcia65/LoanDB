@@ -19,16 +19,26 @@ function HomeGrid({selectedClient} : any) { // Accept selectedClient as a prop
 
     const columnDefs: ColGroupDef[] = [
         {
-        headerName: 'Loaninfo',
+        headerName: 'Loan Information',
         
         children: [
-        { field: 'LoanID', filter: true },
-        { field: 'Name', width: 275 },
-        { field: 'Principal', width: 200 },
-        { field: 'Due' , filter: true, width: 170},
-        { field: 'Issued', filter: true, width: 170},
-        { field: 'Status', editable:true, width: 80 },
+        { field: 'LoanID', width: 150, filter: true, },
+        { field: 'Name', width: 150 },
+        { field: 'Principal', width: 150 ,columnGroupShow: 'open' },
+        { field: 'Due' , filter: true, width: 150, columnGroupShow: 'open'},
+        { field: 'Issued', filter: true, width: 150, columnGroupShow: 'open'},
+        { field: 'Status', editable:true, width: 80,  columnGroupShow: 'open' },
     ],
+        },
+        {
+        headerName: 'Upcoming Payments',
+        children: [
+        { field: 'PaymentDue', width: 150 },
+        { field: 'DueDate' , filter: true, width: 150},
+        { field: 'PaymentReceived', editable:true, width: 150 },
+        { field: 'PaymentReceivedDate', editable:true, width: 160 },
+        { field: 'PaymentStatus', editable:true, width: 150},
+        ]
         },
     ];
     
