@@ -44,8 +44,9 @@ function NewRecord() {
             IssueDate: formData.issuedate,
             LoanAmount: parseFloat(formData.loanAmount),
             InterestRate: parseFloat(formData.interestRate),
-            ActiveStatus: formData.activeStatus === "true", // Adjust as needed
-            // FirstPayment: parseFloat(formData.firstPayment),
+            ActiveStatus: formData.activeStatus === "true",
+            FirstPaymentDueDate : formData.firstPaymentDate,
+            FirstPaymentDueAmount : formData.firstPayment
         };
 
         try {
@@ -177,7 +178,7 @@ function NewRecord() {
 }
 
 {
-    formData.paymentFrequency == "Manual" && (
+    formData.paymentFrequency === "Manual" && (
         <div className="form-group5">
             <label htmlFor="firstPayment">First Payment  </label>
             <input
@@ -194,7 +195,7 @@ function NewRecord() {
 }
 
 {
-    formData.paymentFrequency == "Manual" && (
+    formData.paymentFrequency === "Manual" && (
         <div className="form-group3">
         <label htmlFor="firstPaymentDate">First Payment Date  </label>
         <input

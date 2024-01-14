@@ -90,21 +90,27 @@ async def create_new_loan(loan: NewLoan):
         new_due_date = loan.IssueDate + timedelta(days=30)
         new_due_date = min(new_due_date, loan_maturity)
         amtpayments = total_days // 30
+        dueamt = (loan.LoanAmount * (loan.InterestRate * .01)) / amtpayments
 
     elif loan.PaymentFrequency == "Quarterly":
         new_due_date = loan.IssueDate + timedelta(days=90)
         new_due_date = min(new_due_date, loan_maturity)
         amtpayments = total_days // 90
+        dueamt = (loan.LoanAmount * (loan.InterestRate * .01)) / amtpayments
 
     elif loan.PaymentFrequency == "Annually":
         new_due_date = loan.IssueDate + relativedelta(years=1)
         new_due_date = min(new_due_date, loan_maturity)
         amtpayments = total_days // 365
+        dueamt = (loan.LoanAmount * (loan.InterestRate * .01)) / amtpayments
+    elif loan.PaymentFrequency == "Manual":
+        new_due_date = loan.FirstPaymentDueDate
+        dueamt = loan.FirstPaymentDueAmount
 
     new_payment = NewPayment(
         LoanId=record_id,
         PaymentDueDate=new_due_date,
-        PaymentDueAmount=(loan.LoanAmount * (loan.InterestRate * .01)) / amtpayments
+        PaymentDueAmount=dueamt
     )
     await create_new_payment(new_payment)
     return JSONResponse(content={"message": "New record created successfully", "LoanId": record_id}, status_code=200)
@@ -379,7 +385,7 @@ async def create_tables():
         ClientName VARCHAR(50) NOT NULL,
         LoanMaturity DATE NOT NULL,
         PaymentFrequency VARCHAR(50) NOT NULL,
-        InterestRate DECIMAL(10, 4) NOT NULL,
+        InterestRate DECIMAL(10, 4),
         IssueDate DATE NOT NULL,
         FOREIGN KEY (ClientId) REFERENCES {CLIENT_TABLE_NAME}(ClientId)
     );

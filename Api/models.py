@@ -27,9 +27,11 @@ class NewLoan(BaseModel):
     PaymentFrequency: str
     LoanMaturity: date
     LoanAmount: float
-    InterestRate: float
+    InterestRate: Optional[float] = None
     ActiveStatus: bool
     IssueDate: date
+    FirstPaymentDueDate: Optional[date] = None
+    FirstPaymentDueAmount: Optional[float] = None
 
 
 class UpdateLoan(BaseModel):
