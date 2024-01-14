@@ -20,7 +20,9 @@ function NewRecord() {
         interestRate: "",
         paymentFrequency: 'Monthly',
         loanAmount: "",
-        activeStatus: 'true'
+        activeStatus: 'true',
+        firstPayment: "",
+        firstPaymentDate: ""
     });
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -43,6 +45,7 @@ function NewRecord() {
             LoanAmount: parseFloat(formData.loanAmount),
             InterestRate: parseFloat(formData.interestRate),
             ActiveStatus: formData.activeStatus === "true", // Adjust as needed
+            // FirstPayment: parseFloat(formData.firstPayment),
         };
 
         try {
@@ -159,7 +162,7 @@ function NewRecord() {
             {
     formData.paymentFrequency !== "Manual" && (
         <div className="form-group5">
-            <label htmlFor="interestRate">Interest Rate</label>
+            <label htmlFor="interestRate">Interest Rate   </label>
             <input
                 type="number"
                 id="interestRate"
@@ -170,6 +173,39 @@ function NewRecord() {
                 required
             />
         </div>
+    )
+}
+
+{
+    formData.paymentFrequency == "Manual" && (
+        <div className="form-group5">
+            <label htmlFor="firstPayment">First Payment  </label>
+            <input
+                type="number"
+                id="firstPayment"
+                placeholder=""
+                name="firstPayment"
+                value={formData.firstPayment}
+                onChange={handleChange}
+                required
+            />
+        </div>
+    )
+}
+
+{
+    formData.paymentFrequency == "Manual" && (
+        <div className="form-group3">
+        <label htmlFor="firstPaymentDate">First Payment Date  </label>
+        <input
+            type="date"
+            id="firstPaymentDate"
+            name="firstPaymentDate"
+            value={formData.firstPaymentDate}
+            onChange={handleChange}
+            required
+        />
+    </div>
     )
 }
 
