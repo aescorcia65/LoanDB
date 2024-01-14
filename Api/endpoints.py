@@ -13,7 +13,7 @@ from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from models import NewLoan, NewPayment, Client, Loan, Payment, UpdateLoan
+from models import NewLoan, NewPayment, Client, Loan, Payment, UpdateLoan, FilterParams
 
 DATABASE_NAME = "TestDB"
 CLIENT_TABLE_NAME = "Client"
@@ -337,20 +337,30 @@ async def update_payment(record: Payment, payment_id: str = Query(...)):
     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
 
 @app.post("/api/filter-data")
-async def filter_data(selected_months: List[int], selected_years: List[int]):
-    month_conditions = ' OR '.join([f"MONTH(PaymentDueDate) = {month}" for month in selected_months])
-    year_conditions = ' OR '.join([f"YEAR(PaymentDueDate) = {year}" for year in selected_years])
+async def filter_data(params: FilterParams):
+    conditions = []
 
-    combined_conditions = ''
-    if month_conditions:
-        combined_conditions += f"({month_conditions})"
-    if year_conditions:
-        if combined_conditions:
-            combined_conditions += ' AND '
-        combined_conditions += f"({year_conditions})"
+    if params.Months:
+        month_conditions = " OR ".join([f"MONTH(PaymentDueDate) = :month{index}" for index, month in enumerate(params.Months)])
+        conditions.append(f"({month_conditions})")
 
+    if params.Years:
+        year_conditions = " OR ".join([f"YEAR(PaymentDueDate) = :year{index}" for index, year in enumerate(params.Years)])
+        conditions.append(f"({year_conditions})")
+
+    # Adding ClientID and ActiveStatus conditions
+    conditions.append(f"ClientID = :client_id")
+    conditions.append(f"ActiveStatus = :active_status")
+
+    combined_conditions = " AND ".join(conditions)
     query = f"SELECT * FROM {CLIENT_RECORDS_TABLE_NAME} WHERE {combined_conditions}"
-    results = await database.fetch_all(query=query)
+
+    # Creating a dictionary for parameters to protect against SQL injection
+    query_params = {f"month{index}": month for index, month in enumerate(params.Months)}
+    query_params.update({f"year{index}": year for index, year in enumerate(params.Years)})
+    query_params.update({"client_id": params.ClientID, "active_status": params.ActiveStatus})
+
+    results = await database.fetch_all(query=query, values=query_params)
     return results
 async def create_tables():
     query = f"""

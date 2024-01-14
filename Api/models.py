@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -51,3 +51,9 @@ class NewPayment(BaseModel):
     PaymentDueAmount: float
     PaymentRecDate: Optional[date] = None
     PaymentRecAmount: Optional[float] = None
+
+class FilterParams(BaseModel):
+    Months: List[int]
+    Years: List[int]
+    ClientID: str
+    ActiveStatus: bool
