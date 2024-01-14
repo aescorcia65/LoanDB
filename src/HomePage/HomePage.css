@@ -1,3 +1,7 @@
+.ag-cell {
+  white-space: normal !important; /* Allows text to wrap */
+  line-height: normal; /* Adjust line height as needed */
+}
 .App {
     text-align: center;
   }
