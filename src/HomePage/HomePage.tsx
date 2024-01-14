@@ -6,11 +6,13 @@ import ClientDropdown from "./ClientDropdown";
 import MonthButtons from './MonthsButton';
 import YearButtons from './YearButtons';
 
+
 function HomePage() {
     const navigate = useNavigate();
     const [selectedClient, setSelectedClient] = useState("*"); // State to store the selected client
-    const [selectedMonths, setSelectedMonths] = useState(Array(12).fill(false));
-    const [selectedYears, setSelectedYears] = useState(Array(11).fill(false));
+    const [selectedMonths, setSelectedMonths] = useState(Array(12).fill(true));
+    const [selectedYears, setSelectedYears] = useState(Array(11).fill(true));
+    const [selectedStatus, setSelectedStatus] = useState(Array(2).fill(true));
     const [allToggle, setAllToggle] = useState(true)
 
     // This function is responsible for navigation to the NewRecord page
@@ -60,7 +62,7 @@ function HomePage() {
 
 
             <div className={"topbuttons"}>
-                <button onClick={handleToggle}>ALL</button>
+                <button onClick={handleToggle}>ALL</button> <button>Active</button> <button>Inactive</button>
             </div>
             
             <div className={"monthbuttons"}>
