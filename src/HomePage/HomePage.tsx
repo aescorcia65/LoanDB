@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import HomeGrid from "./HomeGrid";
 import ClientDropdown from "./ClientDropdown";
 import MonthButtons from './MonthsButton';
+import YearButtons from './YearButtons';
 
 function HomePage() {
     const navigate = useNavigate();
@@ -47,6 +48,9 @@ function HomePage() {
             
             <div className={"monthbuttons"}>
                 <MonthButtons/>
+            </div>
+            <div className={"yearbuttons"}>
+                <YearButtons/>
             </div>
             <div className="recordContainer">
                 {/* Pass the selectedClient as a prop to the HomeGrid component */}

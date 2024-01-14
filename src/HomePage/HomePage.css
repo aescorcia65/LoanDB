@@ -39,8 +39,21 @@
     position: absolute; /* or 'absolute' depending on your layout */
     top: 1px;
 
-    margin-left: -30%;
-    margin-top: 5%;
+    margin-left: -23%;
+    margin-top: 6%;
+    /* Adjust margin as needed */
+    /* Add other styles like padding, font, background, etc. as per your design */
+  }
+
+  .yearbuttons {
+    display: flex; /* Enables Flexbox for the container */
+    align-items: center; /* Align items vertically */
+    justify-content: flex-start;
+    position: absolute; /* or 'absolute' depending on your layout */
+    top: 1px;
+
+    margin-left: -15%;
+    margin-top: 9.5%;
     /* Adjust margin as needed */
     /* Add other styles like padding, font, background, etc. as per your design */
   }
@@ -149,7 +162,7 @@
 }
 
   .recordContainer{
-    margin-top: 140px;
+    margin-top: 160px;
     margin-left: -63%;
     height: 600px;
     width:225%;
