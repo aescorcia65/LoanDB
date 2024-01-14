@@ -111,7 +111,7 @@
 }
   .App-header {
     background-color: #0B132B;
-    min-height: 100vh;
+    min-height: 200vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -243,6 +243,7 @@
     text-align: center;
     font-family: 'arial';
     font-weight: 400;
+    margin-top: 6%;
     color: #363333;
   }
   h2{
@@ -333,7 +334,7 @@
     margin-left: 1%;
   }
 
-  
+
   .form-control {
     width: 100%;
   }
