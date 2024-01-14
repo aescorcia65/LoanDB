@@ -137,19 +137,7 @@ function NewRecord() {
                     />
                 </div>
 
-                <div className="form-group5">
-                    <label htmlFor="interestRate">Interest Rate  </label>
-                    <input
-                        type="number"
-                        id="interestRate"
-                        placeholder=""
-                        name="interestRate"
-                        value={formData.interestRate}
-                        onChange={handleChange}
-                        required
-                    />
-                    <PaymentTypeSelector/>
-                </div>
+              
 
                 <div className="form-group6">
                 <label htmlFor="paymentFrequency">Payment Frequency </label>
@@ -163,8 +151,27 @@ function NewRecord() {
                 <option value="Monthly">Monthly  </option>
                 <option value="Quarterly">Quarterly  </option>
                 <option value="Annually">Annually</option>
+                <option value="Manual">MANUAL</option>
+
                 </select>
             </div>
+
+            {
+    formData.paymentFrequency !== "Manual" && (
+        <div className="form-group5">
+            <label htmlFor="interestRate">Interest Rate</label>
+            <input
+                type="number"
+                id="interestRate"
+                placeholder=""
+                name="interestRate"
+                value={formData.interestRate}
+                onChange={handleChange}
+                required
+            />
+        </div>
+    )
+}
 
                 <div className="form-group7">
                 <label htmlFor="activeStatus">Active Status </label>
