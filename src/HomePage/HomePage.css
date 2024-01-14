@@ -125,7 +125,7 @@
 
   .recordBlock1 {
     color: #000000;
-    background-color: #e1ff1d;
+    /* background-color: #e1ff1d; */
     text-emphasis-color: #000000;
   }
   .recordBlock3 {
@@ -337,19 +337,26 @@
     margin-top: 10px;
     box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.548); 
     margin-right: 10px;
-    
+    transition: background-color 0.1s ease;
 }
-
 button.selected {
   background-color: #4b9eb3;
   
   
 }
 
+button:hover {
+  background-color: #b1efff;
+} 
+button:active{
+  background-color:  #047692;
+  transition: background-color 0.3s ease;
+  
+}
 
-  button:hover {
-    background-color: #b1efff;
-  }
+
+
+ 
 
   body{
     background-color: #f9f9f9;
