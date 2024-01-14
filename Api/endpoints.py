@@ -1,6 +1,8 @@
 import decimal
 import json
 from datetime import datetime, timedelta, date
+from typing import List
+
 from dateutil.relativedelta import relativedelta
 import random
 import uuid
@@ -318,24 +320,6 @@ async def update_payment_status(payment_id: str = Query(...), paid_staus: bool =
 async def update_payment(record: Payment, payment_id: str = Query(...)):
     paid_status = record.PaidStatus
     await update_payment_status(payment_id, paid_status)
-    # if record.PaymentRecAmount is not None and record.PaymentRecAmount >= record.PaymentDueAmount and not paid_status:
-    #     query = f"""
-    #     UPDATE {PAYMENT_TABLE_NAME}
-    #     SET PaymentRecDate = :PaymentRecDate,
-    #         PaymentRecAmount = :PaymentRecAmount,
-    #         PaidStatus = true
-    #     WHERE PaymentId = :payment_id
-    #     """
-    #
-    #     values = {
-    #         "PaymentRecDate": record.PaymentRecDate,
-    #         "PaymentRecAmount": record.PaymentRecAmount,
-    #         "payment_id": payment_id
-    #     }
-    #
-    #     await database.execute(query, values)
-    #     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
-    # else:
     query = f"""
                     UPDATE {PAYMENT_TABLE_NAME}
                     SET PaymentRecDate = :PaymentRecDate,
@@ -351,6 +335,23 @@ async def update_payment(record: Payment, payment_id: str = Query(...)):
 
     await database.execute(query, values)
     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
+
+@app.post("/api/filter-data")
+async def filter_data(selected_months: List[int], selected_years: List[int]):
+    month_conditions = ' OR '.join([f"MONTH(PaymentDueDate) = {month}" for month in selected_months])
+    year_conditions = ' OR '.join([f"YEAR(PaymentDueDate) = {year}" for year in selected_years])
+
+    combined_conditions = ''
+    if month_conditions:
+        combined_conditions += f"({month_conditions})"
+    if year_conditions:
+        if combined_conditions:
+            combined_conditions += ' AND '
+        combined_conditions += f"({year_conditions})"
+
+    query = f"SELECT * FROM {CLIENT_RECORDS_TABLE_NAME} WHERE {combined_conditions}"
+    results = await database.fetch_all(query=query)
+    return results
 async def create_tables():
     query = f"""
     CREATE DATABASE IF NOT EXISTS {DATABASE_NAME};

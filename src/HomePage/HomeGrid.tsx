@@ -1,58 +1,44 @@
+import React, {useEffect, useState, useRef, useCallback} from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import { ColGroupDef } from 'ag-grid-community';
+import { useNavigate } from 'react-router-dom';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
-import { AgGridReact } from 'ag-grid-react';
-import {
-    ColGroupDef,
-    createGrid,
-    GridApi,
-    GridOptions,
-    ColDef,
-  } from 'ag-grid-community';
-import React, { useEffect, useState, useRef } from 'react';
 import './HomePage.css';
 
-import {useNavigate} from "react-router-dom";
-
-function HomeGrid({selectedClient, selectedMonths, selectedYears} : any) { // Accept selectedClient as a prop
+function HomeGrid({ selectedClient, selectedMonths, selectedYears }:any) {
     const [rowData, setRowData] = useState([]);
     const navigate = useNavigate();
+    const [gridApi, setGridApi] = useState(null);
 
     const columnDefs: ColGroupDef[] = [
         {
-        headerName: 'Loan Information',
-        
-        children: [
-        { field: 'LoanID', width: 150, filter: true, },
-        { field: 'Name', width: 150 },
-        { field: 'Principal', width: 150 ,columnGroupShow: 'open' },
-        { field: 'Due' , filter: true, width: 150, columnGroupShow: 'open'},
-        { field: 'Issued', filter: true, width: 150, columnGroupShow: 'open'},
-        { field: 'Status', editable:true, width: 80,  columnGroupShow: 'open' },
-    ],
+            headerName: 'LoanInformation',
+
+            children: [
+                { field: 'LoanID', width: 150, filter: true, },
+                { field: 'Name', width: 150 },
+                { field: 'Principal', width: 150 ,columnGroupShow: 'open' },
+                { field: 'Due' , filter: true, width: 150, columnGroupShow: 'open'},
+                { field: 'Issued', filter: true, width: 150, columnGroupShow: 'open'},
+                { field: 'Status', editable:true, width: 80,  columnGroupShow: 'open' },
+            ],
         },
         {
-        headerName: 'Upcoming Payments',
-        children: [
-        { field: 'PaymentDue', width: 150 },
-        { field: 'DueDate' , filter: true, width: 150},
-        { field: 'PaymentReceived', editable:true, width: 150 },
-        { field: 'PaymentReceivedDate', editable:true, width: 160 },
-        { field: 'PaymentStatus', editable:true, width: 150},
-        ]
+            headerName: 'UpcomingPayments',
+            children: [
+                { field: 'PaymentDue', width: 150 },
+                { field: 'DueDate' , filter: true, width: 150},
+                { field: 'PaymentReceived', editable:true, width: 150 },
+                { field: 'PaymentReceivedDate', editable:true, width: 160 },
+                { field: 'PaymentStatus', editable:true, width: 150},
+            ]
         },
     ];
-    
-    const gridRef = useRef<AgGridReact>(null);
-    const onRowClicked = (event: any) => {
-        const loanId = event.data.LoanID;
-        // Perform navigation using your preferred method
-        // For example, using window.location for redirection
-        navigate(`/recordInfo?loanId=${loanId}`);
-    };
 
-    // Define a mapping function to map API response fields to grid fields
-    const mapApiResponseToGridFields = (apiData: any) => {
-        return apiData.map((item : any) => ({
+    // This function maps the API response to the grid's data format
+    const mapApiResponseToGridFields = (apiData:any) => {
+        return apiData.map((item:any) => ({
             LoanID: item.LoanId,
             Due: item.LoanMaturity,
             Issued: item.IssueDate,
@@ -62,37 +48,40 @@ function HomeGrid({selectedClient, selectedMonths, selectedYears} : any) { // Ac
         }));
     };
 
+    // Fetch data whenever selectedClient, selectedMonths, or selectedYears changes
     useEffect(() => {
-        async function fetchData() {
+        const fetchData = async () => {
+            console.log(selectedMonths)
+            console.log(selectedYears)
             try {
-                // Construct the API URL based on the selected client
+                // Construct the API URL
                 const apiUrl = `/api/search-by-client-id?client_id=${selectedClient}`;
                 const response = await fetch(apiUrl);
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
+
                 const apiData = await response.json();
-                const gridData = mapApiResponseToGridFields(apiData.results);
-                setRowData(gridData);
+                if(gridApi != null){
+                setRowData(mapApiResponseToGridFields(apiData.results));}
             } catch (error) {
                 console.error('Error fetching data:', error);
+                // Consider setting an error state and displaying it in the UI
             }
-        }
+        };
 
         fetchData();
-    }, [selectedClient]); // Listen for changes in selectedClient
+    }, [selectedClient, selectedMonths, selectedYears, gridApi]);
 
-    const activeStatus = async (event: any) => {
+    // Handle updating active status
+    const updateActiveStatus = async (event:any) => {
+        const { LoanID, Status } = event.data;
         try {
-            const loanid = event.data.LoanID
-            const updatedData = {
-                    ActiveStatus: event.data.Status
-                    // Include other fields if necessary
-            };
-            const response = await fetch(`/api/active-status?loan_id=${loanid}`, {
+            const response = await fetch(`/api/active-status?loan_id=${LoanID}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedData)
+                body: JSON.stringify({ ActiveStatus: Status })
             });
 
             if (!response.ok) {
@@ -102,12 +91,29 @@ function HomeGrid({selectedClient, selectedMonths, selectedYears} : any) { // Ac
             console.log('Record updated successfully');
         } catch (error) {
             console.error('Error updating record:', error);
+            // Handle the error in the UI
         }
     };
 
+    // Handle row click navigation
+    const handleRowClick = (event:any) => {
+        navigate(`/recordInfo?loanId=${event.data.LoanID}`);
+    };
+
+    const onGridReady = useCallback((params:any) => {
+        setGridApi(params.api);
+        // You can now safely use gridApi here if needed
+    }, []);
+
     return (
         <div className="ag-theme-balham" style={{ width: '100%', height: '100%' }}>
-            <AgGridReact ref={gridRef} rowData={rowData} columnDefs={columnDefs} onRowClicked={onRowClicked} onCellEditingStopped={activeStatus}/>
+            <AgGridReact
+                onGridReady={onGridReady}
+                rowData={rowData}
+                columnDefs={columnDefs}
+                onRowClicked={handleRowClick}
+                onCellEditingStopped={updateActiveStatus}
+            />
         </div>
     );
 }
