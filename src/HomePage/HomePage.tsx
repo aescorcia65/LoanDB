@@ -11,6 +11,7 @@ function HomePage() {
     const [selectedClient, setSelectedClient] = useState("*"); // State to store the selected client
     const [selectedMonths, setSelectedMonths] = useState(Array(12).fill(false));
     const [selectedYears, setSelectedYears] = useState(Array(11).fill(false));
+    const [allToggle, setAllToggle] = useState(false)
 
     // This function is responsible for navigation to the NewRecord page
     const NewRecordnav = () => {
@@ -27,6 +28,12 @@ function HomePage() {
     // Function to handle the selection change in the ClientDropdown
     const handleClientSelection = (selectedValue: any) => {
         setSelectedClient(selectedValue); // Update the selected client in state
+    };
+
+    const handleAllSelection = () => {
+        setAllToggle(!allToggle)
+        setSelectedMonths(Array(12).fill(allToggle));
+        setSelectedYears(Array(11).fill(allToggle));
     };
 
     return (
@@ -49,7 +56,7 @@ function HomePage() {
 
 
             <div className={"topbuttons"}>
-                <button>ALL</button>
+                <button onClick={handleAllSelection}>ALL</button>
             </div>
             
             <div className={"monthbuttons"}>
