@@ -46,7 +46,12 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears }:any) {
             Issued: item.IssueDate,
             Status: Boolean(item.ActiveStatus),
             Name: item.ClientName,
-            Principal: item.LoanAmount
+            Principal: item.LoanAmount,
+            PaymentDue: item.PaymentDueAmount,
+            DueDate: item.PaymentDueAmount,
+            PaymentReceived: item.PaymentRecAmount,
+            PaymentRecievedDate: item.PaymentRecDate,
+            PaymentStatus: item.PaidStatus
         }));
     };
 
