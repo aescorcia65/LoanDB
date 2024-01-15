@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './HomePage.css';
 
 function StatusButtons({ selectedstatuss, setSelectedstatuss}:any) {
-    const statuss = ["Active", "Inactive"];
+    const statuss = ["Open", "Closed"];
 
     const togglestatuss = (index: any) => {
         const newSelectedstatuss = [...selectedstatuss];
