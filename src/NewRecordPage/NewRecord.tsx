@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import InfoGrid from '../RecordInfoPage/InfoGrid';
 import LoanShark from '../LoanShark.png';
 import PaymentTypeSelector from '../HomePage/PaymentSelectors';
+import ClientDropdown from '../HomePage/ClientDropdown';
+import LoanDropdown from '../HomePage/LoanDropdown';
 
 function NewRecord() {
     const navigate = useNavigate();
@@ -105,30 +107,54 @@ function NewRecord() {
 
                 </select>
             </div>
+            {
+    formData.recordType === "Loan" && (
+            <div className="form-group6">
+                <label htmlFor="recordType">New or Existing Client </label>
+                <select
+                id="recordType"
+                name="recordType"
+                value={formData.recordType}
+                onChange={handleChange}
+                required
+                >
+                <option value="New">New  </option>
+                <option value="Existing">Existing  </option>
+                
+
+                </select>
+            </div>
+    )}
 
             <form onSubmit={handleSubmit}>
                 
 
             {
     formData.recordType === "Payment" && (
-                <div className="form-group">
-                    <label htmlFor="name">Name  </label>
-                    <input
-                        type="text"
-                        id="name"
-                        placeholder=""
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+        <div className="client-name-row"> 
+            <span>Client Name</span>
+            <ClientDropdown onSelectClient={function (clientId: string): void {
+                throw new Error('Function not implemented.');
+            } }/>
+        </div>
+    )
+}
 
-    )}
+{
+    formData.recordType === "Payment" && (
+        <div className="client-name-row2"> 
+            <span>LoanID</span>
+            <LoanDropdown onSelectLoan={function (loanId: string): void {
+                throw new Error('Function not implemented.');
+            } }/>
+        </div>
+    )
+}
+
 
             {
     formData.recordType === "Payment" && (
-                <div className="form-group2">
+                <div className="form-group9">
                     <label htmlFor="paymentDueDate">Payment Due Date  </label>
                     <input
                         type="date"
@@ -309,19 +335,7 @@ function NewRecord() {
 
 
 
-                <div className="form-group7">
-                <label htmlFor="activeStatus">Active Status </label>
-                <select
-                id="activeStatus"
-                name="activeStatus"
-                value={formData.activeStatus}
-                onChange={handleChange}
-                required
-                >
-                <option value="true">Yes</option>
-                <option value="false">No</option>
-                </select>
-            </div>
+                
 
                 <button type="submit">Submit</button>
             </form>
