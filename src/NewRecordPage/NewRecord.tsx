@@ -5,28 +5,6 @@ import ClientDropdown from '../HomePage/ClientDropdown';
 import LoanDropdown from '../HomePage/LoanDropdown';
 
 function NewRecord() {
-
-    const Popup = () => (
-        
-        <div className="popup">
-            <div className="container2">
-            <h1>New Record Created Successfully</h1>
-            <button onClick={closePopup}>Done</button> <button onClick={closePopup2}>Create Another Record</button>
-        </div>
-        </div>
-    );
-
-    const closePopup = () => {
-        setShowPopup(false);
-        navigate('/');
-
-    };
-
-    const closePopup2 = () => {
-        setShowPopup(false);
-        
-    };
-
     const navigate = useNavigate();
   
     // This function is responsible for navigation
@@ -38,7 +16,6 @@ function NewRecord() {
     const handleClientSelection = (selectedValue: any) => {
         setSelectedClient(selectedValue); // Update the selected client in state
     };
-    const [showPopup, setShowPopup] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         maturitydate: "",
@@ -171,55 +148,32 @@ function NewRecord() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(requestBody),
+                body: JSON.stringify(paymentBody)
             });
-
-            if (response.ok) {
-                // Handle success here, e.g., show a success message or redirect
-                console.log('Record created successfully');
-                navigate('/')
-            } else {
-                // Handle errors here, e.g., show an error message
-                console.error('Error creating record:', response.status);
+            if (!payres.ok) {
+                throw new Error(`HTTP error! Status: ${payres.status}`);
             }
-        } catch (error) {
-            console.error('Error creating record:', error);
+            else{
+                navigate(`/`);
+            }
+
         }
     };
+
+    function handleLoanSelect(selectedValue: any) {
+        setSelectedLoan(selectedValue);
+    }
 
     return (
         <div>
         <div className="sharkcage">
         </div>
         
-       
-
+   
         <div className="container2">
-        
-        {showPopup && <Popup />}
-
             <button onClick={HomePagenav}>Cancel</button>
-
-
             
-
-            {
-    formData.recordType === "Loan" && (
-        <h1 className="title">New Loan</h1>
-    )
-}
-
-{
-    formData.recordType === "Payment" && (
-        <h1 className="title">New Payment</h1>
-    )
-}
-
-
-            
-           
-           
-           
+            <h1 className="title">New Loan</h1>
             <div className="form-group6">
                 <label htmlFor="recordType">Loan or Payment </label>
                 <select
@@ -472,7 +426,7 @@ function NewRecord() {
 
 
 
-
+                
 
                 <button type="submit">Submit</button>
             </form>
