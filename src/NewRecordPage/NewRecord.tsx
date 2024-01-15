@@ -51,8 +51,8 @@ function NewRecord() {
             LoanAmount: parseFloat(formData.loanAmount),
             InterestRate: parseFloat(formData.interestRate),
             ActiveStatus: formData.activeStatus === "true",
-            FirstPaymentDueDate : formData.firstPaymentDate,
-            FirstPaymentDueAmount : formData.firstPayment
+            // FirstPaymentDueDate : formData.firstPaymentDate,
+            // FirstPaymentDueAmount : formData.firstPayment
             
         };
 
@@ -113,7 +113,7 @@ function NewRecord() {
             
             {
     formData.recordType === "Loan" && (
-            <div className="form-group6">
+            <div className="form-group7">
                 <label htmlFor="newOrExisting">New or Existing Client </label>
                 <select
                 id="newOrExisting"
@@ -186,7 +186,7 @@ function NewRecord() {
 
 {
     formData.recordType === "Payment" && (
-                <div className="form-group2">
+                <div className="form-group22">
                     <label htmlFor="paymentDue">Amount Due   </label>
                     <input
                         type="number"
@@ -271,7 +271,7 @@ function NewRecord() {
 
                 {
     formData.recordType === "Loan" && (
-                <div className="form-group6">
+                <div className="form-group16">
                 <label htmlFor="paymentFrequency">Payment Frequency </label>
                 <select
                 id="paymentFrequency"
