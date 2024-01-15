@@ -45,7 +45,7 @@ function HomePage() {
     };
 
     return (
-        <div>
+        <div className={"homeContainer"}>
             
            
             <div className={"top-left-button"}>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './HomePage.css';
+// import './HomePage.css';
 
 function MonthButtons({ selectedMonths, setSelectedMonths}:any) {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

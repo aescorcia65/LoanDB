@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './HomePage.css';
+// import './HomePage.css';
 
 function StatusButtons({ selectedstatuss, setSelectedstatuss}:any) {
     const statuss = ["Open", "Closed"];

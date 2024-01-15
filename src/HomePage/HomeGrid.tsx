@@ -4,7 +4,7 @@ import { ColDef } from 'ag-grid-community';
 import { useNavigate } from 'react-router-dom';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
-import './HomePage.css';
+//import './HomePage.css';
 
 
 

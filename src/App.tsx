@@ -1,6 +1,6 @@
 import React from 'react';
-import './App.css';
-import './HomePage/HomePage.css';
+// import './App.css';
+// import './HomePage/HomePage.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './HomePage/HomePage'; // import your components
 import NewRecord from './NewRecordPage/NewRecord';
