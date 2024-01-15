@@ -92,7 +92,24 @@ function NewRecord() {
         <div className="container2">
             <button onClick={HomePagenav}>Cancel</button>
             
-            <h1 className="title">New Loan</h1>
+
+            {
+    formData.recordType === "Loan" && (
+        <h1 className="title">New Loan</h1>
+    )
+}
+
+{
+    formData.recordType === "Payment" && (
+        <h1 className="title">New Payment</h1>
+    )
+}
+
+
+            
+           
+           
+           
             <div className="form-group6">
                 <label htmlFor="recordType">Loan or Payment </label>
                 <select
