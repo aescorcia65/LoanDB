@@ -64,6 +64,21 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 const monthsArray = [0, ...mappedMonths]
                 const yearsArray = [0, ...mappedYears]
 
+                let statusFilter;
+                if (selectedStatus[0] && selectedStatus[1]) {
+                    // Both active and inactive are selected
+                    statusFilter = 'both';
+                } else if (selectedStatus[0]) {
+                    // Only active is selected
+                    statusFilter = 'closed';
+                } else if (selectedStatus[1]) {
+                    // Only inactive is selected
+                    statusFilter = 'open';
+                } else {
+                    // Neither active nor inactive is selected
+                    statusFilter = 'none';
+                }
+
                 // Construct the API URL
                 const apiUrl = `/api/filter-data`;
 
@@ -71,7 +86,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 const requestBody = {
                     Months: monthsArray,
                     Years: yearsArray,
-                    ActiveStatus: selectedStatus  // Assuming you have this variable in your state
+                    ActiveStatus: statusFilter  // Assuming you have this variable in your state
                 };
                 console.log(requestBody)
 
@@ -102,26 +117,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         fetchData();
     }, [selectedMonths, selectedYears, gridApi, selectedStatus]);
 
-    // Handle updating active status
-    const updateActiveStatus = async (event:any) => {
-        const { LoanID, Status } = event.data;
-        try {
-            const response = await fetch(`/api/active-status?loan_id=${LoanID}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ActiveStatus: Status })
-            });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            console.log('Record updated successfully');
-        } catch (error) {
-            console.error('Error updating record:', error);
-            // Handle the error in the UI
-        }
-    };
 
     // Handle row click navigation
     const handleRowClick = (event:any) => {
@@ -140,7 +136,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 rowData={rowData}
                 columnDefs={columnDefs}
                 // onRowClicked={handleRowClick}
-                onCellEditingStopped={updateActiveStatus}
+                // onCellEditingStopped={updateActiveStatus}
             />
         </div>
     );

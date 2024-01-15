@@ -57,4 +57,4 @@ class NewPayment(BaseModel):
 class FilterParams(BaseModel):
     Months: List[int] = [0]
     Years: List[int] = [0]
-    ActiveStatus: List[bool]
+    ActiveStatus: str

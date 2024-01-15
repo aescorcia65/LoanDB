@@ -345,6 +345,16 @@ async def update_payment(record: Payment, payment_id: str = Query(...)):
 @app.post("/api/filter-data")
 async def filter_data(params: FilterParams):
     # SQL Query for MySQL
+    if params.ActiveStatus == "both":
+        active_status = [True, False]
+    elif params.ActiveStatus == "closed":
+        active_status = [True]
+    elif params.ActiveStatus == "open":
+        active_status = [False]
+    else:
+        active_status = ["none"]
+
+
     month_conditions = ", ".join(str(month) for month in params.Months)
     year_conditions = ", ".join(str(year) for year in params.Years)
 
@@ -359,7 +369,7 @@ async def filter_data(params: FilterParams):
 
     # Execute query
     result = await database.fetch_all(query=query, values={
-        "active_status": params.ActiveStatus
+        "active_status": active_status
     })
     # Return result
     return {"results":result}
