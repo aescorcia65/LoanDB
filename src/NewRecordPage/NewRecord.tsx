@@ -73,7 +73,7 @@ function NewRecord() {
                             PaymentFrequency: formData.paymentFrequency,
                             LoanMaturity: formData.maturitydate,
                             LoanAmount: formData.loanAmount,
-                            InterestRate: formData.interestRate,
+                            InterestRate: formData.interestRate || null,
                             ActiveStatus: formData.activeStatus,
                             IssueDate: formData.issuedate,
 

@@ -107,8 +107,15 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
 
                 const apiData = await response.json();
                 if (gridApi != null) {
-                    setRowData(mapApiResponseToGridFields(apiData.results));
-                }
+                    if (apiData && apiData.results) {
+                        const sortedPayments = apiData.results.sort((a: any, b: any) => {
+                            // Convert dates to Date objects for comparison
+                            const dateA = new Date(a.PaymentDueDate);
+                            const dateB = new Date(b.PaymentDueDate);
+                            return dateB.getTime() - dateA.getTime(); // Sort in descending order (newest first)
+                        });
+                    setRowData(mapApiResponseToGridFields(sortedPayments));
+                }}
             } catch (error) {
                 console.error('Error fetching data:', error);
                 // Consider setting an error state and displaying it in the UI
