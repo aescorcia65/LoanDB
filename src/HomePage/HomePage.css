@@ -365,6 +365,7 @@
     gap: 5px; /* Optional: adds space between the label and the dropdown */
     margin-left: 30%;
     margin-top: 4%;
+    margin-bottom: 4%;
 }
 
 .client-name-row2 {
@@ -373,6 +374,7 @@
   gap: 5px; /* Optional: adds space between the label and the dropdown */
   margin-left: 36.5%;
   margin-top: 4%;
+  margin-bottom: 4%;
 }
 
 

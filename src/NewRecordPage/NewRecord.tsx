@@ -27,7 +27,8 @@ function NewRecord() {
         firstPaymentDate: "",
         recordType: 'Loan',
         paymentDueDate:"",
-        paymentDue: ""
+        paymentDue: "" ,
+        newOrExisting: "New"
     });
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -107,14 +108,17 @@ function NewRecord() {
 
                 </select>
             </div>
+            
+            
+            
             {
     formData.recordType === "Loan" && (
             <div className="form-group6">
-                <label htmlFor="recordType">New or Existing Client </label>
+                <label htmlFor="newOrExisting">New or Existing Client </label>
                 <select
-                id="recordType"
-                name="recordType"
-                value={formData.recordType}
+                id="newOrExisting"
+                name="newOrExisting"
+                value={formData.newOrExisting}
                 onChange={handleChange}
                 required
                 >
@@ -131,6 +135,18 @@ function NewRecord() {
 
             {
     formData.recordType === "Payment" && (
+        <div className="client-name-row"> 
+            <span>Client Name</span>
+            <ClientDropdown onSelectClient={function (clientId: string): void {
+                throw new Error('Function not implemented.');
+            } }/>
+        </div>
+    )
+}
+
+
+{
+    formData.recordType === "Loan" && formData.newOrExisting == "Existing" && (
         <div className="client-name-row"> 
             <span>Client Name</span>
             <ClientDropdown onSelectClient={function (clientId: string): void {
@@ -186,7 +202,7 @@ function NewRecord() {
                 
             
             {
-    formData.recordType === "Loan" && (
+    formData.recordType === "Loan" && formData.newOrExisting == "New" &&(
                 <div className="form-group">
                     <label htmlFor="name">Name  </label>
                     <input
