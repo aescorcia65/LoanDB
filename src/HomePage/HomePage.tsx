@@ -2,11 +2,11 @@ import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import HomeGrid from "./HomeGrid";
-import ClientDropdown from "./ClientDropdown";
+
 import MonthButtons from './MonthsButton';
 import YearButtons from './YearButtons';
 import StatusButtons from './StatusButtons';
-
+import ClientDropdown from './ClientDropdown';
 
 function HomePage() {
     const navigate = useNavigate();
@@ -64,7 +64,9 @@ function HomePage() {
 
 
             <div className={"topbuttons"}>
-                <button onClick={handleToggle}>*ALL*</button> <StatusButtons selectedstatuss={selectedstatuss} setSelectedstatuss={setSelectedstatuss}/>
+                <button onClick={handleToggle}>*ALL*</button> <StatusButtons selectedstatuss={selectedstatuss} setSelectedstatuss={setSelectedstatuss}/> <ClientDropdown onSelectClient={function (clientId: string): void {
+                    throw new Error('Function not implemented.');
+                } }/>
             </div>
             
             <div className={"monthbuttons"}>
