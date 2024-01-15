@@ -1,4 +1,28 @@
 
+
+.ag-theme-balham{
+  --ag-borders: 1px;
+}
+
+.grid-cell-centered {
+  text-align: center;
+}
+
+.ag-cell
+   {
+    border-right: 1px solid black;
+      border-right-color: black;
+      border-right-width: 1px ;
+      border-right-style: solid ;
+    }
+
+
+.ag-header-cell,  .ag-header-group-cell {
+      border-right: 1px solid rgba(0, 0, 0, 0.454);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.454);
+      
+    }
+
 .App {
     text-align: center;
   }
@@ -21,8 +45,7 @@
     justify-content: flex-start;
     position: absolute; /* or 'absolute' depending on your layout */
     top: 1px;
-
-    margin-left: 100px; /* Adjust margin as needed */
+    margin-left: 4.5%; /* Adjust margin as needed */
     /* Add other styles like padding, font, background, etc. as per your design */
   }
   .top-left-button2 {
@@ -40,7 +63,7 @@
     position: absolute; /* or 'absolute' depending on your layout */
     top: 1px;
 
-    margin-left: -20%;
+    margin-left: -30%;
     margin-top: 6.5%;
     /* Adjust margin as needed */
     /* Add other styles like padding, font, background, etc. as per your design */
@@ -53,7 +76,7 @@
     position: absolute; /* or 'absolute' depending on your layout */
     top: 1px;
 
-    margin-left: -15%;
+    margin-left: -30%;
     margin-top: 3.5%;
    
     /* Adjust margin as needed */
@@ -67,7 +90,7 @@
     position: absolute; /* or 'absolute' depending on your layout */
     top: 1px;
 
-    margin-left: -15%;
+    margin-left: -30%;
     margin-top: 9.5%;
     /* Adjust margin as needed */
     /* Add other styles like padding, font, background, etc. as per your design */
@@ -410,3 +433,4 @@ button:active{
   margin-top: 2%;
   margin-bottom: 3%;
 }
+

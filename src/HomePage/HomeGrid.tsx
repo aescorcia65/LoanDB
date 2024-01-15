@@ -1,10 +1,12 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { ColGroupDef } from 'ag-grid-community';
+import { ColDef } from 'ag-grid-community';
 import { useNavigate } from 'react-router-dom';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import './HomePage.css';
+
+
 
 
 function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatus }:any) {
@@ -12,29 +14,19 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const navigate = useNavigate();
     const [gridApi, setGridApi] = useState(null);
 
-    const columnDefs: ColGroupDef[] = [
-        {
-            headerName: 'LoanInformation',
-
-            children: [
-                { field: 'LoanID', width: 204, filter: true, autoHeight:true},
-                { field: 'Name', width: 204, filter: true, autoHeight:true },
-                { field: 'Principal', filter: true, width: 204 ,columnGroupShow: 'open', autoHeight:true },
-                { field: 'Due' , filter: true, width: 204, columnGroupShow: 'open', autoHeight:true},
-                { field: 'Issued', filter: true, width: 204, columnGroupShow: 'open', autoHeight:true},
-                { field: 'Status', editable:true, filter: true, width: 204,  columnGroupShow: 'open', autoHeight:true },
-            ],
-        },
-        {
-            headerName: 'UpcomingPayments',
-            children: [
-                { field: 'PaymentDue', filter: true, width: 204 },
-                { field: 'DueDate' ,  width: 204},
-                { field: 'PaymentReceived', filter: true, editable:true, width: 204 },
-                { field: 'PaymentReceivedDate', filter: true, editable:true, width: 204},
-                { field: 'PaymentStatus', filter: true, editable:true, width: 204},
-            ]
-        },
+    const columnDefs: ColDef[] = [
+        
+                { field: 'LoanID', width: 142, filter: true, autoHeight:true, cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
+                { field: 'Name', width: 142, filter: true, autoHeight:true , cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
+                { field: 'Principal',  filter: true, width: 142 ,columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
+                { field: 'Due' , filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
+                { field: 'Issued', filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
+                { field: 'PaymentDue', filter: true, width: 142,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
+                { field: 'DueDate' ,  width: 142,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
+                { field: 'PaymentReceived', filter: true, editable:true, width: 144,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
+                { field: 'PaymentReceivedDate', filter: true, editable:true, width: 174,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
+                { field: 'Closed', filter: true, editable:true, width: 115,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}  },
+          
     ];
 
     // This function maps the API response to the grid's data format
@@ -50,7 +42,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             DueDate: item.PaymentDueDate,
             PaymentReceived: item.PaymentRecAmount,
             PaymentReceivedDate: item.PaymentRecDate,
-            PaymentStatus: Boolean(item.PaidStatus)
+            Closed: Boolean(item.PaidStatus)
         }));
     };
 
@@ -147,7 +139,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 onGridReady={onGridReady}
                 rowData={rowData}
                 columnDefs={columnDefs}
-                onRowClicked={handleRowClick}
+                // onRowClicked={handleRowClick}
                 onCellEditingStopped={updateActiveStatus}
             />
         </div>
