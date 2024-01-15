@@ -8,6 +8,8 @@ class Client(BaseModel):
     ClientId: str
     ClientName: str
 
+class NewClient(BaseModel):
+    ClientName: str
 
 class Loan(BaseModel):
     LoanId: str
@@ -23,7 +25,7 @@ class Loan(BaseModel):
 
 
 class NewLoan(BaseModel):
-    ClientName: str
+    ClientId: str
     PaymentFrequency: str
     LoanMaturity: date
     LoanAmount: float
@@ -58,3 +60,4 @@ class FilterParams(BaseModel):
     Months: List[int] = [0]
     Years: List[int] = [0]
     ActiveStatus: str
+    ClientId: str

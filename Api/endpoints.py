@@ -13,7 +13,7 @@ from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from models import NewLoan, NewPayment, Client, Loan, Payment, UpdateLoan, FilterParams
+from models import NewLoan, NewPayment, Client, Loan, Payment, UpdateLoan, FilterParams, NewClient
 
 DATABASE_NAME = "TestDB"
 CLIENT_TABLE_NAME = "Client"
@@ -31,6 +31,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.post("/api/new-client")
+async def new_client(client:NewClient):
+    find_client_query = f"""
+        SELECT * FROM {CLIENT_TABLE_NAME}
+        WHERE ClientName = :ClientName
+        """
+    client_check = await database.fetch_one(find_client_query, {"ClientName": client.ClientName})
+
+        # If client not found, create a new client
+    if not client_check:
+       new_client_id = str(uuid.uuid4())
+       create_client_query = f"""
+       INSERT INTO {CLIENT_TABLE_NAME} (ClientId, ClientName)
+       VALUES (:ClientId, :ClientName)
+       """
+       await database.execute(create_client_query,{"ClientId": new_client_id, "ClientName": client.ClientName})
+       client_id = new_client_id
+       return {"client_id": client_id}
+    else:
+        return {"client_id": client_check.ClientId}
 
 @app.get("/api/clients")
 async def get_all_clients():
@@ -44,61 +64,54 @@ async def create_new_loan(loan: NewLoan):
     # Generate a random 6-digit RecordId
     record_id = random.randint(100000, 999999)
     record_id = "LX-"+str(record_id)
-    find_client_query = f"""
-    SELECT ClientId FROM {CLIENT_TABLE_NAME}
-    WHERE ClientName = :ClientName
+    query = f"""SELECT * FROM {CLIENT_TABLE_NAME}
+    WHERE ClientId = :client_id
     """
-    client = await database.fetch_one(find_client_query, {"ClientName": loan.ClientName})
-    print(client)
+    result = await database.fetch_all(query, {"client_id": loan.ClientId})
+    records = [Client(**row).model_dump() for row in result]
+    client_name = records[0]["ClientName"]
 
-    # If client not found, create a new client
-    if not client:
-        new_client_id = str(uuid.uuid4())
-        create_client_query = f"""
-        INSERT INTO {CLIENT_TABLE_NAME} (ClientId, ClientName)
-        VALUES (:ClientId, :ClientName)
-        """
-        await database.execute(create_client_query,
-                               {"ClientId": new_client_id, "ClientName": loan.ClientName})
-        client_id = new_client_id
-    else:
-        client_id = client["ClientId"]
-
-    # Insert the new record
     insert_query = f"""
-    INSERT INTO {CLIENT_RECORDS_TABLE_NAME} (LoanId, ClientId, LoanAmount, ActiveStatus, LoanMaturity, ClientName, PaymentFrequency, InterestRate, IssueDate)
-    VALUES (:record_id, :client_id, :loan_amount, :active_status, :loan_maturity, :name, :payment_frequency, :interest_rate, :issue_date)
-    """
+        INSERT INTO {CLIENT_RECORDS_TABLE_NAME} (LoanId, ClientId, LoanAmount, ActiveStatus, LoanMaturity, ClientName, PaymentFrequency, InterestRate, IssueDate)
+        VALUES (:record_id, :client_id, :loan_amount, :active_status, :loan_maturity, :name, :payment_frequency, :interest_rate, :issue_date)
+        """
     await database.execute(insert_query, {
-        "record_id": record_id,
-        "client_id": client_id,
-        "loan_amount": loan.LoanAmount,
-        "active_status": loan.ActiveStatus,
-        "loan_maturity": loan.LoanMaturity,
-        "name": loan.ClientName,
-        "payment_frequency": loan.PaymentFrequency,
-        "interest_rate": loan.InterestRate,
-        "issue_date": loan.IssueDate
-    })
-
-    issue_date = loan.IssueDate
-    loan_maturity = loan.LoanMaturity
-
-    total_days = (loan_maturity - issue_date).days
+            "record_id": record_id,
+            "client_id": loan.ClientId,
+            "loan_amount": loan.LoanAmount,
+            "active_status": loan.ActiveStatus,
+            "loan_maturity": loan.LoanMaturity,
+            "name": client_name,
+            "payment_frequency": loan.PaymentFrequency,
+            "interest_rate": loan.InterestRate,
+            "issue_date": loan.IssueDate
+        })
 
     if loan.PaymentFrequency == "Monthly":
+        issue_date = loan.IssueDate
+        loan_maturity = loan.LoanMaturity
+
+        total_days = (loan_maturity - issue_date).days
         new_due_date = loan.IssueDate + timedelta(days=30)
         new_due_date = min(new_due_date, loan_maturity)
         amtpayments = total_days // 30
         dueamt = (loan.LoanAmount * (loan.InterestRate * .01)) / amtpayments
 
     elif loan.PaymentFrequency == "Quarterly":
+        issue_date = loan.IssueDate
+        loan_maturity = loan.LoanMaturity
+
+        total_days = (loan_maturity - issue_date).days
         new_due_date = loan.IssueDate + timedelta(days=90)
         new_due_date = min(new_due_date, loan_maturity)
         amtpayments = total_days // 90
         dueamt = (loan.LoanAmount * (loan.InterestRate * .01)) / amtpayments
 
     elif loan.PaymentFrequency == "Annually":
+        issue_date = loan.IssueDate
+        loan_maturity = loan.LoanMaturity
+
+        total_days = (loan_maturity - issue_date).days
         new_due_date = loan.IssueDate + relativedelta(years=1)
         new_due_date = min(new_due_date, loan_maturity)
         amtpayments = total_days // 365
@@ -225,27 +238,27 @@ async def update_record(record: UpdateLoan, loan_id: str = Query(...)):
     await database.execute(query, values)
     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
 
-@app.get("/api/get_upcoming_payments")
-async def get_all_upcoming_payments(month: str = Query(...), year: str = Query(...)):
-    query = f"""
-        SELECT {PAYMENT_TABLE_NAME}.*, {CLIENT_RECORDS_TABLE_NAME}.ClientName FROM {PAYMENT_TABLE_NAME}
-        JOIN {CLIENT_RECORDS_TABLE_NAME} ON {PAYMENT_TABLE_NAME}.LoanId = {CLIENT_RECORDS_TABLE_NAME}.LoanId
-        WHERE (PaymentRecAmount < PaymentDueAmount OR PaymentRecAmount IS NULL) AND MONTH(PaymentDueDate) = :month AND YEAR(PaymentDueDate) = :year;
-    """
-    values = {"month": month, "year": year}
-    result = await database.fetch_all(query, values=values)
-
-    converted_rows = []
-    for row in result:
-        row_dict = dict(row)  # Convert row to dictionary
-        converted_row = {
-            key: (value.isoformat() if isinstance(value, date) else
-                  float(value) if isinstance(value, Decimal) else
-                  value)
-            for key, value in row_dict.items()
-        }
-        converted_rows.append(converted_row)
-    return JSONResponse(content={"results": converted_rows}, status_code=200)
+# @app.get("/api/get_upcoming_payments")
+# async def get_all_upcoming_payments(month: str = Query(...), year: str = Query(...)):
+#     query = f"""
+#         SELECT {PAYMENT_TABLE_NAME}.*, {CLIENT_RECORDS_TABLE_NAME}.ClientName FROM {PAYMENT_TABLE_NAME}
+#         JOIN {CLIENT_RECORDS_TABLE_NAME} ON {PAYMENT_TABLE_NAME}.LoanId = {CLIENT_RECORDS_TABLE_NAME}.LoanId
+#         WHERE (PaymentRecAmount < PaymentDueAmount OR PaymentRecAmount IS NULL) AND MONTH(PaymentDueDate) = :month AND YEAR(PaymentDueDate) = :year;
+#     """
+#     values = {"month": month, "year": year}
+#     result = await database.fetch_all(query, values=values)
+#
+#     converted_rows = []
+#     for row in result:
+#         row_dict = dict(row)  # Convert row to dictionary
+#         converted_row = {
+#             key: (value.isoformat() if isinstance(value, date) else
+#                   float(value) if isinstance(value, Decimal) else
+#                   value)
+#             for key, value in row_dict.items()
+#         }
+#         converted_rows.append(converted_row)
+#     return JSONResponse(content={"results": converted_rows}, status_code=200)
 
 async def get_payment_by_paymentid(payment_id: str):
     query = f"""
@@ -268,8 +281,6 @@ async def update_payment_status(payment_id: str = Query(...), paid_staus: bool =
     record = await get_payment_by_paymentid(payment_id)
     if record["PaidStatus"] == paid_staus:
         return JSONResponse(content={"message": "Payment Status is already updated"}, status_code=200)
-    elif record["PaidStatus"]:
-        return JSONResponse(content={"message": "Payment Status can not be changed after closed"}, status_code=200)
     query = f"""
         UPDATE {PAYMENT_TABLE_NAME}
         SET PaidStatus = :paid_status
@@ -282,49 +293,13 @@ async def update_payment_status(payment_id: str = Query(...), paid_staus: bool =
     }
 
     await database.execute(query, values)
-    loan = await search_by_client_id(record["LoanId"])
-    loan = json.loads(loan.body)
-    loan = loan["results"][0]
-    issue_date = datetime.strptime(loan["IssueDate"], '%Y-%m-%d').date()
-    loan_maturity = datetime.strptime(loan["LoanMaturity"], '%Y-%m-%d').date()
-
-    total_days = (loan_maturity - issue_date).days
-
-    if loan["PaymentFrequency"] == "Monthly":
-        new_due_date = record["PaymentDueDate"] + timedelta(days=30)
-        new_due_date = min(new_due_date, loan_maturity)
-        amtpayments = total_days // 30
-
-    elif loan["PaymentFrequency"] == "Quarterly":
-        new_due_date = record["PaymentDueDate"] + timedelta(days=90)
-        new_due_date = min(new_due_date, loan_maturity)
-        amtpayments = total_days // 90
-
-    elif loan["PaymentFrequency"] == "Annually":
-        new_due_date = datetime(record["PaymentDueDate"].year + 1, record["PaymentDueDate"].month,
-                                record["PaymentDueDate"].day)
-        new_due_date = min(new_due_date, loan_maturity)
-        amtpayments = total_days // 365
-
-    new_payment = NewPayment(
-        LoanId=record["LoanId"],
-        PaymentDueDate=new_due_date,
-        PaymentDueAmount=(loan["LoanAmount"] * (loan["InterestRate"] * .01)) / amtpayments
-    )
-    if new_due_date == loan_maturity:
-        principal_payment = NewPayment(
-            LoanId=record["LoanId"],
-            PaymentDueDate=loan_maturity,
-            PaymentDueAmount=loan["LoanAmount"]
-        )
-        await create_new_payment(principal_payment)
-    await create_new_payment(new_payment)
     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
 
 
 @app.put("/api/update-payment")
-async def update_payment(record: Payment, payment_id: str = Query(...)):
+async def update_payment(record: Payment):
     paid_status = record.PaidStatus
+    payment_id = record.PaymentId
     await update_payment_status(payment_id, paid_status)
     query = f"""
                     UPDATE {PAYMENT_TABLE_NAME}
@@ -348,29 +323,46 @@ async def filter_data(params: FilterParams):
     if params.ActiveStatus == "both":
         active_status = [True, False]
     elif params.ActiveStatus == "closed":
-        active_status = [True]
-    elif params.ActiveStatus == "open":
         active_status = [False]
+    elif params.ActiveStatus == "open":
+        active_status = [True]
     else:
         active_status = ["none"]
 
 
     month_conditions = ", ".join(str(month) for month in params.Months)
     year_conditions = ", ".join(str(year) for year in params.Years)
-
-    query = f"""
-        SELECT p.*, l.*
-        FROM {PAYMENT_TABLE_NAME} AS p
-        JOIN {CLIENT_RECORDS_TABLE_NAME} AS l ON p.LoanId = l.LoanId
-        WHERE MONTH(p.PaymentDueDate) IN ({month_conditions})
-        AND YEAR(p.PaymentDueDate) IN ({year_conditions})
-        AND (p.PaidStatus IN :active_status)
-        """
+    if params.ClientId == "*":
+        query = f"""
+            SELECT p.*, l.*
+            FROM {PAYMENT_TABLE_NAME} AS p
+            JOIN {CLIENT_RECORDS_TABLE_NAME} AS l ON p.LoanId = l.LoanId
+            WHERE MONTH(p.PaymentDueDate) IN ({month_conditions})
+            AND YEAR(p.PaymentDueDate) IN ({year_conditions})
+            AND (p.PaidStatus IN :active_status)
+            """
 
     # Execute query
-    result = await database.fetch_all(query=query, values={
-        "active_status": active_status
-    })
+        result = await database.fetch_all(query=query, values={
+            "active_status": active_status
+        })
+    else:
+        query = f"""
+                    SELECT p.*, l.*
+                    FROM {PAYMENT_TABLE_NAME} AS p
+                    JOIN {CLIENT_RECORDS_TABLE_NAME} AS l ON p.LoanId = l.LoanId
+                    WHERE MONTH(p.PaymentDueDate) IN ({month_conditions})
+                    AND YEAR(p.PaymentDueDate) IN ({year_conditions})
+                    AND (p.PaidStatus IN :active_status)
+                    AND (l.ClientId) = :client_id
+                    """
+
+            # Execute query
+        result = await database.fetch_all(query=query, values={
+                    "active_status": active_status,
+                    "client_id": params.ClientId
+                })
+
     # Return result
     return {"results":result}
 

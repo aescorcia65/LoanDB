@@ -13,6 +13,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const [rowData, setRowData] = useState([]);
     const navigate = useNavigate();
     const [gridApi, setGridApi] = useState(null);
+    const [updateCount, setUpdateCount]= useState(0)
 
     const columnDefs: ColDef[] = [
         
@@ -42,14 +43,13 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             DueDate: item.PaymentDueDate,
             PaymentReceived: item.PaymentRecAmount,
             PaymentReceivedDate: item.PaymentRecDate,
-            Closed: Boolean(item.PaidStatus)
+            Closed: Boolean(item.PaidStatus),
+            PaymentId: item.PaymentId
         }));
     };
 
     // Fetch data whenever selectedClient, selectedMonths, or selectedYears changes
     useEffect(() => {
-        console.log(selectedYears);
-        console.log(selectedMonths);
 
         const fetchData = async () => {
             try {
@@ -86,7 +86,8 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 const requestBody = {
                     Months: monthsArray,
                     Years: yearsArray,
-                    ActiveStatus: statusFilter  // Assuming you have this variable in your state
+                    ActiveStatus: statusFilter,  // Assuming you have this variable in your state
+                    ClientId: selectedClient
                 };
                 console.log(requestBody)
 
@@ -115,19 +116,50 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         };
 
         fetchData();
-    }, [selectedMonths, selectedYears, gridApi, selectedStatus]);
-
-
-
-    // Handle row click navigation
-    const handleRowClick = (event:any) => {
-        navigate(`/recordInfo?loanId=${event.data.LoanID}`);
-    };
+    }, [selectedMonths, selectedYears, gridApi, selectedStatus, selectedClient, updateCount]);
 
     const onGridReady = useCallback((params:any) => {
         setGridApi(params.api);
         // You can now safely use gridApi here if needed
     }, []);
+
+    async function updateRecord(event:any) {
+        console.log(event)
+        try {
+
+            // Construct the API URL
+            const apiUrl = `/api/update-payment`;
+
+            // Prepare the request body
+            const requestBody = {
+                LoanId: event.data.LoanID,
+                PaymentDueDate: event.data.DueDate,
+                PaymentDueAmount: event.data.PaymentDue,
+                PaymentRecDate: event.data.PaymentReceivedDate,
+                PaymentRecAmount: event.data.PaymentReceived,
+                PaymentId: event.data.PaymentId,
+                PaidStatus: event.data.Closed
+            };
+
+            // Make the POST request
+            const response = await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            // Consider setting an error state and displaying it in the UI
+        }
+        setUpdateCount(updateCount+1)
+
+    }
 
     return (
         <div className="ag-theme-balham" style={{ width: '100%', height: '100%' }}>
@@ -136,7 +168,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 rowData={rowData}
                 columnDefs={columnDefs}
                 // onRowClicked={handleRowClick}
-                // onCellEditingStopped={updateActiveStatus}
+                onCellEditingStopped={updateRecord}
             />
         </div>
     );

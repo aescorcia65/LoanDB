@@ -64,9 +64,7 @@ function HomePage() {
 
 
             <div className={"topbuttons"}>
-                <button onClick={handleToggle}>*ALL*</button> <StatusButtons selectedstatuss={selectedstatuss} setSelectedstatuss={setSelectedstatuss}/> <ClientDropdown onSelectClient={function (clientId: string): void {
-                    throw new Error('Function not implemented.');
-                } }/>
+                <button onClick={handleToggle}>*ALL*</button> <StatusButtons selectedstatuss={selectedstatuss} setSelectedstatuss={setSelectedstatuss}/> <ClientDropdown onSelectClient={handleClientSelection}/>
             </div>
             
             <div className={"monthbuttons"}>
