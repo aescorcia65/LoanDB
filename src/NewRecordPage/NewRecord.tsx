@@ -22,7 +22,10 @@ function NewRecord() {
         loanAmount: "",
         activeStatus: 'true',
         firstPayment: "",
-        firstPaymentDate: ""
+        firstPaymentDate: "",
+        recordType: 'Loan',
+        paymentDueDate:"",
+        paymentDue: ""
     });
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -47,7 +50,10 @@ function NewRecord() {
             ActiveStatus: formData.activeStatus === "true",
             FirstPaymentDueDate : formData.firstPaymentDate,
             FirstPaymentDueAmount : formData.firstPayment
+            
         };
+
+      
 
         try {
             console.log(requestBody)
@@ -76,21 +82,70 @@ function NewRecord() {
     return (
         <div>
         <div className="sharkcage">
-        <img src={LoanShark} alt="Loan Shark" />
+        {/* <img src={LoanShark} alt="Loan Shark" /> */}
         </div>
         
    
         <div className="container2">
-            <button onClick={HomePagenav}>Back</button>
+            <button onClick={HomePagenav}>Cancel</button>
+            
             <h1 className="title">New Loan</h1>
+            <div className="form-group6">
+                <label htmlFor="recordType">Loan or Payment </label>
+                <select
+                id="recordType"
+                name="recordType"
+                value={formData.recordType}
+                onChange={handleChange}
+                required
+                >
+                <option value="Loan">Loan  </option>
+                <option value="Payment">Payment  </option>
+                
+
+                </select>
+            </div>
+
             <form onSubmit={handleSubmit}>
                 
 
                
 
+            {
+    formData.recordType === "Payment" && (
+                <div className="form-group2">
+                    <label htmlFor="paymentDueDate">Payment Due Date  </label>
+                    <input
+                        type="date"
+                        id="paymentDueDate"
+                        name="paymentDueDate"
+                        value={formData.paymentDueDate}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+)}
+
+
+{
+    formData.recordType === "Payment" && (
+                <div className="form-group2">
+                    <label htmlFor="paymentDue">Amount Due   </label>
+                    <input
+                        type="number"
+                        id="paymentDue"
+                        name="paymentDue"
+                        value={formData.paymentDue}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+)}
+                
                 
             
-
+            {
+    formData.recordType === "Loan" && (
                 <div className="form-group">
                     <label htmlFor="name">Name  </label>
                     <input
@@ -104,6 +159,10 @@ function NewRecord() {
                     />
                 </div>
 
+    )}
+
+                {
+    formData.recordType === "Loan" && (
                 <div className="form-group2">
                     <label htmlFor="date">Loan Issue Date  </label>
                     <input
@@ -115,7 +174,11 @@ function NewRecord() {
                         required
                     />
                 </div>
+)}
 
+
+                {
+    formData.recordType === "Loan" && (
                 <div className="form-group3">
                     <label htmlFor="date">Loan Maturity Date  </label>
                     <input
@@ -127,7 +190,12 @@ function NewRecord() {
                         required
                     />
                 </div>
+    )}
 
+
+
+                {
+    formData.recordType === "Loan" && (
                 <div className="form-group4">
                     <label htmlFor="loanAmount">Loan Amount  </label>
                     <input
@@ -140,9 +208,12 @@ function NewRecord() {
                         required
                     />
                 </div>
+    )}
 
               
 
+                {
+    formData.recordType === "Loan" && (
                 <div className="form-group6">
                 <label htmlFor="paymentFrequency">Payment Frequency </label>
                 <select
@@ -159,9 +230,14 @@ function NewRecord() {
 
                 </select>
             </div>
+    )
+}
+
+
+
 
             {
-    formData.paymentFrequency !== "Manual" && (
+    formData.paymentFrequency !== "Manual" && formData.recordType == "Loan" && (
         <div className="form-group5">
             <label htmlFor="interestRate">Interest Rate   </label>
             <input
@@ -176,6 +252,9 @@ function NewRecord() {
         </div>
     )
 }
+
+
+
 
 {
     formData.paymentFrequency === "Manual" && (
@@ -194,6 +273,9 @@ function NewRecord() {
     )
 }
 
+
+
+
 {
     formData.paymentFrequency === "Manual" && (
         <div className="form-group3">
@@ -209,6 +291,8 @@ function NewRecord() {
     </div>
     )
 }
+
+
 
                 <div className="form-group7">
                 <label htmlFor="activeStatus">Active Status </label>

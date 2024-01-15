@@ -245,16 +245,32 @@
   }
 
   .container2 {
-    width: 75vw;
-    margin-top: 25px;
-    background-color: #ffffff;
+    width: 50vw;
+    margin-top: 75px;
+    background-color: #ffffff; /* Consider a soft off-white color for less harsh contrast */
     border-radius: 8px;
-    box-shadow: 0 0 10px #1C2541;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1); /* Softer shadow for depth */
     padding: 20px;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.363);
-  }
+    text-align: center; /* Center align the text for better presentation */
+    font-family: 'Arial', sans-serif; /* Improve typography */
+    color: #333; /* Darker text color for better readability */
+    max-width: 600px; /* Limit maximum width for better structure on large screens */
+    margin-left: auto; /* Center align the container */
+    margin-right: auto;
+    box-sizing: border-box; /* Include padding and border in the width */
+}
+
+.container2 input[type="text"],
+.container2 input[type="number"],
+.container2 input[type="date"] {
+    text-align: left; /* Aligns text to the left */
+    width: 25%; /* Ensures input takes full width of the container */
+    box-sizing: border-box; /* Includes padding and border in the element's total width */
+    /* Add any other styles you need for your inputs here */
+}
+
 
   .sharkcage{
     margin-top: 10px;
