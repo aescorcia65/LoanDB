@@ -109,7 +109,22 @@ function NewRecord() {
             <form onSubmit={handleSubmit}>
                 
 
-               
+            {
+    formData.recordType === "Payment" && (
+                <div className="form-group">
+                    <label htmlFor="name">Name  </label>
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder=""
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+    )}
 
             {
     formData.recordType === "Payment" && (

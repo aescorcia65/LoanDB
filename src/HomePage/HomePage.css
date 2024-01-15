@@ -262,14 +262,7 @@
     box-sizing: border-box; /* Include padding and border in the width */
 }
 
-.container2 input[type="text"],
-.container2 input[type="number"],
-.container2 input[type="date"] {
-    text-align: left; /* Aligns text to the left */
-    width: 25%; /* Ensures input takes full width of the container */
-    box-sizing: border-box; /* Includes padding and border in the element's total width */
-    /* Add any other styles you need for your inputs here */
-}
+
 
 
   .sharkcage{
@@ -364,12 +357,16 @@
     margin-bottom: 20px;
     font-weight: 100;
   }
+input{
+  text-align: left;
+}
+
   label {
     
     font-weight: 500;
     font: times;
     color: #000000;
-    text-align: end;
+    text-align: right;
     margin-left: 1%;
   }
 
