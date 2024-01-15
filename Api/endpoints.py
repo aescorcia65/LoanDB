@@ -344,30 +344,26 @@ async def update_payment(record: Payment, payment_id: str = Query(...)):
 
 @app.post("/api/filter-data")
 async def filter_data(params: FilterParams):
-    conditions = []
+    # SQL Query for MySQL
+    month_conditions = ", ".join(str(month) for month in params.Months)
+    year_conditions = ", ".join(str(year) for year in params.Years)
 
-    if params.Months:
-        month_conditions = " OR ".join([f"MONTH(PaymentDueDate) = :month{index}" for index, month in enumerate(params.Months)])
-        conditions.append(f"({month_conditions})")
+    query = f"""
+        SELECT p.*, l.*
+        FROM {PAYMENT_TABLE_NAME} AS p
+        JOIN {CLIENT_RECORDS_TABLE_NAME} AS l ON p.LoanId = l.LoanId
+        WHERE MONTH(p.PaymentDueDate) IN ({month_conditions})
+        AND YEAR(p.PaymentDueDate) IN ({year_conditions})
+        AND (p.PaidStatus IN :active_status)
+        """
 
-    if params.Years:
-        year_conditions = " OR ".join([f"YEAR(PaymentDueDate) = :year{index}" for index, year in enumerate(params.Years)])
-        conditions.append(f"({year_conditions})")
+    # Execute query
+    result = await database.fetch_all(query=query, values={
+        "active_status": params.ActiveStatus
+    })
+    # Return result
+    return {"results":result}
 
-    # Adding ClientID and ActiveStatus conditions
-    conditions.append(f"ClientID = :client_id")
-    conditions.append(f"ActiveStatus = :active_status")
-
-    combined_conditions = " AND ".join(conditions)
-    query = f"SELECT * FROM {CLIENT_RECORDS_TABLE_NAME} WHERE {combined_conditions}"
-
-    # Creating a dictionary for parameters to protect against SQL injection
-    query_params = {f"month{index}": month for index, month in enumerate(params.Months)}
-    query_params.update({f"year{index}": year for index, year in enumerate(params.Years)})
-    query_params.update({"client_id": params.ClientID, "active_status": params.ActiveStatus})
-
-    results = await database.fetch_all(query=query, values=query_params)
-    return results
 async def create_tables():
     query = f"""
     CREATE DATABASE IF NOT EXISTS {DATABASE_NAME};

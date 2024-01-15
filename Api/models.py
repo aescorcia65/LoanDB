@@ -55,7 +55,6 @@ class NewPayment(BaseModel):
     PaymentRecAmount: Optional[float] = None
 
 class FilterParams(BaseModel):
-    Months: List[int]
-    Years: List[int]
-    ClientID: str
-    ActiveStatus: bool
+    Months: List[int] = [0]
+    Years: List[int] = [0]
+    ActiveStatus: List[bool]
