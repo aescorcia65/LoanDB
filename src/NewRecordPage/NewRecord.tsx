@@ -8,13 +8,35 @@ import ClientDropdown from '../HomePage/ClientDropdown';
 import LoanDropdown from '../HomePage/LoanDropdown';
 
 function NewRecord() {
+
+    const Popup = () => (
+        
+        <div className="popup">
+            <div className="container2">
+            <h1>New Record Created Successfully</h1>
+            <button onClick={closePopup}>Done</button> <button onClick={closePopup2}>Create Another Record</button>
+        </div>
+        </div>
+    );
+
+    const closePopup = () => {
+        setShowPopup(false);
+        navigate('/');
+
+    };
+
+    const closePopup2 = () => {
+        setShowPopup(false);
+        
+    };
+
     const navigate = useNavigate();
   
     // This function is responsible for navigation
     const HomePagenav = () => {
       navigate('/');
     };
-    
+    const [showPopup, setShowPopup] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         maturitydate: "",
@@ -68,19 +90,19 @@ function NewRecord() {
                 },
                 body: JSON.stringify(requestBody),
             });
-
+    
             if (response.ok) {
-                // Handle success here, e.g., show a success message or redirect
                 console.log('Record created successfully');
-                navigate('/')
+                setShowPopup(true); // Show popup on success
+               
             } else {
-                // Handle errors here, e.g., show an error message
                 console.error('Error creating record:', response.status);
             }
         } catch (error) {
             console.error('Error creating record:', error);
         }
     };
+    
 
     return (
         <div>
@@ -88,9 +110,15 @@ function NewRecord() {
         {/* <img src={LoanShark} alt="Loan Shark" /> */}
         </div>
         
-   
+       
+
         <div className="container2">
+        
+        {showPopup && <Popup />}
+
             <button onClick={HomePagenav}>Cancel</button>
+
+
             
 
             {
@@ -368,7 +396,7 @@ function NewRecord() {
 
 
 
-                
+
 
                 <button type="submit">Submit</button>
             </form>
