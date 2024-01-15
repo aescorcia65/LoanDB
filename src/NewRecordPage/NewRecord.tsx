@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import '../HomePage/HomePage.css';
 import { useNavigate } from 'react-router-dom';
-import InfoGrid from '../RecordInfoPage/InfoGrid';
-import LoanShark from '../LoanShark.png';
-import PaymentTypeSelector from '../HomePage/PaymentSelectors';
 import ClientDropdown from '../HomePage/ClientDropdown';
 import LoanDropdown from '../HomePage/LoanDropdown';
 
@@ -36,6 +33,11 @@ function NewRecord() {
     const HomePagenav = () => {
       navigate('/');
     };
+    const [selectedClient, setSelectedClient] = useState("*");
+    const [selectedLoan, setSelectedLoan] = useState("");
+    const handleClientSelection = (selectedValue: any) => {
+        setSelectedClient(selectedValue); // Update the selected client in state
+    };
     const [showPopup, setShowPopup] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
@@ -63,51 +65,131 @@ function NewRecord() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
+        if(formData.recordType === "Loan"){
+            if(formData.newOrExisting === "New"){
+                try {
 
-        // Create the request body object with the form data
-        const requestBody = {
-            ClientName: formData.name,// Assuming the name format is "First Last"
-            PaymentFrequency: formData.paymentFrequency,
-            LoanMaturity: formData.maturitydate,
-            IssueDate: formData.issuedate,
-            LoanAmount: parseFloat(formData.loanAmount),
-            InterestRate: parseFloat(formData.interestRate),
-            ActiveStatus: formData.activeStatus === "true",
-            // FirstPaymentDueDate : formData.firstPaymentDate,
-            // FirstPaymentDueAmount : formData.firstPayment
-            
-        };
+                    // Construct the API URL
+                    const apiUrl = `/api/new-client`;
 
-      
+                    // Prepare the request body
+                    let requestBody = {
+                        ClientName: formData.name
+                    };
 
-        try {
-            console.log(requestBody)
-            // Send a POST request with the request body
-            const response = await fetch('/api/new-loan', {
+                    // Make the POST request
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    else{
+                        let clientid = await response.json()
+                        clientid = clientid.client_id
+                        let loanBody:any = {
+                            ClientId: clientid,
+                            PaymentFrequency: formData.paymentFrequency,
+                            LoanMaturity: formData.maturitydate,
+                            LoanAmount: formData.loanAmount,
+                            InterestRate: formData.interestRate || null,
+                            ActiveStatus: formData.activeStatus,
+                            IssueDate: formData.issuedate,
+
+                        }
+                        if(formData.paymentFrequency === "Manual"){
+                            loanBody = {...loanBody,
+                                FirstPaymentDueDate: formData.firstPaymentDate,
+                                FirstPaymentDueAmount: formData.firstPayment,}
+                        }
+                        const apiLoanURL = `/api/new-loan`;
+                        const loanres = await fetch(apiLoanURL, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(loanBody)
+                        });
+                        if (!loanres.ok) {
+                            throw new Error(`HTTP error! Status: ${loanres.status}`);
+                        }
+                        else{
+                            navigate(`/`);
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    // Consider setting an error state and displaying it in the UI
+                }
+            }
+            else if(formData.newOrExisting === "Existing"){
+                let loanBody:any = {
+                    ClientId: selectedClient,
+                    PaymentFrequency: formData.paymentFrequency,
+                    LoanMaturity: formData.maturitydate,
+                    LoanAmount: formData.loanAmount,
+                    InterestRate: formData.interestRate,
+                    ActiveStatus: formData.activeStatus,
+                    IssueDate: formData.issuedate,
+
+                }
+                if(formData.paymentFrequency === "Manual"){
+                    loanBody = {...loanBody,
+                        FirstPaymentDueDate: formData.firstPaymentDate,
+                        FirstPaymentDueAmount: formData.firstPayment,}
+                }
+                const apiLoanURL = `/api/new-loan`;
+                const loanres = await fetch(apiLoanURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(loanBody)
+                });
+                if (!loanres.ok) {
+                    throw new Error(`HTTP error! Status: ${loanres.status}`);
+                }
+                else{
+                    navigate(`/`);
+                }
+            }
+            }
+        else if(formData.recordType === "Payment"){
+            let paymentBody:any = {
+                LoanId: selectedLoan,
+                PaymentDueDate: formData.paymentDueDate,
+                PaymentDueAmount: formData.paymentDue,
+            }
+            const apiLoanURL = `/api/new-payment`;
+            const payres = await fetch(apiLoanURL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(requestBody),
             });
-    
+
             if (response.ok) {
+                // Handle success here, e.g., show a success message or redirect
                 console.log('Record created successfully');
-                setShowPopup(true); // Show popup on success
-               
+                navigate('/')
             } else {
+                // Handle errors here, e.g., show an error message
                 console.error('Error creating record:', response.status);
             }
         } catch (error) {
             console.error('Error creating record:', error);
         }
     };
-    
 
     return (
         <div>
         <div className="sharkcage">
-        {/* <img src={LoanShark} alt="Loan Shark" /> */}
         </div>
         
        
@@ -182,21 +264,17 @@ function NewRecord() {
     formData.recordType === "Payment" && (
         <div className="client-name-row"> 
             <span>Client Name</span>
-            <ClientDropdown onSelectClient={function (clientId: string): void {
-                throw new Error('Function not implemented.');
-            } }/>
+            <ClientDropdown onSelectClient={handleClientSelection}/>
         </div>
     )
 }
 
 
 {
-    formData.recordType === "Loan" && formData.newOrExisting == "Existing" && (
+    formData.recordType === "Loan" && formData.newOrExisting === "Existing" && (
         <div className="client-name-row"> 
             <span>Client Name</span>
-            <ClientDropdown onSelectClient={function (clientId: string): void {
-                throw new Error('Function not implemented.');
-            } }/>
+            <ClientDropdown onSelectClient={handleClientSelection}/>
         </div>
     )
 }
@@ -205,9 +283,7 @@ function NewRecord() {
     formData.recordType === "Payment" && (
         <div className="client-name-row2"> 
             <span>LoanID</span>
-            <LoanDropdown onSelectLoan={function (loanId: string): void {
-                throw new Error('Function not implemented.');
-            } }/>
+            <LoanDropdown onSelectLoan={handleLoanSelect} clientId={selectedClient}/>
         </div>
     )
 }
@@ -247,7 +323,7 @@ function NewRecord() {
                 
             
             {
-    formData.recordType === "Loan" && formData.newOrExisting == "New" &&(
+    formData.recordType === "Loan" && formData.newOrExisting === "New" &&(
                 <div className="form-group">
                     <label htmlFor="name">Name  </label>
                     <input
@@ -339,7 +415,7 @@ function NewRecord() {
 
 
             {
-    formData.paymentFrequency !== "Manual" && formData.recordType == "Loan" && (
+    formData.paymentFrequency !== "Manual" && formData.recordType === "Loan" && (
         <div className="form-group5">
             <label htmlFor="interestRate">Interest Rate   </label>
             <input
