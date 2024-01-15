@@ -69,15 +69,16 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 const mappedYears = selectedYears
                     .map((selected:any, index:any) => selected ? currentYear + index : null)
                     .filter((year:any) => year !== null);
-
+                const monthsArray = [0, ...mappedMonths]
+                const yearsArray = [0, ...mappedYears]
 
                 // Construct the API URL
                 const apiUrl = `/api/filter-data`;
 
                 // Prepare the request body
                 const requestBody = {
-                    Months: mappedMonths,
-                    Years: mappedYears,
+                    Months: monthsArray,
+                    Years: yearsArray,
                     ActiveStatus: selectedStatus  // Assuming you have this variable in your state
                 };
                 console.log(requestBody)
