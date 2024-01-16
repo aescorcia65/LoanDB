@@ -1,4 +1,7 @@
-
+.wrap-header-text {
+  white-space: normal;
+  line-height: normal; /* Adjust line height if needed */
+}
 .container2{
   background-color: aqua;
   width:500px;
