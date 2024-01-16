@@ -371,7 +371,7 @@ function NewRecord() {
             {
     formData.paymentFrequency !== "Manual" && formData.recordType === "Loan" && (
         <div className="form-group5">
-            <label htmlFor="interestRate">Interest Rate   </label>
+            <label htmlFor="interestRate">Interest Rate Annual %  </label>
             <input
                 type="number"
                 id="interestRate"
