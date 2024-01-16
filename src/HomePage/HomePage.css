@@ -3,10 +3,11 @@
   line-height: normal; /* Adjust line height if needed */
 }
 .container2 {
-  background-color: aqua;
+  background-color: rgb(198,224,180);
   width: 500px;
   margin: auto;
-  padding: 20px; /* Added padding for internal spacing */
+  padding: 20px;
+  margin-top: 50px; /* Added padding for internal spacing */
 }
 
 .form-group {
@@ -74,6 +75,7 @@ width: 100%;
 
 .ag-header-cell {
   background-color: rgb(198,224,180) /* Your desired background color for headers */;
+  border-right: 5px black;
 }
 
 
