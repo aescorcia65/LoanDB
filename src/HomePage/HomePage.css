@@ -1,3 +1,8 @@
+.ag-header-cell {
+  background-color: rgb(198,224,180) /* Your desired background color for headers */;
+  border-right: 5px black;
+}
+
 .wrap-header-text {
   white-space: normal;
   line-height: normal; /* Adjust line height if needed */
@@ -38,13 +43,19 @@ h1{
 button{
   margin-left: 0.2%;
   margin-bottom: 0.2%;
-  background-color: (255,255,204);
-  
-  
+  background-color: #FEFFCC;
 }
 
 select{
-  background-color: rgb(226, 226, 226);
+  background-color:#FEFFCC;
+  
+}
+input{
+  background-color: #FEFFCC;
+}
+
+input:hover{
+  background-color: rgba(245, 245, 220, 0.603);
 }
 
 select:hover{
@@ -77,10 +88,7 @@ height: 100%;
 width: 100%;
 }
 
-.ag-header-cell {
-  background-color: rgb(198,224,180) /* Your desired background color for headers */;
-  border-right: 5px black;
-}
+
 
 
 
