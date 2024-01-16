@@ -2,6 +2,7 @@
   background-color: rgb(198,224,180) /* Your desired background color for headers */;
   border-right: 1px solid black;
   border-bottom: 1px solid black;
+  border-top: 1px solid black;
   
 }
 
@@ -9,7 +10,9 @@
   border-right: 2px solid black;
   white-space: normal;
   line-height: normal;
-  border-bottom: 1px solid black; /* Example of a thicker border */
+  border-bottom: 1px solid black;
+  border-top: 1px solid black;
+   /* Example of a thicker border */
 }
 
 .wrap-header-text {
