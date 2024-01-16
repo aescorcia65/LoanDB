@@ -355,10 +355,10 @@ async def update_payment_status(payment_id: str = Query(...), paid_staus: bool =
 
 @app.put("/api/update-payment")
 async def update_payment(record: Payment):
+    print(record.PaymentRecDate)
     paid_status = record.PaidStatus
     payment_id = record.PaymentId
     test = await update_payment_status(payment_id, paid_status)
-    print(test)
     query = f"""
                     UPDATE {PAYMENT_TABLE_NAME}
                     SET PaymentRecDate = :PaymentRecDate,

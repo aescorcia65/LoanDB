@@ -109,9 +109,7 @@
 /*  background-color: #edff27;*/
 /*}*/
 
-/*body{*/
-/*  background-color: #2e3436;*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  justify-content: center;}*/
+body {
+    background-color: rgb(181, 181, 181);
+}
 

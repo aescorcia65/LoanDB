@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { ColDef } from 'ag-grid-community';
+import {ColDef, GridOptions} from 'ag-grid-community';
 import { useNavigate } from 'react-router-dom';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
@@ -15,8 +15,25 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const [gridApi, setGridApi] = useState(null);
     const [updateCount, setUpdateCount]= useState(0)
 
-    const gridOptions = {
-        // ... other grid options
+    const gridOptions: GridOptions<any> = {
+        dataTypeDefinitions: {
+
+            date: {
+                extendsDataType: 'date',
+                baseDataType: 'date',
+                valueFormatter: (params: any) => {
+                    if (params.value) {
+                        const date = new Date(params.value);
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+                        const year = date.getFullYear();
+                        return `${month}/${day}/${year}`;
+                    } else {
+                        return '';
+                    }
+                },
+            },
+        },
         headerHeight: 40,
         getRowStyle: (params: any) => {
             if (params.data.Closed) {
@@ -39,7 +56,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         { headerName: 'Payment Due Date', field: 'DueDate' ,  width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text' },
         { headerName: 'Payment Expected', field: 'PaymentDue', filter: true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
         { headerName: 'Payment Received', field: 'PaymentReceived', filter: true, editable:true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
-        { headerName: 'Payment Received Date', field: 'PaymentReceivedDate', filter: true, editable:true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text'},
+        { headerName: 'Payment Received Date', field: 'PaymentReceivedDate', filter: true, editable:true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text',},
         { headerName: 'Closed',field: 'Closed', filter: true, editable:true, width: 78  ,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'  },
           
     ];
