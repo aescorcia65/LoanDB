@@ -20,9 +20,7 @@
 .form-group label {
   margin-bottom: 5px; /* Space between label and input/select */
 }
-form{
 
-}
 
 .form-group input, .form-group select, .form-group button {
   width: 100%; /* Make input/select/button take full width of the form group /
@@ -37,14 +35,29 @@ h1{
 button{
   margin-left: 0.2%;
   margin-bottom: 0.2%;
+  
+}
+
+select{
+  background-color: rgb(226, 226, 226);
+}
+
+select:hover{
+  background-color: rgba(245, 245, 220, 0.603);
+}
+
+select:active{
+  background-color: rgba(88, 88, 88, 0.39);
 }
 
 button.selected{
   background-color: rgb(87, 147, 147);
 }
-
+button:hover{
+  background-color: rgba(245, 245, 220, 0.603);
+}
 button:active{
-  background-color: rgb(88, 88, 88);
+  background-color: rgba(88, 88, 88, 0.39);
 }
 
 
