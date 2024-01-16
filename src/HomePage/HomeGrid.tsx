@@ -23,11 +23,17 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 baseDataType: 'date',
                 valueFormatter: (params: any) => {
                     if (params.value) {
-                        const date = new Date(params.value);
-                        const day = String(date.getDate()).padStart(2, '0');
-                        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-                        const year = date.getFullYear();
-                        return `${month}/${day}/${year}`;
+                        const parts = String(params.value).split('-');
+                        const year = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed in JavaScript Date
+                        const day = parseInt(parts[2], 10);
+
+                        const date = new Date(year, month, day);
+                        const formattedDay = String(date.getDate()).padStart(2, '0');
+                        const formattedMonth = String(date.getMonth() + 1).padStart(2, '0'); // Adjusting back to 1-indexed
+                        const formattedYear = date.getFullYear();
+
+                        return `${formattedMonth}/${formattedDay}/${formattedYear}`;
                     } else {
                         return '';
                     }
@@ -65,15 +71,15 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const mapApiResponseToGridFields = (apiData:any) => {
         return apiData.map((item:any) => ({
             LoanID: item.LoanId,
-            Due: item.LoanMaturity != null ? new Date(item.LoanMaturity) : null,
-            Issued: item.IssueDate != null ? new Date(item.IssueDate) : null,
+            Due: item.LoanMaturity != null ? item.LoanMaturity : null,
+            Issued: item.IssueDate != null ? item.IssueDate : null,
             Status: Boolean(item.ActiveStatus),
             Name: item.ClientName,
             Principal: item.LoanAmount != null ? `$${item.LoanAmount}` : item.LoanAmount,
             PaymentDue: item.PaymentDueAmount != null ? `$${item.PaymentDueAmount}` : item.PaymentDueAmount,
-            DueDate: item.PaymentDueDate != null ? new Date(item.PaymentDueDate) : null,
+            DueDate: item.PaymentDueDate != null ? item.PaymentDueDate : null,
             PaymentReceived: item.PaymentRecAmount != null ? `$${item.PaymentRecAmount}` : item.PaymentRecAmount,
-            PaymentReceivedDate: item.PaymentRecDate != null ? new Date(item.PaymentRecDate) : null,
+            PaymentReceivedDate: item.PaymentRecDate != null ? item.PaymentRecDate : null,
             Closed: Boolean(item.PaidStatus),
             PaymentId: item.PaymentId,
             PaymentFreq: item.PaymentFrequency,
