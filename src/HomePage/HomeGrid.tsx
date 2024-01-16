@@ -16,17 +16,19 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const [updateCount, setUpdateCount]= useState(0)
 
     const columnDefs: ColDef[] = [
-        
-                { field: 'LoanID', width: 142, filter: true, autoHeight:true, cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
-                { field: 'Name', width: 142, filter: true, autoHeight:true , cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
-                { field: 'Principal',  filter: true, width: 142 ,columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
-                { field: 'Due' , filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
-                { field: 'Issued', filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
-                { field: 'PaymentDue', filter: true, width: 142,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
-                { field: 'DueDate' ,  width: 142,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
-                { field: 'PaymentReceived', filter: true, editable:true, width: 144,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'},  },
-                { field: 'PaymentReceivedDate', filter: true, editable:true, width: 174,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date'},
-                { field: 'Closed', filter: true, editable:true, width: 115,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}  },
+
+        { field: 'Name', width: 142, filter: true, autoHeight:true , cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
+        { field: 'LoanID', width: 142, filter: true, autoHeight:true, cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
+        { field: 'Principal',  filter: true, width: 142 ,columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
+        { field: 'Issued', filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
+        { field: 'Due' , filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
+        { field: 'InterestRate', filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
+        { field: 'PaymentFreq', filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
+        { field: 'DueDate' ,  width: 142,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
+        { field: 'PaymentDue', filter: true, width: 142,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
+        { field: 'PaymentReceived', filter: true, editable:true, width: 144,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'},  },
+        { field: 'PaymentReceivedDate', filter: true, editable:true, width: 174,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date'},
+        { field: 'Closed', filter: true, editable:true, width: 115,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}  },
           
     ];
 
@@ -44,7 +46,9 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             PaymentReceived: item.PaymentRecAmount != null ? `$${item.PaymentRecAmount}` : item.PaymentRecAmount,
             PaymentReceivedDate: item.PaymentRecDate != null ? new Date(item.PaymentRecDate) : null,
             Closed: Boolean(item.PaidStatus),
-            PaymentId: item.PaymentId
+            PaymentId: item.PaymentId,
+            PaymentFreq: item.PaymentFrequency,
+            InterestRate: item.InterestRate != null ? `${item.InterestRate}%` : null,
         }));
     };
 
