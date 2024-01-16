@@ -215,8 +215,8 @@ function NewRecord() {
 
                     {
                         formData.recordType === "Payment" && (
-                            <div className="client-name-row">
-                                <span>Client Name</span>
+                            <div className="form-group">
+                                <label>Client Name</label>
                                 <ClientDropdown onSelectClient={handleClientSelection}/>
                             </div>
                         )
@@ -225,8 +225,8 @@ function NewRecord() {
 
                     {
                         formData.recordType === "Loan" && formData.newOrExisting === "Existing" && (
-                            <div className="client-name-row">
-                                <span>Client Name</span>
+                            <div className="form-group">
+                                <label>Client Name</label>
                                 <ClientDropdown onSelectClient={handleClientSelection}/>
                             </div>
                         )
@@ -234,8 +234,8 @@ function NewRecord() {
 
                     {
                         formData.recordType === "Payment" && (
-                            <div className="client-name-row">
-                                <span>LoanID</span>
+                            <div className="form-group">
+                                <label>LoanID</label>
                                 <LoanDropdown onSelectLoan={handleLoanSelect} clientId={selectedClient}/>
                             </div>
                         )

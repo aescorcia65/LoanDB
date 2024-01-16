@@ -48,21 +48,14 @@ function HomePage() {
         <div className={"homeContainer"}>
             
            
-            <div className={"top-left-button"}>
-                
-                <button onClick={NewRecordnav}>New Loan / New Payment</button>
-                
-                    
-               
-                
-            </div>
+            
 
             <div>
-                <h1>LMS - Loan Management System
-    </h1>
+                <h1>LMS - Loan Management System </h1>
             </div>
 
 
+            <button className={'newrecordbutton'}onClick={NewRecordnav}>New Loan / New Payment</button>
             <div className={"topbuttons"}>
                 <button onClick={handleToggle}>*ALL*</button> <StatusButtons selectedstatuss={selectedstatuss} setSelectedstatuss={setSelectedstatuss}/> <ClientDropdown onSelectClient={handleClientSelection}/>
             </div>
