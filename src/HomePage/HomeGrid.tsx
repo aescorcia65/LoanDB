@@ -191,7 +191,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const handleCancelUpdate = () => {
         setIsModalOpen(false);
         setCurrentEdit(null)
-        setUpdateCount(updateCount+1)
+        setUpdateCount(updateCount => updateCount+1)
     };
     const updateRecordd = useCallback((event:any) => {
         if(event.column.colDef.field === "Closed"){
@@ -235,7 +235,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            else{setUpdateCount(updateCount+1)}
+            else{setUpdateCount(updateCount => updateCount+1)}
 
         } catch (error) {
             console.error('Error fetching data:', error);
