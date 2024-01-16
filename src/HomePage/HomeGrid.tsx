@@ -146,7 +146,6 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             const apiUrl = `/api/update-payment`;
 
             const formatDate = (date: any) => {
-                if (!(date instanceof Date)) return ""; // Check if valid Date object
                 let year = date.getFullYear();
                 let month = date.getMonth() + 1; // getMonth() returns 0-11
                 let day = date.getDate();
@@ -155,9 +154,9 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
 
             const requestBody = {
                 LoanId: event.data.LoanID,
-                PaymentDueDate: formatDate(new Date(event.data.DueDate)),
+                PaymentDueDate: event.data.DueDate != null ? formatDate(new Date(event.data.DueDate)) : null,
                 PaymentDueAmount: event.data.PaymentDue != null ? parseFloat(event.data.PaymentDue.replace("$", "")) : null,
-                PaymentRecDate: formatDate(new Date(event.data.PaymentReceivedDate)),
+                PaymentRecDate: event.data.PaymentReceivedDate != null ? formatDate(new Date(event.data.PaymentReceivedDate)) : null,
                 PaymentRecAmount: event.data.PaymentReceived != null ? parseFloat(event.data.PaymentReceived.replace("$", "")) : null,
                 PaymentId: event.data.PaymentId,
                 PaidStatus: event.data.Closed
@@ -192,6 +191,8 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 // onRowClicked={handleRowClick}
                 onCellEditingStopped={updateRecord}
                 gridOptions={gridOptions}
+                //onRowEditingStopped={updateRecord}
+                onRowSelected={updateRecord}
             />
         </div>
     );
