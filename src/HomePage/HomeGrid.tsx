@@ -39,7 +39,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         { headerName: 'Payment Due Date', field: 'DueDate' ,  width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text' },
         { headerName: 'Payment Expected', field: 'PaymentDue', filter: true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
         { headerName: 'Payment Received', field: 'PaymentReceived', filter: true, editable:true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
-        { headerName: 'Payment Received Date', field: 'PaymentReceivedDate', filter: true, editable:true, width: 174,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text'},
+        { headerName: 'Payment Received Date', field: 'PaymentReceivedDate', filter: true, editable:true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text'},
         { headerName: 'Closed',field: 'Closed', filter: true, editable:true, width: 78  ,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'  },
           
     ];
