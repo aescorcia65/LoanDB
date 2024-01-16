@@ -20,12 +20,12 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 { field: 'LoanID', width: 142, filter: true, autoHeight:true, cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
                 { field: 'Name', width: 142, filter: true, autoHeight:true , cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
                 { field: 'Principal',  filter: true, width: 142 ,columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
-                { field: 'Due' , filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
-                { field: 'Issued', filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
-                { field: 'PaymentDue', filter: true, width: 142,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
-                { field: 'DueDate' ,  width: 142,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
-                { field: 'PaymentReceived', filter: true, editable:true, width: 144,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'} },
-                { field: 'PaymentReceivedDate', filter: true, editable:true, width: 174,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
+                { field: 'Due' , filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
+                { field: 'Issued', filter: true, width: 142, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
+                { field: 'PaymentDue', filter: true, width: 142,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}},
+                { field: 'DueDate' ,  width: 142,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
+                { field: 'PaymentReceived', filter: true, editable:true, width: 144,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'},  },
+                { field: 'PaymentReceivedDate', filter: true, editable:true, width: 174,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date'},
                 { field: 'Closed', filter: true, editable:true, width: 115,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}  },
           
     ];
@@ -34,15 +34,15 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const mapApiResponseToGridFields = (apiData:any) => {
         return apiData.map((item:any) => ({
             LoanID: item.LoanId,
-            Due: item.LoanMaturity,
-            Issued: item.IssueDate,
+            Due: item.LoanMaturity != null ? new Date(item.LoanMaturity) : null,
+            Issued: item.IssueDate != null ? new Date(item.IssueDate) : null,
             Status: Boolean(item.ActiveStatus),
             Name: item.ClientName,
-            Principal: item.LoanAmount,
-            PaymentDue: item.PaymentDueAmount,
-            DueDate: item.PaymentDueDate,
-            PaymentReceived: item.PaymentRecAmount,
-            PaymentReceivedDate: item.PaymentRecDate,
+            Principal: item.LoanAmount != null ? `$${item.LoanAmount}` : item.LoanAmount,
+            PaymentDue: item.PaymentDueAmount != null ? `$${item.PaymentDueAmount}` : item.PaymentDueAmount,
+            DueDate: item.PaymentDueDate != null ? new Date(item.PaymentDueDate) : null,
+            PaymentReceived: item.PaymentRecAmount != null ? `$${item.PaymentRecAmount}` : item.PaymentRecAmount,
+            PaymentReceivedDate: item.PaymentRecDate != null ? new Date(item.PaymentRecDate) : null,
             Closed: Boolean(item.PaidStatus),
             PaymentId: item.PaymentId
         }));
@@ -137,13 +137,20 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             // Construct the API URL
             const apiUrl = `/api/update-payment`;
 
-            // Prepare the request body
+            const formatDate = (date: any) => {
+                if (!(date instanceof Date)) return ""; // Check if valid Date object
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1; // getMonth() returns 0-11
+                let day = date.getDate();
+                return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            };
+
             const requestBody = {
                 LoanId: event.data.LoanID,
-                PaymentDueDate: event.data.DueDate,
-                PaymentDueAmount: event.data.PaymentDue,
-                PaymentRecDate: event.data.PaymentReceivedDate,
-                PaymentRecAmount: event.data.PaymentReceived,
+                PaymentDueDate: formatDate(new Date(event.data.DueDate)),
+                PaymentDueAmount: event.data.PaymentDue != null ? parseFloat(event.data.PaymentDue.replace("$", "")) : null,
+                PaymentRecDate: formatDate(new Date(event.data.PaymentReceivedDate)),
+                PaymentRecAmount: event.data.PaymentReceived != null ? parseFloat(event.data.PaymentReceived.replace("$", "")) : null,
                 PaymentId: event.data.PaymentId,
                 PaidStatus: event.data.Closed
             };
