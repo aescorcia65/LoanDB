@@ -391,7 +391,7 @@ function NewRecord() {
 {
     formData.paymentFrequency === "Manual" && (
         <div className="form-group5">
-            <label htmlFor="firstPayment">First Payment  </label>
+            <label htmlFor="firstPayment">Upcoming Payment Amount </label>
             <input
                 type="number"
                 id="firstPayment"
@@ -411,7 +411,7 @@ function NewRecord() {
 {
     formData.paymentFrequency === "Manual" && (
         <div className="form-group3">
-        <label htmlFor="firstPaymentDate">First Payment Date  </label>
+        <label htmlFor="firstPaymentDate">Upcoming Payment Date  </label>
         <input
             type="date"
             id="firstPaymentDate"
