@@ -6,6 +6,7 @@ import HomePage from './HomePage/HomePage'; // import your components
 import NewRecord from './NewRecordPage/NewRecord';
 import UpcomingPayments from './UpcomingPaymentsPage/UpcomingPayments'
 import RecordInfo from './RecordInfoPage/RecordInfo';
+import ClosePaymentModal from "./HomePage/ClosePaymentModal";
 
 
 function App() {

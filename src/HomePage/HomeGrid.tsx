@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import './HomePage.css';
+import ClosePaymentModal from "./ClosePaymentModal";
 
 
 
@@ -14,6 +15,8 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const navigate = useNavigate();
     const [gridApi, setGridApi] = useState(null);
     const [updateCount, setUpdateCount]= useState(0)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentEdit, setCurrentEdit] = useState(null);
 
     const gridOptions: GridOptions<any> = {
         dataTypeDefinitions: {
@@ -175,8 +178,30 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         // You can now safely use gridApi here if needed
     }, []);
 
-    async function updateRecord(event:any) {
-        console.log(event)
+    const handleConfirmUpdate = () => {
+        // Perform the update logic here using currentEdit
+        console.log("Update Confirmed", currentEdit);
+        updatePayment(currentEdit)
+
+        // Close the modal
+        setIsModalOpen(false);
+
+    };
+
+    const handleCancelUpdate = () => {
+        setIsModalOpen(false);
+        setCurrentEdit(null)
+        setUpdateCount(updateCount+1)
+    };
+    const updateRecordd = useCallback((event:any) => {
+        if(event.column.colDef.field === "Closed"){
+        setCurrentEdit(event);
+        setIsModalOpen(true);}
+        else{
+            updatePayment(event)
+        }
+    }, []);
+    async function updatePayment(event:any) {
         try {
 
             // Construct the API URL
@@ -210,12 +235,12 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
+            else{setUpdateCount(updateCount+1)}
 
         } catch (error) {
             console.error('Error fetching data:', error);
             // Consider setting an error state and displaying it in the UI
         }
-        setUpdateCount(updateCount+1)
 
     }
 
@@ -226,10 +251,14 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 rowData={rowData}
                 columnDefs={columnDefs}
                 // onRowClicked={handleRowClick}
-                onCellEditingStopped={updateRecord}
+                onCellEditingStopped={updateRecordd}
                 gridOptions={gridOptions}
                 //onRowEditingStopped={updateRecord}
-                onRowSelected={updateRecord}
+            />
+            <ClosePaymentModal
+                isOpen={isModalOpen}
+                onConfirm={handleConfirmUpdate}
+                onCancel={handleCancelUpdate}
             />
         </div>
     );
