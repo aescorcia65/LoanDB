@@ -9,7 +9,7 @@
 }
 .container2 {
   background-color: rgb(198,224,180);
-  width: 500px;
+  width: 400px;
   margin: auto;
   padding: 20px;
   margin-top: 50px; /* Added padding for internal spacing */
@@ -26,12 +26,16 @@
 }
 
 .form-group label {
-  margin-bottom: 5px; /* Space between label and input/select */
+  margin-bottom: 4px;
+   /* Space between label and input/select */
+   margin-left: 130px;
 }
 
 
+
 .form-group input, .form-group select, .form-group button {
-  width: 100%; /* Make input/select/button take full width of the form group /
+  width: 30%;
+  margin-left: 140px; /* Make input/select/button take full width of the form group /
 padding: 8px; / Padding for better visuals and consistency /
 / Add any additional styling you need for inputs, selects, and buttons */
 }
