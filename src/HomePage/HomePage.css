@@ -2,8 +2,12 @@
 .container2{
   background-color: aqua;
   width:500px;
+ margin:auto;
 }
 
+h1{
+  margin-left:30%;
+}
 
 /*.ag-theme-balham{*/
 /*  --ag-borders: 1px;*/
