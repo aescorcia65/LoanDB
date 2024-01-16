@@ -2,10 +2,32 @@
   white-space: normal;
   line-height: normal; /* Adjust line height if needed */
 }
-.container2{
+.container2 {
   background-color: aqua;
-  width:500px;
- margin:auto;
+  width: 500px;
+  margin: auto;
+  padding: 20px; /* Added padding for internal spacing */
+}
+
+.form-group {
+  font-size: larger;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px; /* Space between each form group */
+}
+
+.form-group label {
+  margin-bottom: 5px; /* Space between label and input/select */
+}
+form{
+
+}
+
+.form-group input, .form-group select, .form-group button {
+  width: 100%; /* Make input/select/button take full width of the form group /
+padding: 8px; / Padding for better visuals and consistency /
+/ Add any additional styling you need for inputs, selects, and buttons */
 }
 
 h1{

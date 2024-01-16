@@ -168,269 +168,256 @@ function NewRecord() {
         <div>
         <div className="sharkcage">
         </div>
-        
-   
-        <div className="container2">
-            <button onClick={HomePagenav}>Cancel</button>
-            
-            <h1 className="title">New Loan</h1>
-            <div className="form-group6">
-                <label htmlFor="recordType">Loan or Payment </label>
-                <select
-                id="recordType"
-                name="recordType"
-                value={formData.recordType}
-                onChange={handleChange}
-                required
-                >
-                <option value="Loan">Loan  </option>
-                <option value="Payment">Payment  </option>
-                
-
-                </select>
-            </div>
-            
-            
-            
-            {
-    formData.recordType === "Loan" && (
-            <div className="form-group7">
-                <label htmlFor="newOrExisting">New or Existing Client </label>
-                <select
-                id="newOrExisting"
-                name="newOrExisting"
-                value={formData.newOrExisting}
-                onChange={handleChange}
-                required
-                >
-                <option value="New">New  </option>
-                <option value="Existing">Existing  </option>
-                
-
-                </select>
-            </div>
-    )}
-
-            <form onSubmit={handleSubmit}>
-                
-
-            {
-    formData.recordType === "Payment" && (
-        <div className="client-name-row"> 
-            <span>Client Name</span>
-            <ClientDropdown onSelectClient={handleClientSelection}/>
-        </div>
-    )
-}
 
 
-{
-    formData.recordType === "Loan" && formData.newOrExisting === "Existing" && (
-        <div className="client-name-row"> 
-            <span>Client Name</span>
-            <ClientDropdown onSelectClient={handleClientSelection}/>
-        </div>
-    )
-}
+            <div className="container2">
+                <button onClick={HomePagenav}>Cancel</button>
 
-{
-    formData.recordType === "Payment" && (
-        <div className="client-name-row2"> 
-            <span>LoanID</span>
-            <LoanDropdown onSelectLoan={handleLoanSelect} clientId={selectedClient}/>
-        </div>
-    )
-}
-
-
-            {
-    formData.recordType === "Payment" && (
-                <div className="form-group9">
-                    <label htmlFor="paymentDueDate">Payment Due Date  </label>
-                    <input
-                        type="date"
-                        id="paymentDueDate"
-                        name="paymentDueDate"
-                        value={formData.paymentDueDate}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-)}
-
-
-{
-    formData.recordType === "Payment" && (
-                <div className="form-group22">
-                    <label htmlFor="paymentDue">Amount Due   </label>
-                    <input
-                        type="number"
-                        id="paymentDue"
-                        name="paymentDue"
-                        value={formData.paymentDue}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-)}
-                
-                
-            
-            {
-    formData.recordType === "Loan" && formData.newOrExisting === "New" &&(
+                <h1 className="title">{formData.recordType === "Loan" ? "New Loan" : "New Payment"}</h1>
                 <div className="form-group">
-                    <label htmlFor="name">Name  </label>
-                    <input
-                        type="text"
-                        id="name"
-                        placeholder=""
-                        name="name"
-                        value={formData.name}
+                    <label htmlFor="recordType">Loan or Payment </label>
+                    <select
+                        id="recordType"
+                        name="recordType"
+                        value={formData.recordType}
                         onChange={handleChange}
                         required
-                    />
-                </div>
+                    >
+                        <option value="Loan">Loan</option>
+                        <option value="Payment">Payment</option>
 
-    )}
 
-                {
-    formData.recordType === "Loan" && (
-                <div className="form-group2">
-                    <label htmlFor="date">Loan Issue Date  </label>
-                    <input
-                        type="date"
-                        id="date"
-                        name="issuedate"
-                        value={formData.issuedate}
-                        onChange={handleChange}
-                        required
-                    />
+                    </select>
                 </div>
-)}
 
 
                 {
-    formData.recordType === "Loan" && (
-                <div className="form-group3">
-                    <label htmlFor="date">Loan Maturity Date  </label>
-                    <input
-                        type="date"
-                        id="date"
-                        name="maturitydate"
-                        value={formData.maturitydate}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-    )}
+                    formData.recordType === "Loan" && (
+                        <div className="form-group">
+                            <label htmlFor="newOrExisting">New or Existing Client </label>
+                            <select
+                                id="newOrExisting"
+                                name="newOrExisting"
+                                value={formData.newOrExisting}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="New">New</option>
+                                <option value="Existing">Existing</option>
 
 
+                            </select>
+                        </div>
+                    )}
 
-                {
-    formData.recordType === "Loan" && (
-                <div className="form-group4">
-                    <label htmlFor="loanAmount">Loan Amount  </label>
-                    <input
-                        type="number"
-                        id="loanAmount"
-                        placeholder=""
-                        name="loanAmount"
-                        value={formData.loanAmount}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-    )}
+                <form onSubmit={handleSubmit}>
 
-              
 
-                {
-    formData.recordType === "Loan" && (
-                <div className="form-group16">
-                <label htmlFor="paymentFrequency">Payment Frequency </label>
-                <select
-                id="paymentFrequency"
-                name="paymentFrequency"
-                value={formData.paymentFrequency}
-                onChange={handleChange}
-                required
-                >
-                <option value="Monthly">Monthly  </option>
-                <option value="Quarterly">Quarterly  </option>
-                <option value="Annually">Annually</option>
-                <option value="Manual">MANUAL</option>
+                    {
+                        formData.recordType === "Payment" && (
+                            <div className="client-name-row">
+                                <span>Client Name</span>
+                                <ClientDropdown onSelectClient={handleClientSelection}/>
+                            </div>
+                        )
+                    }
 
-                </select>
+
+                    {
+                        formData.recordType === "Loan" && formData.newOrExisting === "Existing" && (
+                            <div className="client-name-row">
+                                <span>Client Name</span>
+                                <ClientDropdown onSelectClient={handleClientSelection}/>
+                            </div>
+                        )
+                    }
+
+                    {
+                        formData.recordType === "Payment" && (
+                            <div className="client-name-row">
+                                <span>LoanID</span>
+                                <LoanDropdown onSelectLoan={handleLoanSelect} clientId={selectedClient}/>
+                            </div>
+                        )
+                    }
+
+
+                    {
+                        formData.recordType === "Payment" && (
+                            <div className="form-group">
+                                <label htmlFor="paymentDueDate">Payment Due Date </label>
+                                <input
+                                    type="date"
+                                    id="paymentDueDate"
+                                    name="paymentDueDate"
+                                    value={formData.paymentDueDate}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        )}
+
+
+                    {
+                        formData.recordType === "Payment" && (
+                            <div className="form-group">
+                                <label htmlFor="paymentDue">Amount Due </label>
+                                <input
+                                    type="number"
+                                    id="paymentDue"
+                                    name="paymentDue"
+                                    value={formData.paymentDue}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        )}
+
+
+                    {
+                        formData.recordType === "Loan" && formData.newOrExisting === "New" && (
+                            <div className="form-group">
+                                <label htmlFor="name">Name </label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    placeholder=""
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                        )}
+
+                    {
+                        formData.recordType === "Loan" && (
+                            <div className="form-group">
+                                <label htmlFor="date">Loan Issue Date </label>
+                                <input
+                                    type="date"
+                                    id="date"
+                                    name="issuedate"
+                                    value={formData.issuedate}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        )}
+
+
+                    {
+                        formData.recordType === "Loan" && (
+                            <div className="form-group">
+                                <label htmlFor="date">Loan Maturity Date </label>
+                                <input
+                                    type="date"
+                                    id="date"
+                                    name="maturitydate"
+                                    value={formData.maturitydate}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        )}
+
+
+                    {
+                        formData.recordType === "Loan" && (
+                            <div className="form-group">
+                                <label htmlFor="loanAmount">Loan Amount </label>
+                                <input
+                                    type="number"
+                                    id="loanAmount"
+                                    placeholder=""
+                                    name="loanAmount"
+                                    value={formData.loanAmount}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        )}
+
+
+                    {
+                        formData.recordType === "Loan" && (
+                            <div className="form-group">
+                                <label htmlFor="paymentFrequency">Payment Frequency </label>
+                                <select
+                                    id="paymentFrequency"
+                                    name="paymentFrequency"
+                                    value={formData.paymentFrequency}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="Monthly">Monthly</option>
+                                    <option value="Quarterly">Quarterly</option>
+                                    <option value="Annually">Annually</option>
+                                    <option value="Manual">MANUAL</option>
+
+                                </select>
+                            </div>
+                        )
+                    }
+
+
+                    {
+                        formData.paymentFrequency !== "Manual" && formData.recordType === "Loan" && (
+                            <div className="form-group">
+                                <label htmlFor="interestRate">Interest Rate Annual % </label>
+                                <input
+                                    type="number"
+                                    id="interestRate"
+                                    placeholder=""
+                                    name="interestRate"
+                                    value={formData.interestRate}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        )
+                    }
+
+
+                    {
+                        formData.paymentFrequency === "Manual" && (
+                            <div className="form-group">
+                                <label htmlFor="firstPayment">Upcoming Payment Amount </label>
+                                <input
+                                    type="number"
+                                    id="firstPayment"
+                                    placeholder=""
+                                    name="firstPayment"
+                                    value={formData.firstPayment}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        )
+                    }
+
+
+                    {
+                        formData.paymentFrequency === "Manual" && (
+                            <div className="form-group">
+                                <label htmlFor="firstPaymentDate">Upcoming Payment Date </label>
+                                <input
+                                    type="date"
+                                    id="firstPaymentDate"
+                                    name="firstPaymentDate"
+                                    value={formData.firstPaymentDate}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        )
+                    }
+
+
+                    <button type="submit">Submit</button>
+                </form>
             </div>
-    )
-}
-
-
-
-
-            {
-    formData.paymentFrequency !== "Manual" && formData.recordType === "Loan" && (
-        <div className="form-group5">
-            <label htmlFor="interestRate">Interest Rate Annual %  </label>
-            <input
-                type="number"
-                id="interestRate"
-                placeholder=""
-                name="interestRate"
-                value={formData.interestRate}
-                onChange={handleChange}
-                required
-            />
-        </div>
-    )
-}
-
-
-
-
-{
-    formData.paymentFrequency === "Manual" && (
-        <div className="form-group5">
-            <label htmlFor="firstPayment">Upcoming Payment Amount </label>
-            <input
-                type="number"
-                id="firstPayment"
-                placeholder=""
-                name="firstPayment"
-                value={formData.firstPayment}
-                onChange={handleChange}
-                required
-            />
-        </div>
-    )
-}
-
-
-
-
-{
-    formData.paymentFrequency === "Manual" && (
-        <div className="form-group3">
-        <label htmlFor="firstPaymentDate">Upcoming Payment Date  </label>
-        <input
-            type="date"
-            id="firstPaymentDate"
-            name="firstPaymentDate"
-            value={formData.firstPaymentDate}
-            onChange={handleChange}
-            required
-        />
-    </div>
-    )
-}
-
-
-
-                
-
-                <button type="submit">Submit</button>
-            </form>
-        </div>
         </div>
     );
 }
