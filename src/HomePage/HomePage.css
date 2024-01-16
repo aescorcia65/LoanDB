@@ -59,6 +59,10 @@ height: 100%;
 width: 100%;
 }
 
+.ag-header-cell {
+  background-color: rgb(198,224,180) /* Your desired background color for headers */;
+}
+
 
 
 /*.ag-theme-balham{*/

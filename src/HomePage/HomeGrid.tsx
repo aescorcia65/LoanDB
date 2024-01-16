@@ -16,7 +16,15 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const [updateCount, setUpdateCount]= useState(0)
 
     const gridOptions = {
-        headerHeight: 40, // Adjust this value as needed
+        // ... other grid options
+        headerHeight: 40,
+        getRowStyle: (params: any) => {
+            if (params.data.Closed) {
+                return { backgroundColor: 'rgb(208,206,206)' }; // Row color for 'Closed' is true
+            } else {
+                return { backgroundColor: 'rgb(255,255,204)' }; // Row color for 'Closed' is false
+            }
+        }
     };
 
     const columnDefs: ColDef[] = [
@@ -117,13 +125,19 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 if (gridApi != null) {
                     if (apiData && apiData.results) {
                         const sortedPayments = apiData.results.sort((a: any, b: any) => {
-                            // Convert dates to Date objects for comparison
-                            const dateA = new Date(a.PaymentDueDate);
-                            const dateB = new Date(b.PaymentDueDate);
-                            return dateB.getTime() - dateA.getTime(); // Sort in descending order (newest first)
+                            // Assuming PaidStatus is a boolean where true represents 'closed'
+                            // Sorting 'closed' (true) first and then 'open' (false)
+                            if (a.PaidStatus && !b.PaidStatus) {
+                                return 1; // a comes first
+                            } else if (!a.PaidStatus && b.PaidStatus) {
+                                return -1; // b comes first
+                            } else {
+                                return 0; // No change in order
+                            }
                         });
-                    setRowData(mapApiResponseToGridFields(sortedPayments));
-                }}
+                        setRowData(mapApiResponseToGridFields(sortedPayments));
+                    }
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
                 // Consider setting an error state and displaying it in the UI
