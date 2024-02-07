@@ -55,19 +55,19 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
 
     const columnDefs: ColDef[] = [
 
-        { headerName: 'Name',field: 'Name', width: 122, filter: true, autoHeight:true , cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text' },
+        { headerName: 'Name',field: 'Name', width: 122, autoHeaderHeight: true, filter: true, autoHeight:true , cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text' },
         { headerName: 'LX ID', field: 'LoanID', headerClass: 'thick-border', width: 122, filter: true, autoHeight:true, cellStyle: {'padding-left': 4 ,'border-right': '2px solid', 'border-bottom': '1px solid'}},
+        { headerName: 'Interest Payment Due Date', autoHeaderHeight: true, field: 'DueDate' , headerClass: 'wrap-header-text', width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
+        { headerName: 'Interest Payment Expected', autoHeaderHeight: true, field: 'PaymentDue', filter: true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
+        { headerName: 'Interest Payment Received', field: 'PaymentReceived', filter: true, editable:true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
+        { headerName: 'Interest Payment Received Date', field: 'PaymentReceivedDate', filter: true, editable:true, width: 127,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text',},
+        { headerName: 'Closed',field: 'Closed', filter: true, editable:true, width: 95  ,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'  },  
         { headerName: 'Loan Amt', field: 'Principal',  filter: true, width: 122 ,columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text' },
         { headerName: 'Loan Issue Date',field: 'Issued', filter: true, width: 122, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text' },
         { headerName: 'Loan Maturity Date',field: 'Due' , filter: true, width: 122, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text' },
         { headerName: 'Interest Rate', field: 'InterestRate', filter: true, width: 122, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
         { headerName: 'Payment Freq',field: 'PaymentFreq', filter: true, width: 122, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '2px solid', 'border-bottom': '1px solid'}, headerClass: 'thick-border'},
-        { headerName: 'Payment Due Date', field: 'DueDate' , headerClass: 'wrap-header-text', width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
-        { headerName: 'Payment Expected', field: 'PaymentDue', filter: true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
-        { headerName: 'Payment Received', field: 'PaymentReceived', filter: true, editable:true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
-        { headerName: 'Payment Received Date', field: 'PaymentReceivedDate', filter: true, editable:true, width: 127,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text',},
-        { headerName: 'Closed',field: 'Closed', filter: true, editable:true, width: 95  ,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'  },
-          
+       
     ];
 
     // This function maps the API response to the grid's data format
