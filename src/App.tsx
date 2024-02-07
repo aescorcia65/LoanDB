@@ -7,6 +7,7 @@ import NewRecord from './NewRecordPage/NewRecord';
 import UpcomingPayments from './UpcomingPaymentsPage/UpcomingPayments'
 import RecordInfo from './RecordInfoPage/RecordInfo';
 import ClosePaymentModal from "./HomePage/ClosePaymentModal";
+import LoanInfo from './LoanInfo/LoanInfo';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/NewRecord" element={<NewRecord />} />
           <Route path="/RecordInfo" element={<RecordInfo />} />
           <Route path="/UpcomingPayments" element={<UpcomingPayments />} />
+          <Route path="/LoanInfo" element={<LoanInfo />} />
          
 
           {/* Other routes */}
