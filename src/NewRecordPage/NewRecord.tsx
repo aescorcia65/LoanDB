@@ -6,7 +6,7 @@ import LoanDropdown from '../HomePage/LoanDropdown';
 
 function NewRecord() {
     const navigate = useNavigate();
-  
+
     // This function is responsible for navigation
     const HomePagenav = () => {
       navigate('/');
@@ -31,7 +31,9 @@ function NewRecord() {
         paymentDue: "" ,
         newOrExisting: "New",
         interestAmount: undefined,
-        interestType: undefined
+        interestType: undefined,
+        maturityType: undefined,
+        maturityPeriod: undefined
     });
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -312,17 +314,43 @@ function NewRecord() {
                     {
                         formData.recordType === "Loan" && (
                             <div className="form-group">
-                                <label htmlFor="date">Loan Maturity Date </label>
-                                <input
-                                    type="date"
-                                    id="date"
-                                    name="maturitydate"
-                                    value={formData.maturitydate}
-                                    onChange={handleChange}
-                                    required
-                                />
+                                <label htmlFor="maturityType">Loan Maturity Type</label>
+                                <div>
+                                    <input
+                                        type="radio"
+                                        id="weeks"
+                                        name="maturityType"
+                                        value="weeks"
+                                        checked={formData.maturityType === "weeks"}
+                                        onChange={handleChange}
+                                    />
+                                    <label htmlFor="weeks">Weeks</label>
+                                    <input
+                                        type="radio"
+                                        id="months"
+                                        name="maturityType"
+                                        value="months"
+                                        checked={formData.maturityType === "months"}
+                                        onChange={handleChange}
+                                    />
+                                    <label htmlFor="months">Months</label>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="maturityPeriod">Maturity Period</label>
+                                    <input
+                                        type="number"
+                                        id="maturityPeriod"
+                                        placeholder=""
+                                        name="maturityPeriod"
+                                        value={formData.maturityPeriod}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
                             </div>
-                        )}
+                        )
+                    }
+
 
 
                     {
