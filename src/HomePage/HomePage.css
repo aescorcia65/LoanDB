@@ -131,6 +131,26 @@ margin-top: -22px;
 
 
 
+
+.payment-container {
+  width: 80%;
+  margin: 0 auto;
+}
+.payment-record {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.record-field {
+  display: block;
+  margin-bottom: 5px;
+}
+.record-label {
+  font-weight: bold;
+}
+
+
+
 /*.ag-theme-balham{*/
 /*  --ag-borders: 1px;*/
 /*}*/

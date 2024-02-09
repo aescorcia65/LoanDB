@@ -398,7 +398,59 @@ function LoanInfo() {
                 <h2> Interest Paid</h2>
                 <h3>$50 Dollars</h3>
             </div>
+
             </div>
+            
+            <div className="container2">
+                    <h2>Payments Made</h2>
+            
+            
+            <div className="payment-record">
+        <span className="record-field record-label">Date:</span>
+        <span className="record-field record-date">2024-01-22</span>
+        
+        <span className="record-field record-label">Amount:</span>
+        <span className="record-field record-amount">$34</span>
+        
+        <span className="record-field record-label">Notes:</span>
+        <span className="record-field record-notes">Zelle (298417)</span>
+    </div>  
+
+
+
+
+    <div className="payment-record">
+        <span className="record-field record-label">Date:</span>
+        <span className="record-field record-date">2024-01-07</span>
+        
+        <span className="record-field record-label">Amount:</span>
+        <span className="record-field record-amount">$123</span>
+        
+        <span className="record-field record-label">Notes:</span>
+        <span className="record-field record-notes">Cash</span>
+    </div>  
+
+
+
+
+    <div className="payment-record">
+        <span className="record-field record-label">Date:</span>
+        <span className="record-field record-date">2024-02-02</span>
+        
+        <span className="record-field record-label">Amount:</span>
+        <span className="record-field record-amount">$23.50</span>
+        
+        <span className="record-field record-label">Notes:</span>
+        <span className="record-field record-notes">Zelle (124214)</span>
+    </div>  
+
+
+
+    </div> 
+
+
+
+
         </div>
     );
 }
