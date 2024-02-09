@@ -55,6 +55,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
 
     const columnDefs: ColDef[] = [
 
+        { headerName: 'Delete',field: 'Delete', filter: true, editable:true, width: 85  ,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'  },  
         { headerName: 'Name',field: 'Name', width: 122, autoHeaderHeight: true, filter: true, autoHeight:true , cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text' },
         { headerName: 'LX ID', field: 'LoanID', headerClass: 'thick-border', width: 122, filter: true, autoHeight:true, cellStyle: {'padding-left': 4 ,'border-right': '2px solid', 'border-bottom': '1px solid'}},
         { headerName: 'Remaining Principle', field: 'remainingPrinciple', headerClass: 'thick-border', width: 122, filter: true, autoHeight:true, cellStyle: {'padding-left': 4 ,'border-right': '2px solid', 'border-bottom': '1px solid'}},
