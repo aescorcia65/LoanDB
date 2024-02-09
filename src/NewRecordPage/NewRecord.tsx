@@ -19,7 +19,7 @@ function NewRecord() {
     const [formData, setFormData] = useState({
         name: "",
         maturitydate: "",
-        issuedate: "",
+        issuedate: new Date().toISOString().split('T')[0],
         interestRate: "",
         paymentFrequency: 'Monthly',
         loanAmount: "",
@@ -29,7 +29,9 @@ function NewRecord() {
         recordType: 'Loan',
         paymentDueDate:"",
         paymentDue: "" ,
-        newOrExisting: "New"
+        newOrExisting: "New",
+        interestAmount: undefined,
+        interestType: undefined
     });
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -365,16 +367,54 @@ function NewRecord() {
                     {
                         formData.paymentFrequency !== "Manual" && formData.recordType === "Loan" && (
                             <div className="form-group">
-                                <label htmlFor="interestRate">Interest Rate Annual % </label>
-                                <input
-                                    type="number"
-                                    id="interestRate"
-                                    placeholder=""
-                                    name="interestRate"
-                                    value={formData.interestRate}
-                                    onChange={handleChange}
-                                    required
-                                />
+                                <label htmlFor="interestType">Interest Type</label>
+                                <div>
+                                    <input
+                                        type="radio"
+                                        id="percent"
+                                        name="interestType"
+                                        value="percent"
+                                        checked={formData.interestType === "percent"}
+                                        onChange={handleChange}
+                                    />
+                                    <label htmlFor="percent">Percent</label>
+                                    <input
+                                        type="radio"
+                                        id="setAmount"
+                                        name="interestType"
+                                        value="setAmount"
+                                        checked={formData.interestType === "setAmount"}
+                                        onChange={handleChange}
+                                    />
+                                    <label htmlFor="setAmount">Set Amount</label>
+                                </div>
+                                {formData.interestType === "percent" ? (
+                                    <div className="form-group">
+                                        <label htmlFor="interestRate">Interest Rate Annual % </label>
+                                        <input
+                                            type="number"
+                                            id="interestRate"
+                                            placeholder=""
+                                            name="interestRate"
+                                            value={formData.interestRate}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="form-group">
+                                        <label htmlFor="interestAmount">Interest Amount</label>
+                                        <input
+                                            type="number"
+                                            id="interestAmount"
+                                            placeholder=""
+                                            name="interestAmount"
+                                            value={formData.interestAmount}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                )}
                             </div>
                         )
                     }
