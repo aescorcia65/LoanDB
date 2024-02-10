@@ -311,52 +311,14 @@ function NewRecord() {
                         )}
 
 
-                    {
-                        formData.recordType === "Loan" && (
-                            <div className="form-group">
-                                <label htmlFor="maturityType">Loan Maturity Type</label>
-                                <div>
-                                    <input
-                                        type="radio"
-                                        id="weeks"
-                                        name="maturityType"
-                                        value="weeks"
-                                        checked={formData.maturityType === "weeks"}
-                                        onChange={handleChange}
-                                    />
-                                    <label htmlFor="weeks">Weeks</label>
-                                    <input
-                                        type="radio"
-                                        id="months"
-                                        name="maturityType"
-                                        value="months"
-                                        checked={formData.maturityType === "months"}
-                                        onChange={handleChange}
-                                    />
-                                    <label htmlFor="months">Months</label>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="maturityPeriod">Maturity Period</label>
-                                    <input
-                                        type="number"
-                                        id="maturityPeriod"
-                                        placeholder=""
-                                        name="maturityPeriod"
-                                        value={formData.maturityPeriod}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                            </div>
-                        )
-                    }
+
 
 
 
                     {
                         formData.recordType === "Loan" && (
                             <div className="form-group">
-                                <label htmlFor="loanAmount">Loan Amount </label>
+                                <label htmlFor="loanAmount">Loan Amount (Principle)</label>
                                 <input
                                     type="number"
                                     id="loanAmount"
@@ -373,7 +335,7 @@ function NewRecord() {
                     {
                         formData.recordType === "Loan" && (
                             <div className="form-group">
-                                <label htmlFor="paymentFrequency">Payment Frequency </label>
+                                <label htmlFor="paymentFrequency">Interest Payment Frequency </label>
                                 <select
                                     id="paymentFrequency"
                                     name="paymentFrequency"
@@ -382,9 +344,8 @@ function NewRecord() {
                                     required
                                 >
                                     <option value="Monthly">Monthly</option>
-                                    <option value="Quarterly">Quarterly</option>
-                                    <option value="Annually">Annually</option>
-                                    <option value="Manual">MANUAL</option>
+                                    <option value="Weekly">Weekly</option>
+                                    
 
                                 </select>
                             </div>
@@ -393,45 +354,9 @@ function NewRecord() {
 
 
                     {
-                        formData.paymentFrequency !== "Manual" && formData.recordType === "Loan" && (
-                            <div className="form-group">
-                                <label htmlFor="interestType">Interest Type</label>
-                                <div>
-                                    <input
-                                        type="radio"
-                                        id="percent"
-                                        name="interestType"
-                                        value="percent"
-                                        checked={formData.interestType === "percent"}
-                                        onChange={handleChange}
-                                    />
-                                    <label htmlFor="percent">Percent</label>
-                                    <input
-                                        type="radio"
-                                        id="setAmount"
-                                        name="interestType"
-                                        value="setAmount"
-                                        checked={formData.interestType === "setAmount"}
-                                        onChange={handleChange}
-                                    />
-                                    <label htmlFor="setAmount">Set Amount</label>
-                                </div>
-                                {formData.interestType === "percent" ? (
+                         formData.recordType === "Loan" && (
                                     <div className="form-group">
-                                        <label htmlFor="interestRate">Interest Rate Annual % </label>
-                                        <input
-                                            type="number"
-                                            id="interestRate"
-                                            placeholder=""
-                                            name="interestRate"
-                                            value={formData.interestRate}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className="form-group">
-                                        <label htmlFor="interestAmount">Interest Amount</label>
+                                        <label htmlFor="interestAmount">Interest Payment Amount</label>
                                         <input
                                             type="number"
                                             id="interestAmount"
@@ -442,9 +367,9 @@ function NewRecord() {
                                             required
                                         />
                                     </div>
-                                )}
-                            </div>
-                        )
+                                )
+                            
+                        
                     }
 
 
