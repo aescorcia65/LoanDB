@@ -6,6 +6,8 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import './HomePage.css';
 import ClosePaymentModal from "./ClosePaymentModal";
+import { FaRegTrashCan } from "react-icons/fa6";
+
 
 
 
@@ -53,9 +55,13 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         }
     };
 
+    const deleteIconCellRenderer = () => {
+        return <FaRegTrashCan />;
+    };
+
     const columnDefs: ColDef[] = [
 
-        { headerName: 'Delete',field: 'Delete', filter: true, editable:true, width: 85  ,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'  },  
+        { headerName: '',field: 'Delete', width: 30 ,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text', cellRenderer : deleteIconCellRenderer  },
         { headerName: 'Name',field: 'Name', width: 122, autoHeaderHeight: true, filter: true, autoHeight:true , cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text' },
         { headerName: 'LX ID', field: 'LoanID', headerClass: 'thick-border', width: 122, filter: true, autoHeight:true, cellStyle: {'padding-left': 4 ,'border-right': '2px solid', 'border-bottom': '1px solid'}},
         { headerName: 'Remaining Principle', field: 'remainingPrinciple', headerClass: 'thick-border', width: 122, filter: true, autoHeight:true, cellStyle: {'padding-left': 4 ,'border-right': '2px solid', 'border-bottom': '1px solid'}},
