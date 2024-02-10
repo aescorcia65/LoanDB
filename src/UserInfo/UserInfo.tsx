@@ -18,7 +18,7 @@ function UserInfo() {
         
 
 
-            <div className="container3">
+            <div className="container4">
                 <button onClick={HomePagenav}>Cancel</button>
                 <h1>USER INFO</h1>
 
