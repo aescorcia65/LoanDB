@@ -246,6 +246,18 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
 
     }
 
+    function cellClicked(event:any) {
+        if(event.colDef.field === "Name"){
+            navigate('/UserInfo');
+        }
+        else if(event.colDef.field === "LoanID"){
+            navigate('/LoanInfo');
+        }
+
+    }
+
+
+
     return (
         <div className="ag-theme-balham" style={{ width: '100%', height: '100%' }}>
             <AgGridReact
@@ -256,6 +268,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 onCellEditingStopped={updateRecordd}
                 gridOptions={gridOptions}
                 //onRowEditingStopped={updateRecord}
+                onCellClicked={cellClicked}
             />
             <ClosePaymentModal
                 isOpen={isModalOpen}

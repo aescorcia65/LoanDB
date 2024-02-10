@@ -238,27 +238,7 @@ async def update_record(record: UpdateLoan, loan_id: str = Query(...)):
     await database.execute(query, values)
     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
 
-# @app.get("/api/get_upcoming_payments")
-# async def get_all_upcoming_payments(month: str = Query(...), year: str = Query(...)):
-#     query = f"""
-#         SELECT {PAYMENT_TABLE_NAME}.*, {CLIENT_RECORDS_TABLE_NAME}.ClientName FROM {PAYMENT_TABLE_NAME}
-#         JOIN {CLIENT_RECORDS_TABLE_NAME} ON {PAYMENT_TABLE_NAME}.LoanId = {CLIENT_RECORDS_TABLE_NAME}.LoanId
-#         WHERE (PaymentRecAmount < PaymentDueAmount OR PaymentRecAmount IS NULL) AND MONTH(PaymentDueDate) = :month AND YEAR(PaymentDueDate) = :year;
-#     """
-#     values = {"month": month, "year": year}
-#     result = await database.fetch_all(query, values=values)
-#
-#     converted_rows = []
-#     for row in result:
-#         row_dict = dict(row)  # Convert row to dictionary
-#         converted_row = {
-#             key: (value.isoformat() if isinstance(value, date) else
-#                   float(value) if isinstance(value, Decimal) else
-#                   value)
-#             for key, value in row_dict.items()
-#         }
-#         converted_rows.append(converted_row)
-#     return JSONResponse(content={"results": converted_rows}, status_code=200)
+
 
 async def get_payment_by_paymentid(payment_id: str):
     query = f"""
