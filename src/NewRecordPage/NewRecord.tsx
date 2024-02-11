@@ -33,7 +33,8 @@ function NewRecord() {
         interestAmount: undefined,
         interestType: undefined,
         maturityType: undefined,
-        maturityPeriod: undefined
+        maturityPeriod: undefined,
+        loanLength: undefined,
     });
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -351,6 +352,25 @@ function NewRecord() {
                             </div>
                         )
                     }
+
+{
+                        formData.recordType === "Loan" && (
+                            <div className="form-group">
+                                <label htmlFor="loanLength">Loan Length</label>
+                                <input
+                                    type="number"
+                                    id="loanLength"
+                                    placeholder=""
+                                    name="loanLength"
+                                    value={formData.loanLength}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        )}
+
+
+
 
 
                     {
