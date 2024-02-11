@@ -246,7 +246,7 @@ function LoanInfo() {
                     {
                         formData.recordType === "Loan" && formData.newOrExisting === "New" && (
                             <div className="form-group">
-                                <label htmlFor="name">Name </label>
+                                <label htmlFor="name">Name (Autofilled) </label>
                                 <input
                                     type="text"
                                     id="name"
