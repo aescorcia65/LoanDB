@@ -235,7 +235,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
 
    async function deletePayment(event:any) {
 
-    const apiUrl = `/api/update-payment`;
+    const apiUrl = `/api/delete-payment`;
 
     const requestBody = {
         
@@ -313,7 +313,8 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             navigate('/LoanInfo');
         }
         else if(event.colDef.field === "Delete"){
-            setIsDeleteModalOpen(true);;
+            setCurrentEdit(event);
+            setIsDeleteModalOpen(true);
         }
 
     }

@@ -13,7 +13,7 @@ from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from models import NewLoan, NewPayment, Client, Loan, Payment, UpdateLoan, FilterParams, NewClient
+from models import NewLoan, NewPayment, Client, Loan, Payment, UpdateLoan, FilterParams, NewClient, DeletePayment
 
 DATABASE_NAME = "LMS"
 CLIENT_TABLE_NAME = "Client"
@@ -327,6 +327,19 @@ async def update_payment(record: Payment):
     await database.execute(query, values)
     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
 
+
+@app.delete("/api/delete-payment")
+async def delete_payment(record: DeletePayment):
+    query = f"""
+                        DELETE FROM {PAYMENT_TABLE_NAME}
+                        WHERE LoanId = :loan_id AND PaymentId = :payment_id
+                        """
+    values = {
+        "loan_id": record.LoanId,
+        "payment_id": record.PaymentId
+    }
+    await database.execute(query, values)
+    return JSONResponse(content={"message": "Record deleted successfully"}, status_code=200)
 @app.post("/api/filter-data")
 async def filter_data(params: FilterParams):
     # SQL Query for MySQL

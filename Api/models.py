@@ -60,3 +60,7 @@ class FilterParams(BaseModel):
     Years: List[int] = [0]
     ActiveStatus: str
     ClientId: str
+
+class DeletePayment(BaseModel):
+    LoanId: str
+    PaymentId: str
