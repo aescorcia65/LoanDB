@@ -77,7 +77,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         { headerName: 'Loan Amt', field: 'Principal',  filter: true, width: 122 ,columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text' },
         { headerName: 'Loan Issue Date',field: 'Issued', filter: true, width: 122, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text' },
         { headerName: 'Loan Maturity Date',field: 'Due' , filter: true, width: 122, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text' },
-        { headerName: 'Interest Rate', field: 'InterestRate', filter: true, width: 122, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
+        { headerName: 'Interest Amount', field: 'InterestRate', filter: true, width: 122, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
         { headerName: 'Payment Freq',field: 'PaymentFreq', filter: true, width: 122, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '2px solid', 'border-bottom': '1px solid'}, headerClass: 'thick-border'},
        
     ];
@@ -86,7 +86,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const mapApiResponseToGridFields = (apiData:any) => {
         return apiData.map((item:any) => ({
             LoanID: item.LoanId,
-            Due: item.LoanMaturity != null ? item.LoanMaturity : null,
+            Due: item.LoanLength != null ? new Date(new Date(item.IssueDate).getTime() + 86400000).toISOString().split('T')[0] : null,
             Issued: item.IssueDate != null ? item.IssueDate : null,
             Status: Boolean(item.ActiveStatus),
             Name: item.ClientName,
@@ -98,7 +98,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             Closed: Boolean(item.PaidStatus),
             PaymentId: item.PaymentId,
             PaymentFreq: item.PaymentFrequency,
-            InterestRate: item.InterestRate != null ? `${item.InterestRate}%` : null,
+            InterestRate: item.InterestAmount != null ? `${item.InterestAmount}$` : null,
         }));
     };
 
