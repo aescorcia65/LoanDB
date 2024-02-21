@@ -20,7 +20,7 @@ function DeletePaymentModal({ isOpen, onConfirm, onCancel }) {
             style={customStyles}
             contentLabel="Confirmation Modal"
         >
-            <h2>Are You Sure?</h2>
+            <h2>This permenantly delete this record. Are you sure?</h2>
             <button onClick={onConfirm}>Yes</button>
             <button onClick={onCancel}>No</button>
         </Modal>

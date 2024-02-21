@@ -19,6 +19,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const [gridApi, setGridApi] = useState(null);
     const [updateCount, setUpdateCount]= useState(0)
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [currentEdit, setCurrentEdit] = useState(null);
 
     const gridOptions: GridOptions<any> = {
@@ -190,6 +191,23 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         // You can now safely use gridApi here if needed
     }, []);
 
+
+    const handleConfirmDelete = () => {
+        // Perform the update logic here using currentEdit
+        console.log("Delete Confirmed", currentEdit);
+        deletePayment(currentEdit)
+
+        // Close the modal
+        setIsDeleteModalOpen(false);
+
+    };
+
+    const handleCancelDelete = () => {
+        setIsDeleteModalOpen(false);
+        setCurrentEdit(null)
+        setUpdateCount(updateCount => updateCount+1)
+    };
+
     const handleConfirmUpdate = () => {
         // Perform the update logic here using currentEdit
         console.log("Update Confirmed", currentEdit);
@@ -209,19 +227,40 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         if(event.column.colDef.field === "Closed"){
         setCurrentEdit(event);
         setIsModalOpen(true);}
+
         else{
             updatePayment(event)
         }
     }, []);
 
-    const deleteRecord = useCallback((event:any) => {
-        if(event.column.colDef.field === "Delete"){
-        setCurrentEdit(event);
-        setIsModalOpen(true);}
-        else{
-            updatePayment(event)
-        }
-    }, []);
+   async function deletePayment(event:any) {
+
+    const apiUrl = `/api/update-payment`;
+
+    const requestBody = {
+        
+        LoanId: event.data.LoanID,
+        PaymentId: event.data.PaymentId
+        
+    };
+
+    const response = await fetch(apiUrl, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    else{setUpdateCount(updateCount => updateCount+1)}
+
+
+
+
+
+   }
 
     async function updatePayment(event:any) {
         try {
@@ -273,6 +312,9 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         else if(event.colDef.field === "LoanID"){
             navigate('/LoanInfo');
         }
+        else if(event.colDef.field === "Delete"){
+            setIsDeleteModalOpen(true);;
+        }
 
     }
 
@@ -296,9 +338,9 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 onCancel={handleCancelUpdate}
             />
             <DeletePaymentModal
-                isOpen={isModalOpen}
-                onConfirm={handleConfirmUpdate}
-                onCancel={handleCancelUpdate}
+                isOpen={isDeleteModalOpen}
+                onConfirm={handleConfirmDelete}
+                onCancel={handleCancelDelete}
             />
         </div>
     );
