@@ -7,6 +7,7 @@ import 'ag-grid-community/styles/ag-theme-balham.css';
 import './HomePage.css';
 import ClosePaymentModal from "./ClosePaymentModal";
 import { FaRegTrashCan } from "react-icons/fa6";
+import DeletePaymentModal from './DeletePaymentModal';
 
 
 
@@ -212,6 +213,16 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             updatePayment(event)
         }
     }, []);
+
+    const deleteRecord = useCallback((event:any) => {
+        if(event.column.colDef.field === "Delete"){
+        setCurrentEdit(event);
+        setIsModalOpen(true);}
+        else{
+            updatePayment(event)
+        }
+    }, []);
+
     async function updatePayment(event:any) {
         try {
 
@@ -280,6 +291,11 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 onCellClicked={cellClicked}
             />
             <ClosePaymentModal
+                isOpen={isModalOpen}
+                onConfirm={handleConfirmUpdate}
+                onCancel={handleCancelUpdate}
+            />
+            <DeletePaymentModal
                 isOpen={isModalOpen}
                 onConfirm={handleConfirmUpdate}
                 onCancel={handleCancelUpdate}

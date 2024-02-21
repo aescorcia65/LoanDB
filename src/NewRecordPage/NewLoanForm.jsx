@@ -43,7 +43,7 @@ function NewLoanForm() {
 
         try {
             const response = await fetch(apiEndpoint, {
-                method: 'POST', // or 'GET', 'PUT', 'DELETE', etc.
+                method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json', // Assuming you're sending JSON data
                     // Include other headers as needed
