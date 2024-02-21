@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from models import NewLoan, NewPayment, Client, Loan, Payment, UpdateLoan, FilterParams, NewClient
 
-DATABASE_NAME = "TestDB"
+DATABASE_NAME = "LMS"
 CLIENT_TABLE_NAME = "Client"
 CLIENT_RECORDS_TABLE_NAME = "LoanRecord"
 PAYMENT_TABLE_NAME = "PaymentRecord"
@@ -31,13 +31,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/api/new-client")
-async def new_client(client:NewClient):
+
+async def new_client(clientName):
     find_client_query = f"""
         SELECT * FROM {CLIENT_TABLE_NAME}
         WHERE ClientName = :ClientName
         """
-    client_check = await database.fetch_one(find_client_query, {"ClientName": client.ClientName})
+    client_check = await database.fetch_one(find_client_query, {"ClientName": clientName})
 
         # If client not found, create a new client
     if not client_check:
@@ -46,11 +46,11 @@ async def new_client(client:NewClient):
        INSERT INTO {CLIENT_TABLE_NAME} (ClientId, ClientName)
        VALUES (:ClientId, :ClientName)
        """
-       await database.execute(create_client_query,{"ClientId": new_client_id, "ClientName": client.ClientName})
+       await database.execute(create_client_query,{"ClientId": new_client_id, "ClientName": clientName})
        client_id = new_client_id
-       return {"client_id": client_id}
+       return client_id
     else:
-        return {"client_id": client_check.ClientId}
+        return client_check.ClientId
 
 @app.get("/api/clients")
 async def get_all_clients():
@@ -64,68 +64,26 @@ async def create_new_loan(loan: NewLoan):
     # Generate a random 6-digit RecordId
     record_id = random.randint(100000, 999999)
     record_id = "LX-"+str(record_id)
-    query = f"""SELECT * FROM {CLIENT_TABLE_NAME}
-    WHERE ClientId = :client_id
-    """
-    result = await database.fetch_all(query, {"client_id": loan.ClientId})
-    records = [Client(**row).model_dump() for row in result]
-    client_name = records[0]["ClientName"]
+    if loan.Type == "New":
+        client_id = await new_client(loan.Name)
+    else:
+        client_id = loan.ClientId
+
 
     insert_query = f"""
-        INSERT INTO {CLIENT_RECORDS_TABLE_NAME} (LoanId, ClientId, LoanAmount, ActiveStatus, LoanMaturity, ClientName, PaymentFrequency, InterestRate, IssueDate)
-        VALUES (:record_id, :client_id, :loan_amount, :active_status, :loan_maturity, :name, :payment_frequency, :interest_rate, :issue_date)
+        INSERT INTO {CLIENT_RECORDS_TABLE_NAME} (LoanId, ClientId, LoanAmount, ActiveStatus, LoanLength, PaymentFrequency, InterestAmount, IssueDate)
+        VALUES (:record_id, :client_id, :loan_amount, :active_status, :loan_length, :payment_frequency, :interest_amount, :issue_date)
         """
     await database.execute(insert_query, {
             "record_id": record_id,
-            "client_id": loan.ClientId,
+            "client_id": client_id,
             "loan_amount": loan.LoanAmount,
-            "active_status": loan.ActiveStatus,
-            "loan_maturity": loan.LoanMaturity,
-            "name": client_name,
+            "active_status": 1,
+            "loan_length": loan.LoanLength,
             "payment_frequency": loan.PaymentFrequency,
-            "interest_rate": loan.InterestRate,
+            "interest_amount": loan.InterestAmount,
             "issue_date": loan.IssueDate
         })
-
-    if loan.PaymentFrequency == "Monthly":
-        issue_date = loan.IssueDate
-        loan_maturity = loan.LoanMaturity
-
-        total_days = (loan_maturity - issue_date).days
-        new_due_date = loan.IssueDate + timedelta(days=30)
-        new_due_date = min(new_due_date, loan_maturity)
-        amtpayments = total_days // 30
-        dueamt = (loan.LoanAmount * (loan.InterestRate * .01)) / amtpayments
-
-    elif loan.PaymentFrequency == "Quarterly":
-        issue_date = loan.IssueDate
-        loan_maturity = loan.LoanMaturity
-
-        total_days = (loan_maturity - issue_date).days
-        new_due_date = loan.IssueDate + timedelta(days=90)
-        new_due_date = min(new_due_date, loan_maturity)
-        amtpayments = total_days // 90
-        dueamt = (loan.LoanAmount * (loan.InterestRate * .01)) / amtpayments
-
-    elif loan.PaymentFrequency == "Annually":
-        issue_date = loan.IssueDate
-        loan_maturity = loan.LoanMaturity
-
-        total_days = (loan_maturity - issue_date).days
-        new_due_date = loan.IssueDate + relativedelta(years=1)
-        new_due_date = min(new_due_date, loan_maturity)
-        amtpayments = total_days // 365
-        dueamt = (loan.LoanAmount * (loan.InterestRate * .01)) / amtpayments
-    elif loan.PaymentFrequency == "Manual":
-        new_due_date = loan.FirstPaymentDueDate
-        dueamt = loan.FirstPaymentDueAmount
-
-    new_payment = NewPayment(
-        LoanId=record_id,
-        PaymentDueDate=new_due_date,
-        PaymentDueAmount=dueamt
-    )
-    await create_new_payment(new_payment)
     return JSONResponse(content={"message": "New record created successfully", "LoanId": record_id}, status_code=200)
 
 @app.post("/api/new-payment")
@@ -418,10 +376,9 @@ async def create_tables():
         ClientId VARCHAR(50) NOT NULL,
         LoanAmount DECIMAL(10, 2) NOT NULL,
         ActiveStatus BOOLEAN NOT NULL,
-        ClientName VARCHAR(50) NOT NULL,
-        LoanMaturity DATE NOT NULL,
+        LoanLength INT NOT NULL,
         PaymentFrequency VARCHAR(50) NOT NULL,
-        InterestRate DECIMAL(10, 4),
+        InterestAmount DECIMAL(10, 2),
         IssueDate DATE NOT NULL,
         FOREIGN KEY (ClientId) REFERENCES {CLIENT_TABLE_NAME}(ClientId)
     );
