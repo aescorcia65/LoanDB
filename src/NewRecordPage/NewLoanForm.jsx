@@ -3,8 +3,13 @@ import '../HomePage/HomePage.css';
 import { useNavigate } from 'react-router-dom';
 import ClientDropdown from '../HomePage/ClientDropdown';
 import LoanDropdown from '../HomePage/LoanDropdown';
+import NewLoanModal from '../HomePage/NewLoanModal';
 
 function NewLoanForm() {
+
+    const [isNewLoanModalOpen, setisNewLoanModalOpen] = useState(false);
+
+
     const navigate = useNavigate();
 
     // This function is responsible for navigation
@@ -12,6 +17,7 @@ function NewLoanForm() {
         navigate('/');
     };
     const [selectedClient, setSelectedClient] = useState("*");
+
     const [selectedLoan, setSelectedLoan] = useState("");
     const handleClientSelection = (selectedValue) => {
         setSelectedClient(selectedValue); // Update the selected client in state
@@ -36,10 +42,20 @@ function NewLoanForm() {
         }));
     };
 
+    const handleConfirmDelete = () => {
+        
+        deletePayment(currentEdit)
+
+        // Close the modal
+        setIsDeleteModalOpen(false);
+
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent the default form submission behavior
         // Assuming you have an API endpoint '/api/submit-form' and formData is your data to submit
         const apiEndpoint = '/api/new-loan';
+        navigate('/');
 
         try {
             const response = await fetch(apiEndpoint, {

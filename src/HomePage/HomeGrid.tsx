@@ -8,7 +8,7 @@ import './HomePage.css';
 import ClosePaymentModal from "./ClosePaymentModal";
 import { FaRegTrashCan } from "react-icons/fa6";
 import DeletePaymentModal from './DeletePaymentModal';
-
+import NewLoanModal from './NewLoanModal';
 
 
 
@@ -20,6 +20,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const [updateCount, setUpdateCount]= useState(0)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    
     const [currentEdit, setCurrentEdit] = useState(null);
 
     const gridOptions: GridOptions<any> = {
@@ -190,6 +191,8 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         setGridApi(params.api);
         // You can now safely use gridApi here if needed
     }, []);
+
+
 
 
     const handleConfirmDelete = () => {
