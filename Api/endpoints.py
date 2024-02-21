@@ -84,6 +84,20 @@ async def create_new_loan(loan: NewLoan):
             "interest_amount": loan.InterestAmount,
             "issue_date": loan.IssueDate
         })
+
+    if loan.PaymentFrequency == "Monthly":
+        time_delta = relativedelta(months=+1)
+    elif loan.PaymentFrequency == "Weekly":
+        time_delta = relativedelta(weeks=+1)
+    else:
+        raise ValueError("Unsupported Payment Frequency")
+
+    first_payment = NewPayment(
+        LoanId=record_id,
+        PaymentDueDate=loan.IssueDate + time_delta,  # Adds one month to IssueDate
+        PaymentDueAmount=loan.InterestAmount
+    )
+    await create_new_payment(first_payment)
     return JSONResponse(content={"message": "New record created successfully", "LoanId": record_id}, status_code=200)
 
 @app.post("/api/new-payment")
@@ -330,23 +344,25 @@ async def filter_data(params: FilterParams):
     year_conditions = ", ".join(str(year) for year in params.Years)
     if params.ClientId == "*":
         query = f"""
-            SELECT p.*, l.*
-            FROM {PAYMENT_TABLE_NAME} AS p
-            JOIN {CLIENT_RECORDS_TABLE_NAME} AS l ON p.LoanId = l.LoanId
-            WHERE MONTH(p.PaymentDueDate) IN ({month_conditions})
-            AND YEAR(p.PaymentDueDate) IN ({year_conditions})
-            AND (p.PaidStatus IN :active_status)
-            """
+                    SELECT p.*, l.*, c.ClientName
+                    FROM {PAYMENT_TABLE_NAME} AS p
+                    JOIN {CLIENT_RECORDS_TABLE_NAME} AS l ON p.LoanId = l.LoanId
+                    JOIN {CLIENT_TABLE_NAME} AS c ON l.ClientId = c.ClientId
+                    WHERE MONTH(p.PaymentDueDate) IN ({month_conditions})
+                    AND YEAR(p.PaymentDueDate) IN ({year_conditions})
+                    AND p.PaidStatus IN :active_status
+                    """
 
-    # Execute query
+        # Execute query
         result = await database.fetch_all(query=query, values={
             "active_status": active_status
         })
     else:
         query = f"""
-                    SELECT p.*, l.*
+                    SELECT p.*, l.*, c.ClientName
                     FROM {PAYMENT_TABLE_NAME} AS p
                     JOIN {CLIENT_RECORDS_TABLE_NAME} AS l ON p.LoanId = l.LoanId
+                    JOIN {CLIENT_TABLE_NAME} AS c ON l.ClientId = c.ClientId
                     WHERE MONTH(p.PaymentDueDate) IN ({month_conditions})
                     AND YEAR(p.PaymentDueDate) IN ({year_conditions})
                     AND (p.PaidStatus IN :active_status)
