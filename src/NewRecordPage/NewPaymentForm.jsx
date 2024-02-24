@@ -14,9 +14,27 @@ function NewPaymentForm() {
     const [selectedClient, setSelectedClient] = useState("*");
     const [selectedLoan, setSelectedLoan] = useState("");
     const handleClientSelection = (selectedValue) => {
-        setSelectedClient(selectedValue); // Update the selected client in state
+        setSelectedClient(selectedValue);
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            ClientId: selectedValue
+        }));
     };
+
+    function getNewYorkDateISO() {
+        const now = new Date();
+        const localTimeOffset = now.getTimezoneOffset() * 60000;
+        const newYorkOffset = -300 * 60000; // Adjust for EST; consider daylight saving time as well
+        const newYorkDate = new Date(now.getTime() - localTimeOffset + newYorkOffset);
+        return newYorkDate.toISOString().split('T')[0];
+    }
+
     const [formData, setFormData] = useState({
+        LoanId: selectedLoan,
+        ClientId: selectedClient,
+        PaymentDueDate: getNewYorkDateISO(),
+        PaymentDueAmount: ""
+
     });
 
     const handleChange = (e) => {
@@ -28,13 +46,41 @@ function NewPaymentForm() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        console.log(formData)
+        e.preventDefault(); // Prevent the default form submission behavior
+        // Assuming you have an API endpoint '/api/submit-form' and formData is your data to submit
+        const apiEndpoint = '/api/new-payment';
 
+        try {
+            const response = await fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Assuming you're sending JSON data
+                    // Include other headers as needed
+                },
+                body: JSON.stringify(formData), // Convert your data to a JSON string
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json(); // Assuming the server responds with JSON data
+            console.log(result); // Process your result here
+            navigate('/');
+
+            // Handle success, e.g., show a success message, redirect, etc.
+        } catch (error) {
+            console.error('Error:', error);
+            // Handle errors, e.g., show an error message
+        }
     };
 
     function handleLoanSelect(selectedValue) {
         setSelectedLoan(selectedValue);
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            LoanId: selectedValue
+        }));
     }
 
     return (
@@ -67,7 +113,7 @@ function NewPaymentForm() {
                                     type="date"
                                     id="paymentDueDate"
                                     name="paymentDueDate"
-                                    value={formData.paymentDueDate}
+                                    value={formData.PaymentDueDate}
                                     onChange={handleChange}
                                     required
                                 />
@@ -77,12 +123,12 @@ function NewPaymentForm() {
 
 
                             <div className="form-group">
-                                <label htmlFor="paymentDue">Amount Due </label>
+                                <label htmlFor="PaymentDueAmount">Amount Due </label>
                                 <input
                                     type="number"
-                                    id="paymentDue"
-                                    name="paymentDue"
-                                    value={formData.paymentDue}
+                                    id="PaymentDueAmount"
+                                    name="PaymentDueAmount"
+                                    value={formData.PaymentDueAmount}
                                     onChange={handleChange}
                                     required
                                 />

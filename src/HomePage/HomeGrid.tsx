@@ -99,6 +99,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             PaymentReceivedDate: item.PaymentRecDate != null ? item.PaymentRecDate : null,
             Closed: Boolean(item.PaidStatus),
             PaymentId: item.PaymentId,
+            ClientId: item.ClientId,
             PaymentFreq: item.PaymentFrequency,
             InterestRate: item.InterestAmount != null ? `${item.InterestAmount}$` : null,
         }));

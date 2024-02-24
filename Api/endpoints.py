@@ -112,8 +112,8 @@ async def create_new_payment(payment: NewPayment):
         "record_id": payment.LoanId,
         "payment_due_date": payment.PaymentDueDate,
         "payment_due_amount": payment.PaymentDueAmount,
-        "payment_rec_date": payment.PaymentRecDate,
-        "payment_rec_amount": payment.PaymentRecAmount,
+        "payment_rec_date": None,
+        "payment_rec_amount": None,
         "payment_id": payment_id,
         "paid_status": False
     }
