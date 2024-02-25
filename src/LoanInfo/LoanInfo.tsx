@@ -7,7 +7,7 @@ import LoanDropdown from '../HomePage/LoanDropdown';
 function LoanInfo() {
     const location = useLocation(); // Use useParams hook here
     const queryParams = new URLSearchParams(location.search);
-    const loanId = queryParams.get('loanId');// Access loanId from params
+    const loanId = queryParams.get('LoanId');// Access loanId from params
     const navigate = useNavigate();
   
     // This function is responsible for navigation

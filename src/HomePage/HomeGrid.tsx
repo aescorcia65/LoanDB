@@ -314,7 +314,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             navigate(`/UserInfo?ClientId=${event.data.ClientId}`);
         }
         else if(event.colDef.field === "LoanID"){
-            navigate('/LoanInfo');
+            navigate(`/LoanInfo?LoanId=${event.data.LoanID}`);
         }
         else if(event.colDef.field === "Delete"){
             setCurrentEdit(event);
