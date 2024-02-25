@@ -311,7 +311,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
 
     function cellClicked(event:any) {
         if(event.colDef.field === "Name"){
-            navigate('/UserInfo');
+            navigate(`/UserInfo?ClientId=${event.data.ClientId}`);
         }
         else if(event.colDef.field === "LoanID"){
             navigate('/LoanInfo');
