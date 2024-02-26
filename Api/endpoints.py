@@ -306,6 +306,45 @@ async def update_payment(record: Payment):
     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
 
 
+
+@app.get("/api/user-info")
+async def user_info(client_id):
+    query = f"""
+            SELECT
+                c.ClientId,
+                c.ClientName,
+                cr.LoanId,
+                cr.LoanAmount,
+                cr.PrincipalRemaining,
+                cr.ActiveStatus,
+                cr.LoanLength,
+                cr.PaymentFrequency,
+                cr.InterestAmount,
+                cr.IssueDate,
+                p.PaymentDueDate,
+                p.PaymentDueAmount,
+                p.PaymentRecDate,
+                p.PaymentRecAmount,
+                p.PaidStatus,
+                p.PrincipalPaymentRec,
+                p.Notes,
+                p.PaymentId
+            FROM
+                {CLIENT_TABLE_NAME} AS c
+            JOIN
+                {CLIENT_RECORDS_TABLE_NAME} AS cr ON c.ClientId = cr.ClientId
+            JOIN
+                {PAYMENT_TABLE_NAME} AS p ON cr.LoanId = p.LoanId
+            WHERE
+                c.ClientId = :client_id;
+
+            """
+        values = {
+            "client_id": record.LoanId
+        }
+        await database.execute(query, values)
+        return JSONResponse(content={"message": "Record deleted successfully"}, status_code=200)
+
 @app.delete("/api/delete-payment")
 async def delete_payment(record: DeletePayment):
     query = f"""

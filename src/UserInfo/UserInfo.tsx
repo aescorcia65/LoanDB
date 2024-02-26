@@ -10,7 +10,10 @@ function UserInfo() {
     const location = useLocation(); // Use useParams hook here
     const queryParams = new URLSearchParams(location.search);
     const ClientId = queryParams.get('ClientId');// Access loanId from params
-    const [UserInfo, setUserInfo] = useState({});
+    const [UserInfo, setUserInfo] = useState({
+        penis:"balls",
+
+    });
   
     // This function is responsible for navigation
     const HomePagenav = () => {
@@ -31,7 +34,7 @@ function UserInfo() {
 
                 <div className="payment-record">
                     <span className="record-field record-label">Name:</span>
-                    <span className="record-field record-date">{ClientId}</span>
+                    <span className="record-field record-date">{UserInfo.penis}</span>
 
                     <span className="record-field record-label">Total Interest Paid</span>
                     <span className="record-field record-amount">$34</span>
