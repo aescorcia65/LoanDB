@@ -47,6 +47,8 @@ class Payment(BaseModel):
     PaymentRecAmount: Optional[float] = None
     PaymentId: Optional[str] = None
     PaidStatus: bool
+    PrinciplePaymentReceived: Optional[float] = None
+    Notes: Optional[str] = None
 
 class NewPayment(BaseModel):
     LoanId: str

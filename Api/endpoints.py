@@ -232,11 +232,11 @@ async def get_payment_by_paymentid(payment_id: str):
         return converted_rows[0]
 
 @app.put("/api/update-payment-status")
-async def update_payment_status(payment_id: str = Query(...), paid_staus: bool = Query(...)):
+async def update_payment_status(payment_id: str = Query(...), paid_status: bool = Query(...)):
     record = await get_payment_by_paymentid(payment_id)
     loan = await search_by_loan_id(record["LoanId"])
     loan = loan["results"][0]
-    if record["PaidStatus"] == paid_staus:
+    if record["PaidStatus"] == paid_status:
         return JSONResponse(content={"message": "Payment Status is already updated"}, status_code=200)
     query = f"""
         UPDATE {PAYMENT_TABLE_NAME}
@@ -246,66 +246,36 @@ async def update_payment_status(payment_id: str = Query(...), paid_staus: bool =
 
     values = {
         "payment_id": payment_id,
-        "paid_status": paid_staus
+        "paid_status": paid_status
     }
 
     await database.execute(query, values)
-    if paid_staus == False:
+    if paid_status == False:
         return "Status Updated"
     payfreq = loan["PaymentFrequency"]
-    if payfreq == "Manual" or record["PaymentDueAmount"] == loan["LoanAmount"]:
-        return "Status Updated"
-    elif payfreq == "Monthly":
-        date_format = "%Y-%m-%d"
-        issue_date = datetime.strptime(loan["IssueDate"], date_format)
-        loan_maturity = datetime.strptime(loan["LoanMaturity"], date_format)
-        last_payment_date = record["PaymentDueDate"]
-        if isinstance(last_payment_date, date) and not isinstance(last_payment_date, datetime):
-            last_payment_date = datetime.combine(last_payment_date, datetime.min.time())
-        print(issue_date)
+    query = f"""
+            SELECT * FROM {PAYMENT_TABLE_NAME}
+            WHERE LoanId = :loan_id
+            """
 
-        total_days = (loan_maturity - issue_date).days
-        new_due_date = last_payment_date + timedelta(days=30)
-        new_due_date = min(new_due_date, loan_maturity)
-        print(new_due_date)
-        amtpayments = total_days // 30
-        dueamt = (loan["LoanAmount"] * (loan["InterestRate"] * .01)) / amtpayments
-    elif payfreq == "Quarterly":
-        date_format = "%Y-%m-%d"
-        issue_date = datetime.strptime(loan["IssueDate"], date_format)
-        loan_maturity = datetime.strptime(loan["LoanMaturity"], date_format)
-        last_payment_date = record["PaymentDueDate"]
-        if isinstance(last_payment_date, date) and not isinstance(last_payment_date, datetime):
-            last_payment_date = datetime.combine(last_payment_date, datetime.min.time())
-
-        total_days = (loan_maturity - issue_date).days
-        new_due_date = last_payment_date + timedelta(days=90)
-        new_due_date = min(new_due_date, loan_maturity)
-        amtpayments = total_days // 90
-        dueamt = (loan["LoanAmount"] * (loan["InterestRate"] * .01)) / amtpayments
-    elif payfreq == "Annually":
-        date_format = "%Y-%m-%d"
-        issue_date = datetime.strptime(loan["IssueDate"], date_format)
-        loan_maturity = datetime.strptime(loan["LoanMaturity"], date_format)
-        last_payment_date = record["PaymentDueDate"]
-        if isinstance(last_payment_date, date) and not isinstance(last_payment_date, datetime):
-            last_payment_date = datetime.combine(last_payment_date, datetime.min.time())
-
-        total_days = (loan_maturity - issue_date).days
-        new_due_date = last_payment_date + relativedelta(years=1)
-        new_due_date = min(new_due_date, loan_maturity)
-        amtpayments = total_days // 365
-        dueamt = (loan["LoanAmount"] * (loan["InterestRate"] * .01)) / amtpayments
+    values = {
+            "loan_id": loan["LoanId"]
+        }
+    result = await database.fetch_all(query, values=values)
+    total_payment = len(result)
+    if total_payment < loan["LoanLength"]:
+        if loan["PaymentFrequency"] == "Weekly":
+            new_due_date = record["PaymentDueDate"] + timedelta(days=7)
+        elif loan["PaymentFrequency"] == "Monthly":
+            new_due_date = record["PaymentDueDate"] + relativedelta(months=+1)
+        new_payment = NewPayment(
+            LoanId=loan["LoanId"],
+            PaymentDueDate=new_due_date,
+            PaymentDueAmount=loan["InterestAmount"]
+        )
+        await create_new_payment(new_payment)
     else:
-        return
-    if new_due_date == loan_maturity:
-        dueamt = loan["LoanAmount"]
-    new_payment = NewPayment(
-        LoanId=loan["LoanId"],
-        PaymentDueDate=new_due_date,
-        PaymentDueAmount=dueamt
-    )
-    await create_new_payment(new_payment)
+        return "updated"
 
 
 @app.put("/api/update-payment")
@@ -317,14 +287,19 @@ async def update_payment(record: Payment):
     query = f"""
                     UPDATE {PAYMENT_TABLE_NAME}
                     SET PaymentRecDate = :PaymentRecDate,
-                        PaymentRecAmount = :PaymentRecAmount
+                        PaymentRecAmount = :PaymentRecAmount,
+                        PrincipalPaymentRec = :principal_rec,
+                        Notes = :notes
                     WHERE PaymentId = :payment_id
                     """
 
     values = {
             "PaymentRecDate": record.PaymentRecDate,
             "PaymentRecAmount": record.PaymentRecAmount,
-            "payment_id": payment_id
+            "payment_id": payment_id,
+            "principal_rec": record.PrinciplePaymentReceived,
+            "notes": record.Notes
+
         }
 
     await database.execute(query, values)
