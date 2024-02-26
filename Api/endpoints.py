@@ -308,10 +308,9 @@ async def update_payment(record: Payment):
 
 
 @app.get("/api/user-info")
-async def user_info(client_id):
+async def user_info(client_id: str):
     query = f"""
             SELECT
-                c.ClientId,
                 c.ClientName,
                 cr.LoanId,
                 cr.LoanAmount,
@@ -320,15 +319,10 @@ async def user_info(client_id):
                 cr.LoanLength,
                 cr.PaymentFrequency,
                 cr.InterestAmount,
-                cr.IssueDate,
-                p.PaymentDueDate,
                 p.PaymentDueAmount,
-                p.PaymentRecDate,
                 p.PaymentRecAmount,
                 p.PaidStatus,
-                p.PrincipalPaymentRec,
-                p.Notes,
-                p.PaymentId
+                p.PrincipalPaymentRec
             FROM
                 {CLIENT_TABLE_NAME} AS c
             JOIN
@@ -337,13 +331,15 @@ async def user_info(client_id):
                 {PAYMENT_TABLE_NAME} AS p ON cr.LoanId = p.LoanId
             WHERE
                 c.ClientId = :client_id;
-
             """
-        values = {
-            "client_id": record.LoanId
-        }
-        await database.execute(query, values)
-        return JSONResponse(content={"message": "Record deleted successfully"}, status_code=200)
+    values = {"client_id": client_id}
+    rows = await database.fetch_all(query, values)  # Using fetch_all to get all matching records
+
+        # Convert row objects to a list of dictionaries
+    results = [dict(row) for row in rows]
+    if not results:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"data": results}
 
 @app.delete("/api/delete-payment")
 async def delete_payment(record: DeletePayment):

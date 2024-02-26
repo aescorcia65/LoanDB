@@ -11,7 +11,6 @@ function UserInfo() {
     const queryParams = new URLSearchParams(location.search);
     const ClientId = queryParams.get('ClientId');// Access loanId from params
     const [UserInfo, setUserInfo] = useState({
-        penis:"balls",
 
     });
   
@@ -20,7 +19,31 @@ function UserInfo() {
       navigate('/');
     };
     useEffect(() => {
+        const fetchData = async () => {
+            const apiUrl = `/api/user-info?client_id=${ClientId}`;
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'GET', // If your API requires, adjust the method
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Include other headers as required by your API
+                        // For example, 'Authorization': 'Bearer <YourTokenHere>'
+                    },
+                });
 
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                console.log(data); // Do something with the data
+            } catch (error) {
+                console.error("Failed to fetch data: ", error);
+            }
+        };
+
+        fetchData();
     }, [ClientId]);
     return (
         <div>
@@ -34,7 +57,7 @@ function UserInfo() {
 
                 <div className="payment-record">
                     <span className="record-field record-label">Name:</span>
-                    <span className="record-field record-date">{UserInfo.penis}</span>
+                    <span className="record-field record-date">{}</span>
 
                     <span className="record-field record-label">Total Interest Paid</span>
                     <span className="record-field record-amount">$34</span>
