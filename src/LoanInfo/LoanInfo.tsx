@@ -188,67 +188,6 @@ function LoanInfo() {
 
 
                     {
-                        formData.recordType === "Payment" && (
-                            <div className="form-group">
-                                <label>Client Name</label>
-                                <ClientDropdown onSelectClient={handleClientSelection}/>
-                            </div>
-                        )
-                    }
-
-
-                    {
-                        formData.recordType === "Loan" && formData.newOrExisting === "Existing" && (
-                            <div className="form-group">
-                                <label>Client Name</label>
-                                <ClientDropdown onSelectClient={handleClientSelection}/>
-                            </div>
-                        )
-                    }
-
-                    {
-                        formData.recordType === "Payment" && (
-                            <div className="form-group">
-                                <label>LoanID</label>
-                                <LoanDropdown onSelectLoan={handleLoanSelect} clientId={selectedClient}/>
-                            </div>
-                        )
-                    }
-
-
-                    {
-                        formData.recordType === "Payment" && (
-                            <div className="form-group">
-                                <label htmlFor="paymentDueDate">Payment Due Date </label>
-                                <input
-                                    type="date"
-                                    id="paymentDueDate"
-                                    name="paymentDueDate"
-                                    value={formData.paymentDueDate}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        )}
-
-
-                    {
-                        formData.recordType === "Payment" && (
-                            <div className="form-group">
-                                <label htmlFor="paymentDue">Amount Due </label>
-                                <input
-                                    type="number"
-                                    id="paymentDue"
-                                    name="paymentDue"
-                                    value={formData.paymentDue}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        )}
-
-
-                    {
                         formData.recordType === "Loan" && formData.newOrExisting === "New" && (
                             <div className="form-group">
                                 <label htmlFor="name">Name (Autofilled) </label>
@@ -300,7 +239,7 @@ function LoanInfo() {
                     {
                         formData.recordType === "Loan" && (
                             <div className="form-group">
-                                <label htmlFor="loanAmount">Loan Amount </label>
+                                <label htmlFor="loanAmount">Initial Principle </label>
                                 <input
                                     type="number"
                                     id="loanAmount"
@@ -326,9 +265,9 @@ function LoanInfo() {
                                     required
                                 >
                                     <option value="Monthly">Monthly</option>
-                                    <option value="Quarterly">Quarterly</option>
-                                    <option value="Annually">Annually</option>
-                                    <option value="Manual">MANUAL</option>
+                                    <option value="Weekly">Weekly</option>
+                                    
+                                    
 
                                 </select>
                             </div>
@@ -336,57 +275,13 @@ function LoanInfo() {
                     }
 
 
-                    {
-                        formData.paymentFrequency !== "Manual" && formData.recordType === "Loan" && (
-                            <div className="form-group">
-                                <label htmlFor="interestRate">Interest Rate Annual % </label>
-                                <input
-                                    type="number"
-                                    id="interestRate"
-                                    placeholder=""
-                                    name="interestRate"
-                                    value={formData.interestRate}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        )
-                    }
+               
 
 
-                    {
-                        formData.paymentFrequency === "Manual" && (
-                            <div className="form-group">
-                                <label htmlFor="firstPayment">Upcoming Payment Amount </label>
-                                <input
-                                    type="number"
-                                    id="firstPayment"
-                                    placeholder=""
-                                    name="firstPayment"
-                                    value={formData.firstPayment}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        )
-                    }
+                    
 
 
-                    {
-                        formData.paymentFrequency === "Manual" && (
-                            <div className="form-group">
-                                <label htmlFor="firstPaymentDate">Upcoming Payment Date </label>
-                                <input
-                                    type="date"
-                                    id="firstPaymentDate"
-                                    name="firstPaymentDate"
-                                    value={formData.firstPaymentDate}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        )
-                    }
+                   
 
 
                     <button type="submit">Submit Changes</button>
