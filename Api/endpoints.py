@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from models import NewLoan, NewPayment, Client, Loan, Payment, UpdateLoan, FilterParams, NewClient, DeletePayment
 
-DATABASE_NAME = "LMS"
+DATABASE_NAME = "TestDB"
 CLIENT_TABLE_NAME = "Client"
 CLIENT_RECORDS_TABLE_NAME = "LoanRecord"
 PAYMENT_TABLE_NAME = "PaymentRecord"
@@ -71,8 +71,8 @@ async def create_new_loan(loan: NewLoan):
 
 
     insert_query = f"""
-        INSERT INTO {CLIENT_RECORDS_TABLE_NAME} (LoanId, ClientId, LoanAmount, ActiveStatus, LoanLength, PaymentFrequency, InterestAmount, IssueDate)
-        VALUES (:record_id, :client_id, :loan_amount, :active_status, :loan_length, :payment_frequency, :interest_amount, :issue_date)
+        INSERT INTO {CLIENT_RECORDS_TABLE_NAME} (LoanId, ClientId, LoanAmount, ActiveStatus, LoanLength, PaymentFrequency, InterestAmount, IssueDate, PrincipalRemaining)
+        VALUES (:record_id, :client_id, :loan_amount, :active_status, :loan_length, :payment_frequency, :interest_amount, :issue_date, :principal_remaining)
         """
     await database.execute(insert_query, {
             "record_id": record_id,
@@ -82,7 +82,8 @@ async def create_new_loan(loan: NewLoan):
             "loan_length": loan.LoanLength,
             "payment_frequency": loan.PaymentFrequency,
             "interest_amount": loan.InterestAmount,
-            "issue_date": loan.IssueDate
+            "issue_date": loan.IssueDate,
+            "principal_remaining": loan.LoanAmount
         })
 
     if loan.PaymentFrequency == "Monthly":
@@ -105,8 +106,8 @@ async def create_new_payment(payment: NewPayment):
     payment_id = str(uuid.uuid4())
     query = f"""
     INSERT INTO {PAYMENT_TABLE_NAME}
-    (LoanId, PaymentDueDate, PaymentDueAmount, PaymentRecDate, PaymentRecAmount, PaymentId, PaidStatus)
-    VALUES (:record_id, :payment_due_date, :payment_due_amount, :payment_rec_date, :payment_rec_amount, :payment_id, :paid_status)
+    (LoanId, PaymentDueDate, PaymentDueAmount, PaymentRecDate, PaymentRecAmount, PaymentId, PaidStatus, PrincipalPaymentRec, Notes)
+    VALUES (:record_id, :payment_due_date, :payment_due_amount, :payment_rec_date, :payment_rec_amount, :payment_id, :paid_status, :principal_rec, :notes)
     """
     values = {
         "record_id": payment.LoanId,
@@ -115,7 +116,9 @@ async def create_new_payment(payment: NewPayment):
         "payment_rec_date": None,
         "payment_rec_amount": None,
         "payment_id": payment_id,
-        "paid_status": False
+        "paid_status": False,
+        "principal_rec": None,
+        "notes": None
     }
     await database.execute(query, values)
     return {"message": "New payment created successfully", "PaymentId": payment_id}
@@ -404,6 +407,7 @@ async def create_tables():
         LoanId VARCHAR(50) NOT NULL PRIMARY KEY,
         ClientId VARCHAR(50) NOT NULL,
         LoanAmount DECIMAL(10, 2) NOT NULL,
+        PrincipalRemaining DECIMAL(10, 2) NOT NULL,
         ActiveStatus BOOLEAN NOT NULL,
         LoanLength INT NOT NULL,
         PaymentFrequency VARCHAR(50) NOT NULL,
@@ -419,6 +423,8 @@ async def create_tables():
         PaymentRecDate DATE,
         PaymentRecAmount DECIMAL(10, 2),
         PaidStatus BOOLEAN NOT NULL,
+        PrincipalPaymentRec DECIMAL(10,2),
+        Notes MEDIUMTEXT,
         PaymentId VARCHAR(50) NOT NULL PRIMARY KEY,
         FOREIGN KEY (LoanId) REFERENCES {CLIENT_RECORDS_TABLE_NAME}(LoanId));
     """

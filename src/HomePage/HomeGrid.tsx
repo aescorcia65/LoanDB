@@ -103,6 +103,9 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             ClientId: item.ClientId,
             PaymentFreq: item.PaymentFrequency,
             InterestRate: item.InterestAmount != null ? `${item.InterestAmount}$` : null,
+            remainingPrinciple: item.PrincipalRemaining != null ? `$${item.PrincipalRemaining}` : item.PrincipalRemaining,
+            Notes: item.Notes,
+            PrinciplePaymentReceived: item.PrincipalPaymentRec != null ? `$${item.PrincipalPaymentRec}` : item.PrincipalPaymentRec
         }));
     };
 
