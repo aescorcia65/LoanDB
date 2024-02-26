@@ -11,7 +11,12 @@ function UserInfo() {
     const queryParams = new URLSearchParams(location.search);
     const ClientId = queryParams.get('ClientId');// Access loanId from params
     const [UserInfo, setUserInfo] = useState({
-
+        Name:"Marcus Cuch",
+        InterestPaid: "10,0238423",
+        InterestDue: "25,435,435,435",
+        PrinciplePaid: "10,0238423",
+        PrincipleDue: "25,435,435,435",
+        LoanID: "LX32523, LX32423, LX64456"
     });
   
     // This function is responsible for navigation
