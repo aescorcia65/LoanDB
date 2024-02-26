@@ -103,6 +103,9 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
             ClientId: item.ClientId,
             PaymentFreq: item.PaymentFrequency,
             InterestRate: item.InterestAmount != null ? `${item.InterestAmount}$` : null,
+            remainingPrinciple: item.PrincipalRemaining != null ? `$${item.PrincipalRemaining}` : item.PrincipalRemaining,
+            Notes: item.Notes,
+            PrinciplePaymentReceived: item.PrincipalPaymentRec != null ? `$${item.PrincipalPaymentRec}` : item.PrincipalPaymentRec
         }));
     };
 
@@ -287,7 +290,11 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 PaymentRecDate: event.data.PaymentReceivedDate != null ? formatDate(new Date(event.data.PaymentReceivedDate)) : null,
                 PaymentRecAmount: event.data.PaymentReceived != null ? parseFloat(event.data.PaymentReceived.replace("$", "")) : null,
                 PaymentId: event.data.PaymentId,
-                PaidStatus: event.data.Closed
+                PaidStatus: event.data.Closed,
+                PrinciplePaymentReceived: event.data.PrinciplePaymentReceived,
+                Notes: event.data.Notes
+
+
             };
 
             // Make the POST request

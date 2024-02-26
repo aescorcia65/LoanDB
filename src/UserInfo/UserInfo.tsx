@@ -30,23 +30,29 @@ function UserInfo() {
                 <h1>USER INFO</h1>
 
                 <div className="payment-record">
-        <span className="record-field record-label">Name:</span>
-        <span className="record-field record-date">{ClientId}</span>
-        
-        <span className="record-field record-label">Total Amount Paid</span>
-        <span className="record-field record-amount">$34</span>
-        
-        <span className="record-field record-label">Total Amount Due</span>
-        <span className="record-field record-notes">$20,000</span>
+                    <span className="record-field record-label">Name:</span>
+                    <span className="record-field record-date">{ClientId}</span>
 
-        <span className="record-field record-label">Current Loans</span>
-        <span className="record-field record-notes">LX3422, LX3647, LX2375</span>
+                    <span className="record-field record-label">Total Interest Paid</span>
+                    <span className="record-field record-amount">$34</span>
 
-    </div>  
+                    <span className="record-field record-label">Total Interest Due</span>
+                    <span className="record-field record-notes">$20,000</span>
+
+                    <span className="record-field record-label">Total Principal Paid</span>
+                    <span className="record-field record-notes">$20,000</span>
+
+                    <span className="record-field record-label">Total Principal Due</span>
+                    <span className="record-field record-notes">$20,000</span>
+
+                    <span className="record-field record-label">Current Loans</span>
+                    <span className="record-field record-notes">LX3422, LX3647, LX2375</span>
 
                 </div>
-                </div>
-                </div>
+
+            </div>
+        </div>
+        </div>
     );
 }
 
