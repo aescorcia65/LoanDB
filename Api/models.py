@@ -31,7 +31,7 @@ class NewLoan(BaseModel):
     LoanAmount: float
     InterestAmount: float
     IssueDate: date
-    Name: str
+    Name: Optional[str] = None
     Type: str
 
 
@@ -52,8 +52,6 @@ class NewPayment(BaseModel):
     LoanId: str
     PaymentDueDate: date
     PaymentDueAmount: float
-    PaymentRecDate: Optional[date] = None
-    PaymentRecAmount: Optional[float] = None
 
 class FilterParams(BaseModel):
     Months: List[int] = [0]

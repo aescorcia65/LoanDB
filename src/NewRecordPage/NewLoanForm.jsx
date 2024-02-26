@@ -13,21 +13,24 @@ function NewLoanForm() {
     const navigate = useNavigate();
 
     // This function is responsible for navigation
-    const HomePagenav = () => {
-        navigate('/');
-    };
+
     const [selectedClient, setSelectedClient] = useState("*");
 
     const [selectedLoan, setSelectedLoan] = useState("");
     const handleClientSelection = (selectedValue) => {
         setSelectedClient(selectedValue); // Update the selected client in state
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            ClientId: selectedValue
+        }));
+
     };
     const [formData, setFormData] = useState({
-        InterestAmount: undefined,
+        InterestAmount: "",
         IssueDate: getNewYorkDateISO(),
-        LoanAmount: undefined,
-        LoanLength: undefined,
-        Name: undefined,
+        LoanAmount: "",
+        LoanLength: "",
+        Name: "",
         PaymentFrequency: "Monthly",
         Type: "New",
         ClientId: selectedClient
@@ -42,21 +45,10 @@ function NewLoanForm() {
         }));
     };
 
-    const handleConfirmDelete = () => {
-        
-        deletePayment(currentEdit)
-
-        // Close the modal
-        setIsDeleteModalOpen(false);
-
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent the default form submission behavior
         // Assuming you have an API endpoint '/api/submit-form' and formData is your data to submit
         const apiEndpoint = '/api/new-loan';
-        navigate('/');
-
         try {
             const response = await fetch(apiEndpoint, {
                 method: 'POST', 
@@ -73,6 +65,7 @@ function NewLoanForm() {
 
             const result = await response.json(); // Assuming the server responds with JSON data
             console.log(result); // Process your result here
+            navigate('/');
 
             // Handle success, e.g., show a success message, redirect, etc.
         } catch (error) {

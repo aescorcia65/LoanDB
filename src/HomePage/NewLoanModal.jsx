@@ -12,7 +12,7 @@ const customStyles = {
         transform: 'translate(-50%, -50%)',
     },
 };
-function NewLoanModal({ isOpen, onConfirm }) {
+function NewLoanModal({ isOpen, onConfirm, onCancel }) {
     return (
         <Modal
             isOpen={isOpen}

@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import '../HomePage/HomePage.css';
-import { useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import ClientDropdown from '../HomePage/ClientDropdown';
 import LoanDropdown from '../HomePage/LoanDropdown';
 
 function LoanInfo() {
+    const location = useLocation(); // Use useParams hook here
+    const queryParams = new URLSearchParams(location.search);
+    const loanId = queryParams.get('LoanId');// Access loanId from params
     const navigate = useNavigate();
   
     // This function is responsible for navigation
@@ -169,17 +172,17 @@ function LoanInfo() {
     return (
         <div>
         <div className="sharkcage">
-        
+
 
 
             <div className="container3">
                 <button onClick={HomePagenav}>Cancel</button>
 
                 <h1 className="title">{formData.recordType === "Loan" ? "Existing Loan" : "New Payment"}</h1>
-                
 
 
-                
+
+
 
                 <form onSubmit={handleSubmit}>
 
@@ -388,7 +391,7 @@ function LoanInfo() {
 
                     <button type="submit">Submit Changes</button>
                 </form>
-                
+
             </div>
             <div className='container3'>
                 <h2>Current Principle Balance</h2>
@@ -402,7 +405,7 @@ function LoanInfo() {
             </div>
 
             </div>
-     
+
 
 
 
