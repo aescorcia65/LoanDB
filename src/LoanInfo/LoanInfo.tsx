@@ -158,6 +158,8 @@ function LoanInfo() {
             }
 
         }
+
+        
     };
 
     function handleLoanSelect(selectedValue: any) {
