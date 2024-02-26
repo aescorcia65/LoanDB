@@ -11,7 +11,13 @@ function UserInfo() {
     const queryParams = new URLSearchParams(location.search);
     const ClientId = queryParams.get('ClientId');// Access loanId from params
     const [UserInfo, setUserInfo] = useState({
-        penis:"balls",
+        Name:"Marcus Cuch",
+        InterestPaid: "10,0238423",
+        InterestDue: "25,435,435,435",
+        PrinciplePaid: "10,0238423",
+        PrincipleDue: "25,435,435,435",
+        LoanID: "LX32523, LX32423, LX64456"
+
 
     });
   
@@ -34,22 +40,22 @@ function UserInfo() {
 
                 <div className="payment-record">
                     <span className="record-field record-label">Name:</span>
-                    <span className="record-field record-date">{UserInfo.penis}</span>
+                    <span className="record-field record-date">{UserInfo.Name}</span>
 
                     <span className="record-field record-label">Total Interest Paid</span>
-                    <span className="record-field record-amount">$34</span>
+                    <span className="record-field record-amount">{UserInfo.InterestPaid}</span>
 
                     <span className="record-field record-label">Total Interest Due</span>
-                    <span className="record-field record-notes">$20,000</span>
+                    <span className="record-field record-notes">{UserInfo.InterestDue}</span>
 
                     <span className="record-field record-label">Total Principal Paid</span>
-                    <span className="record-field record-notes">$20,000</span>
+                    <span className="record-field record-notes">{UserInfo.PrinciplePaid}</span>
 
                     <span className="record-field record-label">Total Principal Due</span>
-                    <span className="record-field record-notes">$20,000</span>
+                    <span className="record-field record-notes">{UserInfo.PrincipleDue}</span>
 
                     <span className="record-field record-label">Current Loans</span>
-                    <span className="record-field record-notes">LX3422, LX3647, LX2375</span>
+                    <span className="record-field record-notes">{UserInfo.LoanID}</span>
 
                 </div>
 
