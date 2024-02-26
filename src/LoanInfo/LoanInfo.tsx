@@ -197,7 +197,7 @@ function LoanInfo() {
                                     placeholder=""
                                     name="name"
                                     value={formData.name}
-                                    onChange={handleChange}
+                                   
                                     required
                                 />
                             </div>
@@ -213,7 +213,7 @@ function LoanInfo() {
                                     id="date"
                                     name="issuedate"
                                     value={formData.issuedate}
-                                    onChange={handleChange}
+                                    
                                     required
                                 />
                             </div>
@@ -229,7 +229,7 @@ function LoanInfo() {
                                     id="date"
                                     name="maturitydate"
                                     value={formData.maturitydate}
-                                    onChange={handleChange}
+                                   
                                     required
                                 />
                             </div>
@@ -246,7 +246,7 @@ function LoanInfo() {
                                     placeholder=""
                                     name="loanAmount"
                                     value={formData.loanAmount}
-                                    onChange={handleChange}
+                                    
                                     required
                                 />
                             </div>
@@ -261,7 +261,7 @@ function LoanInfo() {
                                     id="paymentFrequency"
                                     name="paymentFrequency"
                                     value={formData.paymentFrequency}
-                                    onChange={handleChange}
+                                
                                     required
                                 >
                                     <option value="Monthly">Monthly</option>
@@ -284,7 +284,7 @@ function LoanInfo() {
                    
 
 
-                    <button type="submit">Submit Changes</button>
+                    {/* <button type="submit">Submit Changes</button> */}
                 </form>
 
             </div>
