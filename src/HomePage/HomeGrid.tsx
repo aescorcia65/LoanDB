@@ -85,11 +85,30 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
        
     ];
 
+    function maturityDate(issueDate:any, loanLength:any, paymentFreq:any) {
+        // Create a new Date object from the issueDate
+        let maturityDate = new Date(issueDate);
+
+        if (paymentFreq === "Monthly") {
+            // Add the loanLength in months to the issueDate
+            maturityDate.setMonth(maturityDate.getMonth() + loanLength);
+        } else if (paymentFreq === "Weekly") {
+            // Add the loanLength in weeks to the issueDate
+            // 7 days per week
+            maturityDate.setDate(maturityDate.getDate() + (loanLength * 7));
+        } else {
+            throw new Error("Invalid payment frequency. Please use 'Monthly' or 'Weekly'.");
+        }
+
+        // Return the maturity date as a string in YYYY-MM-DD format
+        return maturityDate.toISOString().split('T')[0];
+    }
+
     // This function maps the API response to the grid's data format
     const mapApiResponseToGridFields = (apiData:any) => {
         return apiData.map((item:any) => ({
             LoanID: item.LoanId,
-            Due: item.LoanLength != null ? new Date(new Date(item.IssueDate).getTime() + 86400000).toISOString().split('T')[0] : null,
+            Due: maturityDate(item.IssueDate, item.LoanLength, item.PaymentFrequency),
             Issued: item.IssueDate != null ? item.IssueDate : null,
             Status: Boolean(item.ActiveStatus),
             Name: item.ClientName,

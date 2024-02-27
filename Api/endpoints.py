@@ -277,6 +277,36 @@ async def update_payment_status(payment_id: str = Query(...), paid_status: bool 
     else:
         return "updated"
 
+async def update_principal_remaining(loanid):
+    # Assuming PAYMENT_TABLE_NAME and LOAN_TABLE_NAME are defined
+    # and you have a database connection object `database`
+
+    # Step 1: Fetch the sum of principal payments for the loan
+    sum_query = f"""
+        SELECT SUM(PrincipalPaymentRec) AS TotalPrincipalPaid
+        FROM {PAYMENT_TABLE_NAME}
+        WHERE LoanId = :loan_id
+    """
+    values = {"loan_id": loanid}
+    total_princ_payments_result = await database.fetch_one(sum_query, values)
+
+    # Extract the total payments amount, defaulting to 0 if none found
+    total_principal_paid = total_princ_payments_result["TotalPrincipalPaid"] if total_princ_payments_result["TotalPrincipalPaid"] is not None else 0
+
+    # Step 2: Update the principal remaining in another table, assuming you have such a column and table
+    # This would depend on your schema. For example, you might subtract the total payments from the original loan amount
+    update_query = f"""
+        UPDATE {CLIENT_RECORDS_TABLE_NAME}
+        SET PrincipalRemaining = (LoanAmount - :total_paid)
+        WHERE LoanId = :loan_id
+    """
+    update_values = {"loan_id": loanid, "total_paid": total_principal_paid}
+    await database.execute(update_query, update_values)
+
+    # Optionally, return the total principal paid or any other relevant information
+    return total_principal_paid
+
+
 
 @app.put("/api/update-payment")
 async def update_payment(record: Payment):
@@ -303,6 +333,7 @@ async def update_payment(record: Payment):
         }
 
     await database.execute(query, values)
+    await update_principal_remaining(record.LoanId)
     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
 
 
