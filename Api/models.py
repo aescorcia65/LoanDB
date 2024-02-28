@@ -50,6 +50,7 @@ class Payment(BaseModel):
     PrinciplePaymentReceived: Optional[float] = None
     Notes: Optional[str] = None
     PrincipalRemaining: Optional[float] = -1
+    NewExpectedPayment: Optional[float] = None
 
 class NewPayment(BaseModel):
     LoanId: str

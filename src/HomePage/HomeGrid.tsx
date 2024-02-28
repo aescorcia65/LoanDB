@@ -17,7 +17,10 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const [updateCount, setUpdateCount]= useState(0)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    
+    const [newExpectedPayment, setnewExpectedPayment] = useState(null);
+
+
+
     const [currentEdit, setCurrentEdit] = useState(null);
 
     const gridOptions: GridOptions<any> = {
@@ -255,14 +258,16 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         setUpdateCount(updateCount => updateCount+1)
     };
 
-    const handleConfirmUpdate = () => {
-        // Perform the update logic here using currentEdit
+    const handleConfirmUpdate = (nextInterestPayment:any) => {
         console.log("Update Confirmed", currentEdit);
-        updatePayment(currentEdit)
+        console.log("Next Interest Payment:", nextInterestPayment);
+        setnewExpectedPayment(() => nextInterestPayment);
+        console.log("Next Interest Payment2:", nextInterestPayment);
+        // You can now use nextInterestPayment as part of your update logic
 
-        // Close the modal
+        updatePayment(currentEdit); // Modify updatePayment to accept this value
+
         setIsModalOpen(false);
-
     };
 
     const handleCancelUpdate = () => {
@@ -332,7 +337,8 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 PaidStatus: event.data.Closed,
                 PrinciplePaymentReceived: event.data.PrinciplePaymentReceived != null ? parseFloat(event.data.PrinciplePaymentReceived.replace("$", "")) : null,
                 Notes: event.data.Notes,
-                PrincipalRemaining: event.data.remainingPrinciple != null ? parseFloat(event.data.remainingPrinciple.replace("$","")) : null
+                PrincipalRemaining: event.data.remainingPrinciple != null ? parseFloat(event.data.remainingPrinciple.replace("$","")) : null,
+                NewExpectedPayment: newExpectedPayment
 
 
             };

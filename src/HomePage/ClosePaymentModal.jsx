@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Modal from 'react-modal'
 
 
@@ -12,7 +12,23 @@ const customStyles = {
         transform: 'translate(-50%, -50%)',
     },
 };
+// In ClosePaymentModal component
+
 function ClosePaymentModal({ isOpen, onConfirm, onCancel }) {
+    // State to hold the input value
+    const [nextInterestPayment, setNextInterestPayment] = useState('');
+
+    // Handler to update state on input change
+    const handleInputChange = (e) => {
+        setNextInterestPayment(e.target.value);
+        console.log(nextInterestPayment)
+    };
+
+    // Modified onConfirm to pass the input value
+    const handleConfirm = () => {
+        onConfirm(nextInterestPayment); // Pass the input value on confirm
+    };
+
     return (
         <Modal
             isOpen={isOpen}
@@ -20,24 +36,23 @@ function ClosePaymentModal({ isOpen, onConfirm, onCancel }) {
             style={customStyles}
             contentLabel="Confirmation Modal"
         >
-            <h2>Close Payment </h2>
-            <h5>Next Payment Amount </h5>
+            <h2>Close Payment</h2>
+            <h5>Next Payment Amount</h5>
             <input
-                                    type="number"
-                                    id="NextInterestPayment"
-                                    placeholder=""
-                                    name="NextInterestPayment"
-                                    // value={formData.NextInterestPayment}
-                                    // onChange={handleChange}
-                                    // required
-                                />
+                type="number"
+                id="NextInterestPayment"
+                placeholder=""
+                name="NextInterestPayment"
+                value={nextInterestPayment}
+                onChange={handleInputChange}
+            />
 
-
-<div class="button-container">
-    <button onClick={onConfirm}>Confirm</button>
-    <button onClick={onCancel}>Cancel</button>
-</div>
+            <div className="button-container">
+                <button onClick={handleConfirm}>Confirm</button>
+                <button onClick={onCancel}>Cancel</button>
+            </div>
         </Modal>
     );
 }
+
 export default ClosePaymentModal;

@@ -233,10 +233,14 @@ async def get_payment_by_paymentid(payment_id: str):
         return converted_rows[0]
 
 @app.put("/api/update-payment-status")
-async def update_payment_status(payment_id: str = Query(...), paid_status: bool = Query(...), principal_remaining = -1):
+async def update_payment_status(payment_id: str = Query(...), paid_status: bool = Query(...), principal_remaining = -1, new_expected_payment = None):
     record = await get_payment_by_paymentid(payment_id)
     loan = await search_by_loan_id(record["LoanId"])
     loan = loan["results"][0]
+    if new_expected_payment:
+        amount_due = new_expected_payment
+    else:
+        amount_due = loan["InterestAmount"]
     if record["PaidStatus"] == paid_status:
         return JSONResponse(content={"message": "Payment Status is already updated"}, status_code=200)
     query = f"""
@@ -272,7 +276,7 @@ async def update_payment_status(payment_id: str = Query(...), paid_status: bool 
         new_payment = NewPayment(
             LoanId=loan["LoanId"],
             PaymentDueDate=new_due_date,
-            PaymentDueAmount=loan["InterestAmount"],
+            PaymentDueAmount=amount_due,
             PrincipalRemaining=principal_remaining
         )
         await create_new_payment(new_payment)
@@ -319,7 +323,8 @@ async def update_payment(record: Payment):
     print(record.PrincipalRemaining)
     print(record.PrinciplePaymentReceived)
     print(principal_remaining)
-    test = await update_payment_status(payment_id, paid_status, principal_remaining)
+    print(record.NewExpectedPayment)
+    test = await update_payment_status(payment_id, paid_status, principal_remaining, record.NewExpectedPayment)
     query = f"""
                     UPDATE {PAYMENT_TABLE_NAME}
                     SET PaymentRecDate = :PaymentRecDate,
