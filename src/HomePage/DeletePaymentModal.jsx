@@ -20,9 +20,9 @@ function DeletePaymentModal({ isOpen, onConfirm, onCancel }) {
             style={customStyles}
             contentLabel="Confirmation Modal"
         >
-            <h2>This permenantly delete this record. Are you sure?</h2>
-            <button onClick={onConfirm}>Yes</button>
-            <button onClick={onCancel}>No</button>
+            <h2>Delete Record?</h2>
+            <button onClick={onConfirm}>Confirm</button>
+            <button onClick={onCancel}>Cancel</button>
         </Modal>
     );
 }

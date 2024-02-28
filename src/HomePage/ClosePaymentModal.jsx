@@ -20,9 +20,9 @@ function ClosePaymentModal({ isOpen, onConfirm, onCancel }) {
             style={customStyles}
             contentLabel="Confirmation Modal"
         >
-            <h2>Are You Sure?</h2>
-            <button onClick={onConfirm}>Yes</button>
-            <button onClick={onCancel}>No</button>
+            <h2>Close Payment? </h2>
+            <button onClick={onConfirm}>Confirm</button>
+            <button onClick={onCancel}>Cancel</button>
         </Modal>
     );
 }
