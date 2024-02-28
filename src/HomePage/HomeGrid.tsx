@@ -1,16 +1,13 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
-import { AgGridReact } from 'ag-grid-react';
+import React, {useCallback, useEffect, useState} from 'react';
+import {AgGridReact} from 'ag-grid-react';
 import {ColDef, GridOptions} from 'ag-grid-community';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import './HomePage.css';
 import ClosePaymentModal from "./ClosePaymentModal";
-import { FaRegTrashCan } from "react-icons/fa6";
+import {FaRegTrashCan} from "react-icons/fa6";
 import DeletePaymentModal from './DeletePaymentModal';
-import NewLoanModal from './NewLoanModal';
-
-
 
 
 function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatus }:any) {
@@ -30,22 +27,26 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 extendsDataType: 'date',
                 baseDataType: 'date',
                 valueFormatter: (params: any) => {
-                    if (params.value) {
-                        const parts = String(params.value).split('-');
-                        const year = parseInt(parts[0], 10);
-                        const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed in JavaScript Date
-                        const day = parseInt(parts[2], 10);
-
-                        const date = new Date(year, month, day);
-                        const formattedDay = String(date.getDate()).padStart(2, '0');
-                        const formattedMonth = String(date.getMonth() + 1).padStart(2, '0'); // Adjusting back to 1-indexed
-                        const formattedYear = date.getFullYear();
-
-                        return `${formattedMonth}/${formattedDay}/${formattedYear}`;
-                    } else {
+                    if (!params.value) {
                         return '';
                     }
-                },
+                    // Attempt to directly use the Date constructor for parsing
+                    const date = new Date(params.value);
+                    if (!isNaN(date.getTime())) { // Check if the date is valid
+                        const tzOffset = date.getTimezoneOffset() * 60000; // timezone offset in milliseconds
+                        const localDate = new Date(date.getTime() - tzOffset);
+
+                        // Format the date
+                        return ((localDate.getMonth() + 1) + '').padStart(2, '0') + '/' +
+                            (localDate.getDate() + '').padStart(2, '0') + '/' +
+                            localDate.getFullYear();
+                    } else {
+                        // Fallback or additional parsing logic for non-standard formats
+                        // Example: Specific handling if `params.value` doesn't conform to expected date formats
+                        // You might need to adjust this based on the actual format of `params.value` that fails
+                        return 'Invalid Date Format'; // Or any other fallback logic
+                    }
+                }
             },
         },
         headerHeight: 40,
@@ -71,7 +72,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         { headerName: 'Principle Payment Received',  field: 'PrinciplePaymentReceived', filter: true, editable:true, width: 122,  cellStyle: {'background-color': "#fbfce1", 'padding-left': 4 ,'border-right': '1px solid', 'border-left': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
         { headerName: 'Interest Payment Due Date', autoHeaderHeight: true, field: 'DueDate' , headerClass: 'wrap-header-text', width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date' },
         { headerName: 'Interest Payment Expected', autoHeaderHeight: true, field: 'PaymentDue', filter: true, width: 122,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
-        { headerName: 'Interest Payment Received', field: 'PaymentReceived', filter: true, editable:true, width: 122,  cellStyle: {'background-color': "#fbfce1", 'padding-left': 4 ,'border-right': '1px solid','border-left': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
+        { headerName: 'Interest Payment Received', field: 'PaymentReceived', filter: true, editable:true, width: 122,  cellStyle: {'background-color': "#fbfce1", 'padding-left': 4 ,'border-right': '1px solid','border-left': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text',},
        
         
         { headerName: 'Notes', field: 'Notes', filter: true, editable:true, width: 122,  cellStyle: {'background-color': "#fbfce1", 'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
