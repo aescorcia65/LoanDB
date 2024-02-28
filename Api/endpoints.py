@@ -334,8 +334,7 @@ async def update_payment(record: Payment):
             "PaymentRecAmount": record.PaymentRecAmount,
             "payment_id": payment_id,
             "principal_rec": record.PrinciplePaymentReceived,
-            "notes": record.Notes,
-            "principal_remaining" : principal_remaining
+            "notes": record.Notes
 
         }
 
