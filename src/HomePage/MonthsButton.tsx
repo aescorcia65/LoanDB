@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 // import './HomePage.css';
 
-function MonthButtons({ selectedMonths, setSelectedMonths}:any) {
+function MonthButtons({ selectedMonths, setSelectedMonths, unsetTdyToggle}:any) {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const toggleMonth = (index: any) => {
+        unsetTdyToggle();
         const newSelectedMonths = [...selectedMonths];
         newSelectedMonths[index] = !newSelectedMonths[index];
         setSelectedMonths(newSelectedMonths);

@@ -15,6 +15,7 @@ function HomePage() {
     const [selectedYears, setSelectedYears] = useState(Array(11).fill(true));
     const [selectedstatuss, setSelectedstatuss] = useState(Array(2).fill(true));
     const [allToggle, setAllToggle] = useState(true)
+    const [tdyToggle, setTdyToggle]= useState(false)
 
     // This function is responsible for navigation to the NewRecord page
     const NewRecordnav = () => {
@@ -37,11 +38,24 @@ function HomePage() {
     }, [allToggle]);
 
 
-    const handleToggle = () => {
+    const handleAllToggle = () => {
+         setTdyToggle(false)
          setAllToggle(!allToggle);
          setSelectedMonths(Array(12).fill(allToggle));
          setSelectedYears(Array(11).fill(allToggle));
          setSelectedstatuss(Array(2).fill(allToggle));
+    };
+
+    function handleTdyToggle() {
+        setTdyToggle(true)
+        setAllToggle(false);
+        setSelectedMonths(Array(12).fill(false));
+        setSelectedYears(Array(11).fill(false));
+        setSelectedstatuss(Array(2).fill(false));
+    }
+
+    const unsetTdyToggle = () => {
+        setTdyToggle(false);
     };
 
     return (
@@ -57,18 +71,18 @@ function HomePage() {
 
             <button className={'newrecordbutton'}onClick={NewRecordnav}>New Loan / New Payment</button>
             <div className={"topbuttons"}>
-                <button onClick={handleToggle}>*ALL*</button> <button onClick={handleToggle}>*TODAY*</button> <StatusButtons selectedstatuss={selectedstatuss} setSelectedstatuss={setSelectedstatuss}/> <ClientDropdown onSelectClient={handleClientSelection}/>
+                <button onClick={handleAllToggle}>*ALL*</button> <button onClick={handleTdyToggle}>*TODAY*</button> <StatusButtons selectedstatuss={selectedstatuss} setSelectedstatuss={setSelectedstatuss}/> <ClientDropdown onSelectClient={handleClientSelection}/>
             </div>
             
             <div className={"monthbuttons"}>
-                <MonthButtons selectedMonths={selectedMonths} setSelectedMonths={setSelectedMonths}/>
+                <MonthButtons selectedMonths={selectedMonths} setSelectedMonths={setSelectedMonths} unsetTdyToggle={unsetTdyToggle}/>
             </div>
             <div className={"yearbuttons"}>
-                <YearButtons selectedYears={selectedYears} setSelectedYears={setSelectedYears}/>
+                <YearButtons selectedYears={selectedYears} setSelectedYears={setSelectedYears} unsetTdyToggle={unsetTdyToggle}/>
             </div>
             <div className="recordContainer">
                 {/* Pass the selectedClient as a prop to the HomeGrid component */}
-                <HomeGrid selectedClient={selectedClient} selectedMonths={selectedMonths} selectedYears={selectedYears} selectedStatus={selectedstatuss}/>
+                <HomeGrid selectedClient={selectedClient} selectedMonths={selectedMonths} selectedYears={selectedYears} selectedStatus={selectedstatuss} tdyToggle={tdyToggle}/>
             </div>
         </div>
     );

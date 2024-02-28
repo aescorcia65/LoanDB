@@ -55,13 +55,15 @@ class NewPayment(BaseModel):
     LoanId: str
     PaymentDueDate: date
     PaymentDueAmount: float
-    PrincipalRemaining : float
+    PrincipalRemaining : Optional[float] = None
 
 class FilterParams(BaseModel):
     Months: List[int] = [0]
     Years: List[int] = [0]
     ActiveStatus: str
     ClientId: str
+    TdyToggle: bool
+    TdyDate: date
 
 class DeletePayment(BaseModel):
     LoanId: str

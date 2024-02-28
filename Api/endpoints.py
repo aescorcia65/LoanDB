@@ -391,9 +391,24 @@ async def delete_payment(record: DeletePayment):
     }
     await database.execute(query, values)
     return JSONResponse(content={"message": "Record deleted successfully"}, status_code=200)
+async def tdy_owed(date):
+    query = f"""
+                    SELECT p.*, l.*, c.ClientName
+                    FROM {PAYMENT_TABLE_NAME} AS p
+                    JOIN {CLIENT_RECORDS_TABLE_NAME} AS l ON p.LoanId = l.LoanId
+                    JOIN {CLIENT_TABLE_NAME} AS c ON l.ClientId = c.ClientId
+                    WHERE p.PaymentDueDate = :date
+                    """
+    # Execute query
+    result = await database.fetch_all(query=query, values={"date": date})
+    return result
+
 @app.post("/api/filter-data")
 async def filter_data(params: FilterParams):
-    # SQL Query for MySQL
+    if params.TdyToggle:
+        result = await tdy_owed(params.TdyDate)
+        return {"results":result}
+
     if params.ActiveStatus == "both":
         active_status = [True, False]
     elif params.ActiveStatus == "closed":
@@ -471,7 +486,7 @@ async def create_tables():
         PaymentRecAmount DECIMAL(10, 2),
         PaidStatus BOOLEAN NOT NULL,
         PrincipalPaymentRec DECIMAL(10,2),
-        PrincipalRemaining DECIMAL(10, 2) NOT NULL,
+        PrincipalRemaining DECIMAL(10, 2),
         Notes MEDIUMTEXT,
         PaymentId VARCHAR(50) NOT NULL PRIMARY KEY,
         FOREIGN KEY (LoanId) REFERENCES {CLIENT_RECORDS_TABLE_NAME}(LoanId));

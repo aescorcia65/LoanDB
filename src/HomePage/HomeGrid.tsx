@@ -10,7 +10,7 @@ import {FaRegTrashCan} from "react-icons/fa6";
 import DeletePaymentModal from './DeletePaymentModal';
 
 
-function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatus }:any) {
+function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatus, tdyToggle }:any) {
     const [rowData, setRowData] = useState([]);
     const navigate = useNavigate();
     const [gridApi, setGridApi] = useState(null);
@@ -181,7 +181,9 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                     Months: monthsArray,
                     Years: yearsArray,
                     ActiveStatus: statusFilter,  // Assuming you have this variable in your state
-                    ClientId: selectedClient
+                    ClientId: selectedClient,
+                    TdyToggle: tdyToggle,
+                    TdyDate: new Date().toISOString().split('T')[0]
                 };
                 console.log(requestBody)
 
