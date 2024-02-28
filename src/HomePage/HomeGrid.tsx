@@ -189,19 +189,23 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 if (gridApi != null) {
                     if (apiData && apiData.results) {
                         const sortedPayments = apiData.results.sort((a: any, b: any) => {
-                            // Assuming PaidStatus is a boolean where true represents 'closed'
-                            // Sorting 'closed' (true) first and then 'open' (false)
-                            if (a.PaidStatus && !b.PaidStatus) {
-                                return 1; // a comes first
-                            } else if (!a.PaidStatus && b.PaidStatus) {
-                                return -1; // b comes first
+                            // Check paid status to group not paid and paid separately
+                            if (!a.PaidStatus && b.PaidStatus) {
+                                return -1; // a (not paid) comes before b (paid)
+                            } else if (a.PaidStatus && !b.PaidStatus) {
+                                return 1; // b (not paid) comes before a (paid)
                             } else {
-                                return 0; // No change in order
+                                // If both have the same paid status, sort by date from newest to oldest
+                                // Assuming PaymentDate is a date string or a Date object that can be compared directly
+                                const dateA:any = new Date(a.IssueDate);
+                                const dateB:any = new Date(b.IssueDate);
+                                return dateB - dateA; // Sorts descending by date
                             }
                         });
                         setRowData(mapApiResponseToGridFields(sortedPayments));
                     }
                 }
+
             } catch (error) {
                 console.error('Error fetching data:', error);
                 // Consider setting an error state and displaying it in the UI
@@ -256,7 +260,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         setIsModalOpen(true);}
 
         else{
-            updatePayment(event)
+
         }
     }, []);
 

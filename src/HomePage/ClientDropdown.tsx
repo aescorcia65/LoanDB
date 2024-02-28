@@ -15,12 +15,26 @@ const ClientDropdown: React.FC<ClientDropdownProps> = ({ onSelectClient }) => {
         }));
     };
 
+    function sortClientsAlphabetically(data:any) {
+        return data.sort((a: any, b: any) => {
+            const nameA = a.fullName.toUpperCase(); // ignore upper and lowercase
+            const nameB = b.fullName.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+                return -1; // nameA comes first
+            }
+            if (nameA > nameB) {
+                return 1; // nameB comes first
+            }
+            return 0; // names must be equal
+        });
+    }
+
     useEffect(() => {
         fetch('/api/clients')
             .then(response => response.json())
             .then(data => {
-                const mappedData = mapApiResponseToFields(data);
-                setClients(mappedData);
+                const sortedData= sortClientsAlphabetically(mapApiResponseToFields(data));
+                setClients(sortedData);
             })
             .catch(error => console.error('Error fetching clients:', error));
     }, []);
