@@ -30,24 +30,33 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                     if (!params.value) {
                         return '';
                     }
-                    // Attempt to directly use the Date constructor for parsing
-                    const date = new Date(params.value);
-                    if (!isNaN(date.getTime())) {
-                        // Check if the date is valid
-                        const localDate = new Date(date.setDate(date.getDate() + 1));
-                        console.log(localDate)
 
-                        // Format the date
-                        return ((localDate.getMonth() + 1) + '').padStart(2, '0') + '/' +
-                            (localDate.getDate() + '').padStart(2, '0') + '/' +
-                            localDate.getFullYear();
+                    let date;
+                    if (typeof params.value === "string" && params.value.includes('-') && params.value.length ===10) {
+                        // Manually construct the date to ensure it's treated as local time
+                        const parts = params.value.split('-');
+                        if (parts.length === 3) {
+                            // Adjusting for local time zone explicitly by adding "T00:00:00"
+                            const adjustedDateString = `${parts[0]}-${parts[1]}-${parts[2]}T00:00:00`;
+                            date = new Date(adjustedDateString);
+                        }
+                        else {date = new Date("1888-1-1")}
                     } else {
-                        // Fallback or additional parsing logic for non-standard formats
-                        // Example: Specific handling if `params.value` doesn't conform to expected date formats
-                        // You might need to adjust this based on the actual format of `params.value` that fails
-                        return 'Invalid Date Format'; // Or any other fallback logic
+                        // For full string dates, the Date constructor handles timezone automatically
+                        date = new Date(params.value);
+                    }
+
+                    if (!isNaN(date.getTime())) { // Check if the date is valid
+                        // Format the date to MM/DD/YYYY with leading zeros for month and day
+                        const formattedDate = (date.getMonth() + 1).toString().padStart(2, '0') + '/' +
+                            date.getDate().toString().padStart(2, '0') + '/' +
+                            date.getFullYear();
+                        return formattedDate;
+                    } else {
+                        return 'Invalid Date Format'; // Handle invalid date formats
                     }
                 }
+
             },
         },
         headerHeight: 40,
@@ -320,7 +329,8 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 PaymentId: event.data.PaymentId,
                 PaidStatus: event.data.Closed,
                 PrinciplePaymentReceived: event.data.PrinciplePaymentReceived != null ? parseFloat(event.data.PrinciplePaymentReceived.replace("$", "")) : null,
-                Notes: event.data.Notes
+                Notes: event.data.Notes,
+                PrincipalRemaining: event.data.remainingPrinciple != null ? parseFloat(event.data.remainingPrinciple.replace("$","")) : null
 
 
             };

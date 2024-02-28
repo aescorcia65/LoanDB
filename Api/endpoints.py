@@ -71,8 +71,8 @@ async def create_new_loan(loan: NewLoan):
 
 
     insert_query = f"""
-        INSERT INTO {CLIENT_RECORDS_TABLE_NAME} (LoanId, ClientId, LoanAmount, ActiveStatus, LoanLength, PaymentFrequency, InterestAmount, IssueDate, PrincipalRemaining)
-        VALUES (:record_id, :client_id, :loan_amount, :active_status, :loan_length, :payment_frequency, :interest_amount, :issue_date, :principal_remaining)
+        INSERT INTO {CLIENT_RECORDS_TABLE_NAME} (LoanId, ClientId, LoanAmount, ActiveStatus, LoanLength, PaymentFrequency, InterestAmount, IssueDate)
+        VALUES (:record_id, :client_id, :loan_amount, :active_status, :loan_length, :payment_frequency, :interest_amount, :issue_date)
         """
     await database.execute(insert_query, {
             "record_id": record_id,
@@ -83,7 +83,6 @@ async def create_new_loan(loan: NewLoan):
             "payment_frequency": loan.PaymentFrequency,
             "interest_amount": loan.InterestAmount,
             "issue_date": loan.IssueDate,
-            "principal_remaining": loan.LoanAmount
         })
 
     if loan.PaymentFrequency == "Monthly":
@@ -96,7 +95,8 @@ async def create_new_loan(loan: NewLoan):
     first_payment = NewPayment(
         LoanId=record_id,
         PaymentDueDate=loan.IssueDate + time_delta,  # Adds one month to IssueDate
-        PaymentDueAmount=loan.InterestAmount
+        PaymentDueAmount=loan.InterestAmount,
+        PrincipalRemaining=loan.LoanAmount
     )
     await create_new_payment(first_payment)
     return JSONResponse(content={"message": "New record created successfully", "LoanId": record_id}, status_code=200)
@@ -106,8 +106,8 @@ async def create_new_payment(payment: NewPayment):
     payment_id = str(uuid.uuid4())
     query = f"""
     INSERT INTO {PAYMENT_TABLE_NAME}
-    (LoanId, PaymentDueDate, PaymentDueAmount, PaymentRecDate, PaymentRecAmount, PaymentId, PaidStatus, PrincipalPaymentRec, Notes)
-    VALUES (:record_id, :payment_due_date, :payment_due_amount, :payment_rec_date, :payment_rec_amount, :payment_id, :paid_status, :principal_rec, :notes)
+    (LoanId, PaymentDueDate, PaymentDueAmount, PaymentRecDate, PaymentRecAmount, PaymentId, PaidStatus, PrincipalPaymentRec, Notes, PrincipalRemaining)
+    VALUES (:record_id, :payment_due_date, :payment_due_amount, :payment_rec_date, :payment_rec_amount, :payment_id, :paid_status, :principal_rec, :notes, :principal_remaining)
     """
     values = {
         "record_id": payment.LoanId,
@@ -118,7 +118,8 @@ async def create_new_payment(payment: NewPayment):
         "payment_id": payment_id,
         "paid_status": False,
         "principal_rec": None,
-        "notes": None
+        "notes": None,
+        "principal_remaining": payment.PrincipalRemaining
     }
     await database.execute(query, values)
     return {"message": "New payment created successfully", "PaymentId": payment_id}
@@ -232,7 +233,7 @@ async def get_payment_by_paymentid(payment_id: str):
         return converted_rows[0]
 
 @app.put("/api/update-payment-status")
-async def update_payment_status(payment_id: str = Query(...), paid_status: bool = Query(...)):
+async def update_payment_status(payment_id: str = Query(...), paid_status: bool = Query(...), principal_remaining = -1):
     record = await get_payment_by_paymentid(payment_id)
     loan = await search_by_loan_id(record["LoanId"])
     loan = loan["results"][0]
@@ -271,7 +272,8 @@ async def update_payment_status(payment_id: str = Query(...), paid_status: bool 
         new_payment = NewPayment(
             LoanId=loan["LoanId"],
             PaymentDueDate=new_due_date,
-            PaymentDueAmount=loan["InterestAmount"]
+            PaymentDueAmount=loan["InterestAmount"],
+            PrincipalRemaining=principal_remaining
         )
         await create_new_payment(new_payment)
     else:
@@ -313,13 +315,18 @@ async def update_payment(record: Payment):
     print(record.PaymentRecDate)
     paid_status = record.PaidStatus
     payment_id = record.PaymentId
-    test = await update_payment_status(payment_id, paid_status)
+    principal_remaining = record.PrincipalRemaining - record.PrinciplePaymentReceived
+    print(record.PrincipalRemaining)
+    print(record.PrinciplePaymentReceived)
+    print(principal_remaining)
+    test = await update_payment_status(payment_id, paid_status, principal_remaining)
     query = f"""
                     UPDATE {PAYMENT_TABLE_NAME}
                     SET PaymentRecDate = :PaymentRecDate,
                         PaymentRecAmount = :PaymentRecAmount,
                         PrincipalPaymentRec = :principal_rec,
-                        Notes = :notes
+                        Notes = :notes,
+                        PrincipalRemaining = :principal_remaining
                     WHERE PaymentId = :payment_id
                     """
 
@@ -328,12 +335,12 @@ async def update_payment(record: Payment):
             "PaymentRecAmount": record.PaymentRecAmount,
             "payment_id": payment_id,
             "principal_rec": record.PrinciplePaymentReceived,
-            "notes": record.Notes
+            "notes": record.Notes,
+            "principal_remaining" : principal_remaining
 
         }
 
     await database.execute(query, values)
-    await update_principal_remaining(record.LoanId)
     return JSONResponse(content={"message": "Record updated successfully"}, status_code=200)
 
 
@@ -448,7 +455,6 @@ async def create_tables():
         LoanId VARCHAR(50) NOT NULL PRIMARY KEY,
         ClientId VARCHAR(50) NOT NULL,
         LoanAmount DECIMAL(10, 2) NOT NULL,
-        PrincipalRemaining DECIMAL(10, 2) NOT NULL,
         ActiveStatus BOOLEAN NOT NULL,
         LoanLength INT NOT NULL,
         PaymentFrequency VARCHAR(50) NOT NULL,
@@ -465,6 +471,7 @@ async def create_tables():
         PaymentRecAmount DECIMAL(10, 2),
         PaidStatus BOOLEAN NOT NULL,
         PrincipalPaymentRec DECIMAL(10,2),
+        PrincipalRemaining DECIMAL(10, 2) NOT NULL,
         Notes MEDIUMTEXT,
         PaymentId VARCHAR(50) NOT NULL PRIMARY KEY,
         FOREIGN KEY (LoanId) REFERENCES {CLIENT_RECORDS_TABLE_NAME}(LoanId));

@@ -49,11 +49,13 @@ class Payment(BaseModel):
     PaidStatus: bool
     PrinciplePaymentReceived: Optional[float] = None
     Notes: Optional[str] = None
+    PrincipalRemaining: Optional[float] = -1
 
 class NewPayment(BaseModel):
     LoanId: str
     PaymentDueDate: date
     PaymentDueAmount: float
+    PrincipalRemaining : float
 
 class FilterParams(BaseModel):
     Months: List[int] = [0]
