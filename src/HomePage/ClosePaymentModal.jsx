@@ -20,9 +20,23 @@ function ClosePaymentModal({ isOpen, onConfirm, onCancel }) {
             style={customStyles}
             contentLabel="Confirmation Modal"
         >
-            <h2>Close Payment? </h2>
-            <button onClick={onConfirm}>Confirm</button>
-            <button onClick={onCancel}>Cancel</button>
+            <h2>Close Payment </h2>
+            <h5>Next Payment Amount </h5>
+            <input
+                                    type="number"
+                                    id="NextInterestPayment"
+                                    placeholder=""
+                                    name="NextInterestPayment"
+                                    // value={formData.NextInterestPayment}
+                                    // onChange={handleChange}
+                                    // required
+                                />
+
+
+<div class="button-container">
+    <button onClick={onConfirm}>Confirm</button>
+    <button onClick={onCancel}>Cancel</button>
+</div>
         </Modal>
     );
 }

@@ -57,7 +57,7 @@ function HomePage() {
 
             <button className={'newrecordbutton'}onClick={NewRecordnav}>New Loan / New Payment</button>
             <div className={"topbuttons"}>
-                <button onClick={handleToggle}>*ALL*</button> <StatusButtons selectedstatuss={selectedstatuss} setSelectedstatuss={setSelectedstatuss}/> <ClientDropdown onSelectClient={handleClientSelection}/>
+                <button onClick={handleToggle}>*ALL*</button> <button onClick={handleToggle}>*TODAY*</button> <StatusButtons selectedstatuss={selectedstatuss} setSelectedstatuss={setSelectedstatuss}/> <ClientDropdown onSelectClient={handleClientSelection}/>
             </div>
             
             <div className={"monthbuttons"}>
