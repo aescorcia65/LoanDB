@@ -32,9 +32,10 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                     }
                     // Attempt to directly use the Date constructor for parsing
                     const date = new Date(params.value);
-                    if (!isNaN(date.getTime())) { // Check if the date is valid
-                        const tzOffset = date.getTimezoneOffset() * 60000; // timezone offset in milliseconds
-                        const localDate = new Date(date.getTime() - tzOffset);
+                    if (!isNaN(date.getTime())) {
+                        // Check if the date is valid
+                        const localDate = new Date(date.setDate(date.getDate() + 1));
+                        console.log(localDate)
 
                         // Format the date
                         return ((localDate.getMonth() + 1) + '').padStart(2, '0') + '/' +
@@ -77,7 +78,10 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
         
         { headerName: 'Notes', field: 'Notes', filter: true, editable:true, width: 122,  cellStyle: {'background-color': "#fbfce1", 'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'},
         { headerName: 'Interest Payment Received Date', field: 'PaymentReceivedDate', filter: true, editable:true, width: 127,  cellStyle: {'background-color': "#fbfce1", 'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text',},
-        { headerName: 'Closed',field: 'Closed', filter: true, editable:true, width: 95  ,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'  },  
+        { headerName: 'Closed',field: 'Closed', filter: true, editable:(params) => {
+                // Check if the "Closed" field is true or 1
+                return !(params.data.Closed || params.data.Closed === 1);
+            }, width: 95  ,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text'  },
         { headerName: 'Loan Amt', field: 'Principal',  filter: true, width: 122 ,columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, headerClass: 'wrap-header-text' },
         { headerName: 'Loan Issue Date',field: 'Issued', filter: true, width: 122, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text' },
         { headerName: 'Loan Maturity Date',field: 'Due' , filter: true, width: 122, columnGroupShow: 'open', autoHeight:true,  cellStyle: {'padding-left': 4 ,'border-right': '1px solid', 'border-bottom': '1px solid'}, cellDataType:'date', headerClass: 'wrap-header-text' },
