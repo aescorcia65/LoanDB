@@ -325,8 +325,7 @@ async def update_payment(record: Payment):
                     SET PaymentRecDate = :PaymentRecDate,
                         PaymentRecAmount = :PaymentRecAmount,
                         PrincipalPaymentRec = :principal_rec,
-                        Notes = :notes,
-                        PrincipalRemaining = :principal_remaining
+                        Notes = :notes
                     WHERE PaymentId = :payment_id
                     """
 
