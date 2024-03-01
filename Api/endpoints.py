@@ -268,7 +268,7 @@ async def update_payment_status(payment_id: str = Query(...), paid_status: bool 
         }
     result = await database.fetch_all(query, values=values)
     total_payment = len(result)
-    if total_payment < loan["LoanLength"]:
+    if principal_remaining>0:
         if loan["PaymentFrequency"] == "Weekly":
             new_due_date = record["PaymentDueDate"] + timedelta(days=7)
         elif loan["PaymentFrequency"] == "Monthly":
@@ -358,7 +358,6 @@ async def user_info(client_id: str):
                 c.ClientName,
                 cr.LoanId,
                 cr.LoanAmount,
-                cr.PrincipalRemaining,
                 cr.ActiveStatus,
                 cr.LoanLength,
                 cr.PaymentFrequency,
