@@ -393,15 +393,28 @@ async def user_info(client_id: str):
 
 @app.delete("/api/delete-payment")
 async def delete_payment(record: DeletePayment):
-    query = f"""
-                        DELETE FROM {PAYMENT_TABLE_NAME}
-                        WHERE LoanId = :loan_id AND PaymentId = :payment_id
-                        """
-    values = {
+    # First, check how many payments exist for the given LoanId
+    count_query = f"""
+        SELECT COUNT(*) FROM {PAYMENT_TABLE_NAME}
+        WHERE LoanId = :loan_id
+    """
+    count_values = {"loan_id": record.LoanId}
+    count_result = await database.fetch_one(count_query, count_values)
+
+    # If there's only one payment, return without deleting
+    if count_result and count_result[0] == 1:
+        return JSONResponse(content={"message": "Cannot delete the only payment for this loan"}, status_code=200)
+
+    # If there are more, proceed with deletion
+    delete_query = f"""
+        DELETE FROM {PAYMENT_TABLE_NAME}
+        WHERE LoanId = :loan_id AND PaymentId = :payment_id
+    """
+    delete_values = {
         "loan_id": record.LoanId,
         "payment_id": record.PaymentId
     }
-    await database.execute(query, values)
+    await database.execute(delete_query, delete_values)
     return JSONResponse(content={"message": "Record deleted successfully"}, status_code=200)
 async def tdy_owed(date):
     query = f"""
