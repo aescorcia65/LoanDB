@@ -214,9 +214,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                             } else {
                                 // If both have the same paid status, sort by date from newest to oldest
                                 // Assuming PaymentDate is a date string or a Date object that can be compared directly
-                                const dateA:any = new Date(a.IssueDate);
-                                const dateB:any = new Date(b.IssueDate);
-                                return dateB - dateA; // Sorts descending by date
+                                return b.UpdateTime - a.UpdateTime;
                             }
                         });
                         setRowData(mapApiResponseToGridFields(sortedPayments));

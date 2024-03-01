@@ -7,6 +7,8 @@ from dateutil.relativedelta import relativedelta
 import random
 import uuid
 from decimal import Decimal
+import time
+
 
 from databases import Database
 from fastapi import FastAPI, Query
@@ -104,10 +106,11 @@ async def create_new_loan(loan: NewLoan):
 @app.post("/api/new-payment")
 async def create_new_payment(payment: NewPayment):
     payment_id = str(uuid.uuid4())
+    unix_timestamp = int(time.time())
     query = f"""
     INSERT INTO {PAYMENT_TABLE_NAME}
-    (LoanId, PaymentDueDate, PaymentDueAmount, PaymentRecDate, PaymentRecAmount, PaymentId, PaidStatus, PrincipalPaymentRec, Notes, PrincipalRemaining)
-    VALUES (:record_id, :payment_due_date, :payment_due_amount, :payment_rec_date, :payment_rec_amount, :payment_id, :paid_status, :principal_rec, :notes, :principal_remaining)
+    (LoanId, PaymentDueDate, PaymentDueAmount, PaymentRecDate, PaymentRecAmount, PaymentId, PaidStatus, PrincipalPaymentRec, Notes, PrincipalRemaining, UpdateTime)
+    VALUES (:record_id, :payment_due_date, :payment_due_amount, :payment_rec_date, :payment_rec_amount, :payment_id, :paid_status, :principal_rec, :notes, :principal_remaining, :unix_timestamp)
     """
     values = {
         "record_id": payment.LoanId,
@@ -119,7 +122,8 @@ async def create_new_payment(payment: NewPayment):
         "paid_status": False,
         "principal_rec": None,
         "notes": None,
-        "principal_remaining": payment.PrincipalRemaining
+        "principal_remaining": payment.PrincipalRemaining,
+        "unix_timestamp": unix_timestamp
     }
     await database.execute(query, values)
     return {"message": "New payment created successfully", "PaymentId": payment_id}
@@ -268,7 +272,7 @@ async def update_payment_status(payment_id: str = Query(...), paid_status: bool 
         }
     result = await database.fetch_all(query, values=values)
     total_payment = len(result)
-    if principal_remaining>0:
+    if (principal_remaining is not None) and (principal_remaining>0):
         if loan["PaymentFrequency"] == "Weekly":
             new_due_date = record["PaymentDueDate"] + timedelta(days=7)
         elif loan["PaymentFrequency"] == "Monthly":
@@ -283,39 +287,40 @@ async def update_payment_status(payment_id: str = Query(...), paid_status: bool 
     else:
         return "updated"
 
-async def update_principal_remaining(loanid):
-    # Assuming PAYMENT_TABLE_NAME and LOAN_TABLE_NAME are defined
-    # and you have a database connection object `database`
-
-    # Step 1: Fetch the sum of principal payments for the loan
-    sum_query = f"""
-        SELECT SUM(PrincipalPaymentRec) AS TotalPrincipalPaid
-        FROM {PAYMENT_TABLE_NAME}
-        WHERE LoanId = :loan_id
-    """
-    values = {"loan_id": loanid}
-    total_princ_payments_result = await database.fetch_one(sum_query, values)
-
-    # Extract the total payments amount, defaulting to 0 if none found
-    total_principal_paid = total_princ_payments_result["TotalPrincipalPaid"] if total_princ_payments_result["TotalPrincipalPaid"] is not None else 0
-
-    # Step 2: Update the principal remaining in another table, assuming you have such a column and table
-    # This would depend on your schema. For example, you might subtract the total payments from the original loan amount
-    update_query = f"""
-        UPDATE {CLIENT_RECORDS_TABLE_NAME}
-        SET PrincipalRemaining = (LoanAmount - :total_paid)
-        WHERE LoanId = :loan_id
-    """
-    update_values = {"loan_id": loanid, "total_paid": total_principal_paid}
-    await database.execute(update_query, update_values)
-
-    # Optionally, return the total principal paid or any other relevant information
-    return total_principal_paid
+# async def update_principal_remaining(loanid):
+#     # Assuming PAYMENT_TABLE_NAME and LOAN_TABLE_NAME are defined
+#     # and you have a database connection object `database`
+#
+#     # Step 1: Fetch the sum of principal payments for the loan
+#     sum_query = f"""
+#         SELECT SUM(PrincipalPaymentRec) AS TotalPrincipalPaid
+#         FROM {PAYMENT_TABLE_NAME}
+#         WHERE LoanId = :loan_id
+#     """
+#     values = {"loan_id": loanid}
+#     total_princ_payments_result = await database.fetch_one(sum_query, values)
+#
+#     # Extract the total payments amount, defaulting to 0 if none found
+#     total_principal_paid = total_princ_payments_result["TotalPrincipalPaid"] if total_princ_payments_result["TotalPrincipalPaid"] is not None else 0
+#
+#     # Step 2: Update the principal remaining in another table, assuming you have such a column and table
+#     # This would depend on your schema. For example, you might subtract the total payments from the original loan amount
+#     update_query = f"""
+#         UPDATE {CLIENT_RECORDS_TABLE_NAME}
+#         SET PrincipalRemaining = (LoanAmount - :total_paid)
+#         WHERE LoanId = :loan_id
+#     """
+#     update_values = {"loan_id": loanid, "total_paid": total_principal_paid}
+#     await database.execute(update_query, update_values)
+#
+#     # Optionally, return the total principal paid or any other relevant information
+#     return total_principal_paid
 
 
 
 @app.put("/api/update-payment")
 async def update_payment(record: Payment):
+    unix_timestamp = int(time.time())
     print(record.PaymentRecDate)
     paid_status = record.PaidStatus
     payment_id = record.PaymentId
@@ -331,6 +336,7 @@ async def update_payment(record: Payment):
     query = f"""
                     UPDATE {PAYMENT_TABLE_NAME}
                     SET PaymentRecDate = :PaymentRecDate,
+                        UpdateTime = :unix_timestamp,
                         PaymentRecAmount = :PaymentRecAmount,
                         PrincipalPaymentRec = :principal_rec,
                         Notes = :notes
@@ -339,6 +345,7 @@ async def update_payment(record: Payment):
 
     values = {
             "PaymentRecDate": record.PaymentRecDate,
+            "unix_timestamp": unix_timestamp,
             "PaymentRecAmount": record.PaymentRecAmount,
             "payment_id": payment_id,
             "principal_rec": record.PrinciplePaymentReceived,
@@ -484,6 +491,7 @@ async def create_tables():
     );
 
     CREATE TABLE IF NOT EXISTS {PAYMENT_TABLE_NAME} (
+        UpdateTime INT,
         LoanId VARCHAR(50) NOT NULL,
         PaymentDueDate DATE NOT NULL,
         PaymentDueAmount DECIMAL(10, 2) NOT NULL,
