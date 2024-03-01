@@ -108,11 +108,11 @@ function NewPaymentForm() {
 
 
                             <div className="form-group">
-                                <label htmlFor="paymentDueDate">Payment Due Date </label>
+                                <label htmlFor="PaymentDueDate">Payment Due Date </label>
                                 <input
                                     type="date"
-                                    id="paymentDueDate"
-                                    name="paymentDueDate"
+                                    id="PaymentDueDate"
+                                    name="PaymentDueDate"
                                     value={formData.PaymentDueDate}
                                     onChange={handleChange}
                                     required

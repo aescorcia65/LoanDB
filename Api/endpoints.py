@@ -319,7 +319,10 @@ async def update_payment(record: Payment):
     print(record.PaymentRecDate)
     paid_status = record.PaidStatus
     payment_id = record.PaymentId
-    principal_remaining = record.PrincipalRemaining - record.PrinciplePaymentReceived
+    if record.PrincipalRemaining:
+        principal_remaining = record.PrincipalRemaining - record.PrinciplePaymentReceived
+    else:
+        principal_remaining = None
     print(record.PrincipalRemaining)
     print(record.PrinciplePaymentReceived)
     print(principal_remaining)

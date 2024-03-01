@@ -17,8 +17,6 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const [updateCount, setUpdateCount]= useState(0)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [newExpectedPayment, setnewExpectedPayment] = useState(null);
-
 
 
     const [currentEdit, setCurrentEdit] = useState(null);
@@ -261,11 +259,10 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
     const handleConfirmUpdate = (nextInterestPayment:any) => {
         console.log("Update Confirmed", currentEdit);
         console.log("Next Interest Payment:", nextInterestPayment);
-        setnewExpectedPayment(() => nextInterestPayment);
         console.log("Next Interest Payment2:", nextInterestPayment);
         // You can now use nextInterestPayment as part of your update logic
 
-        updatePayment(currentEdit); // Modify updatePayment to accept this value
+        updatePayment(currentEdit, nextInterestPayment); // Modify updatePayment to accept this value
 
         setIsModalOpen(false);
     };
@@ -314,7 +311,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
 
    }
 
-    async function updatePayment(event:any) {
+    async function updatePayment(event:any, newExpectedPayment:any) {
         try {
 
             // Construct the API URL

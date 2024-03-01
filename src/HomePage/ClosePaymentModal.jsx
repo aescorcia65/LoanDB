@@ -16,12 +16,11 @@ const customStyles = {
 
 function ClosePaymentModal({ isOpen, onConfirm, onCancel }) {
     // State to hold the input value
-    const [nextInterestPayment, setNextInterestPayment] = useState('');
+    const [nextInterestPayment, setNextInterestPayment] = useState(null);
 
     // Handler to update state on input change
     const handleInputChange = (e) => {
         setNextInterestPayment(e.target.value);
-        console.log(nextInterestPayment)
     };
 
     // Modified onConfirm to pass the input value
