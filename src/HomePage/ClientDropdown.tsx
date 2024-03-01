@@ -1,59 +1,96 @@
 import React, { useState, useEffect } from 'react';
 
+interface Client {
+    id: string;
+    fullName: string;
+}
+
 interface ClientDropdownProps {
-    onSelectClient: (clientId: string) => void; // Callback function to handle client selection
+    onSelectClient: (clientId: string) => void;
 }
 
 const ClientDropdown: React.FC<ClientDropdownProps> = ({ onSelectClient }) => {
-    const [clients, setClients] = useState<{ id: string, fullName: string }[]>([]);
-    const [selectedClientId, setSelectedClientId] = useState<string>('');
-
-    const mapApiResponseToFields = (apiData: any) => {
-        return apiData.results.map((item: any) => ({
-            id: item.ClientId,
-            fullName: item.ClientName
-        }));
-    };
-
-    function sortClientsAlphabetically(data:any) {
-        return data.sort((a: any, b: any) => {
-            const nameA = a.fullName.toUpperCase(); // ignore upper and lowercase
-            const nameB = b.fullName.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-                return -1; // nameA comes first
-            }
-            if (nameA > nameB) {
-                return 1; // nameB comes first
-            }
-            return 0; // names must be equal
-        });
-    }
+    const [clients, setClients] = useState<Client[]>([]);
+    const [displayClients, setDisplayClients] = useState<Client[]>([]);
+    const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+    const [searchTerm, setSearchTerm] = useState<string>('');
 
     useEffect(() => {
         fetch('/api/clients')
             .then(response => response.json())
             .then(data => {
-                const sortedData= sortClientsAlphabetically(mapApiResponseToFields(data));
-                setClients(sortedData);
+                const clients = data.results.map((item: any) => ({
+                    id: item.ClientId,
+                    fullName: item.ClientName,
+                }));
+                clients.sort((a: Client, b: Client) =>
+                    a.fullName.localeCompare(b.fullName)
+                );
+                setClients(clients);
+                setDisplayClients(clients);
             })
             .catch(error => console.error('Error fetching clients:', error));
     }, []);
 
-    // Handle dropdown change and call the onSelectClient callback
-    const handleDropdownChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedValue = event.target.value;
-        setSelectedClientId(selectedValue);
-        onSelectClient(selectedValue); // Call the callback with the selected client ID
+    useEffect(() => {
+        if (searchTerm === '') {
+            setDisplayClients(clients);
+        } else {
+            const filteredClients = clients.filter(client =>
+                client.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setDisplayClients(filteredClients);
+        }
+    }, [searchTerm, clients]);
+
+    const handleSelectClient = (clientId: string) => {
+        onSelectClient(clientId);
+        setDropdownOpen(false);
+        setSearchTerm('');
     };
 
     return (
-        <div>
-            <select value={selectedClientId} onChange={handleDropdownChange}>
-                <option value="*">--ALL--</option> {/* Add the initial "All" option */}
-                {clients.map((client, index) => (
-                    <option key={index} value={client.id}>{client.fullName}</option>
-                ))}
-            </select>
+        <div style={{ position: 'relative' }}>
+            <input
+                type="text"
+                onFocus={() => setDropdownOpen(true)}
+                onBlur={() => setTimeout(() => setDropdownOpen(false), 200)}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchTerm}
+                placeholder="Search clients..."
+                style={{ width: '200px', marginLeft:"3px" }}
+            />
+            {dropdownOpen && (
+                <ul style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    maxHeight: '200px',
+                    width: '200px',
+                    overflowY: 'auto',
+                    cursor: 'pointer',
+                    zIndex: 1000, // ensure it's on top of other elements
+                    backgroundColor: 'white',
+                    border: '1px solid #ddd',
+                    borderTop: 'none', // seamless connection with the input
+                    listStyleType: 'none',
+                    padding: 0,
+                    margin: 0,
+                }}>
+                    <li onClick={() => handleSelectClient("*")}
+                        style={{padding: '10px', borderBottom: '1px solid #ddd'}}>
+                        ALL
+
+                    </li>
+                    {displayClients.map((client, index) => (
+                        <li key={index} onClick={() => handleSelectClient(client.id)}
+                            style={{padding: '10px', borderBottom: '1px solid #ddd'}}>
+                            {client.fullName}
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };
