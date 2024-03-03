@@ -330,7 +330,7 @@ function HomeGrid({ selectedClient, selectedMonths, selectedYears, selectedStatu
                 PaymentRecAmount: event.data.PaymentReceived != null ? parseFloat(event.data.PaymentReceived.replace("$", "")) : null,
                 PaymentId: event.data.PaymentId,
                 PaidStatus: event.data.Closed,
-                PrinciplePaymentReceived: event.data.PrinciplePaymentReceived != null ? parseFloat(event.data.PrinciplePaymentReceived.replace("$", "")) : null,
+                PrinciplePaymentReceived: event.data.PrinciplePaymentReceived != null ? parseFloat(event.data.PrinciplePaymentReceived.replace("$", "")) : 0,
                 Notes: event.data.Notes,
                 PrincipalRemaining: event.data.remainingPrinciple != null ? parseFloat(event.data.remainingPrinciple.replace("$","")) : null,
                 NewExpectedPayment: newExpectedPayment != null ? parseFloat(newExpectedPayment) : null
