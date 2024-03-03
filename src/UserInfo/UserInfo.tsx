@@ -7,18 +7,11 @@ function UserInfo() {
     const queryParams = new URLSearchParams(location.search);
     const ClientId = queryParams.get('ClientId');
     const [userInfo, setUserInfo] = useState({
-        ClientName: "",
-        LoanId: "LX-",
-        LoanAmount: 0,
-        PrincipalRemaining: 0,
-        ActiveStatus: 0,
-        LoanLength: 0,
-        PaymentFrequency: "",
-        InterestAmount: 0,
-        PaymentDueAmount: 0,
-        PaymentRecAmount: null,
-        PaidStatus: 0,
-        PrincipalPaymentRec: null
+        Name: undefined,
+        TotalInterestPaid: undefined,
+        TotalPrincipalPaid: undefined,
+        TotalPrincipalDue: undefined,
+        AllLoanID: undefined
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -38,7 +31,7 @@ function UserInfo() {
                 }
 
                 const data = await response.json();
-                setUserInfo(data.data[0]);
+                setUserInfo(data.data);
             } catch (error) {
                 console.error("Failed to fetch data: ", error);
                 setError('Failed to fetch data');
@@ -72,22 +65,22 @@ function UserInfo() {
 
                 <div className="payment-record">
                     <span className="record-field record-label">Name:</span>
-                    <span className="record-field record-date">{userInfo.ClientName != null ? userInfo.ClientName : "Example"}</span>
+                    <span className="record-field record-date">{userInfo.Name != null ? userInfo.Name : "Example"}</span>
 
                     <span className="record-field record-label">Total Interest Paid</span>
-                    <span className="record-field record-amount">{userInfo.PaymentRecAmount != null ? userInfo.PaymentRecAmount : 0}</span>
+                    <span className="record-field record-amount">{userInfo.TotalInterestPaid != null ? userInfo.TotalInterestPaid : 0}</span>
 
                     <span className="record-field record-label">Total Interest Due</span>
-                    <span className="record-field record-notes">{userInfo.PaymentDueAmount != null ? userInfo.PaymentDueAmount : 0}</span>
+                    <span className="record-field record-notes">{userInfo.TotalPrincipalPaid != null ? userInfo.TotalPrincipalPaid : 0}</span>
 
                     <span className="record-field record-label">Total Principal Paid</span>
-                    <span className="record-field record-notes">{userInfo.PrincipalPaymentRec != null ? userInfo.PrincipalPaymentRec : 0}</span>
+                    <span className="record-field record-notes">{userInfo.TotalPrincipalPaid != null ? userInfo.TotalPrincipalPaid : 0}</span>
 
                     <span className="record-field record-label">Total Principal Due</span>
-                    <span className="record-field record-notes">{userInfo.PrincipalRemaining != null ? userInfo.PrincipalRemaining : 0}</span>
+                    <span className="record-field record-notes">{userInfo.TotalPrincipalDue != null ? userInfo.TotalPrincipalDue : 0}</span>
 
                     <span className="record-field record-label">Current Loans</span>
-                    <span className="record-field record-notes">{userInfo.LoanId != null ? userInfo.LoanId : "LX-"}</span>
+                    <span className="record-field record-notes">{userInfo.AllLoanID != null ? userInfo.AllLoanID : "LX-"}</span>
 
                 </div>
 
