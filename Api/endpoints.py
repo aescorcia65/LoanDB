@@ -287,35 +287,6 @@ async def update_payment_status(payment_id: str = Query(...), paid_status: bool 
     else:
         return "updated"
 
-# async def update_principal_remaining(loanid):
-#     # Assuming PAYMENT_TABLE_NAME and LOAN_TABLE_NAME are defined
-#     # and you have a database connection object `database`
-#
-#     # Step 1: Fetch the sum of principal payments for the loan
-#     sum_query = f"""
-#         SELECT SUM(PrincipalPaymentRec) AS TotalPrincipalPaid
-#         FROM {PAYMENT_TABLE_NAME}
-#         WHERE LoanId = :loan_id
-#     """
-#     values = {"loan_id": loanid}
-#     total_princ_payments_result = await database.fetch_one(sum_query, values)
-#
-#     # Extract the total payments amount, defaulting to 0 if none found
-#     total_principal_paid = total_princ_payments_result["TotalPrincipalPaid"] if total_princ_payments_result["TotalPrincipalPaid"] is not None else 0
-#
-#     # Step 2: Update the principal remaining in another table, assuming you have such a column and table
-#     # This would depend on your schema. For example, you might subtract the total payments from the original loan amount
-#     update_query = f"""
-#         UPDATE {CLIENT_RECORDS_TABLE_NAME}
-#         SET PrincipalRemaining = (LoanAmount - :total_paid)
-#         WHERE LoanId = :loan_id
-#     """
-#     update_values = {"loan_id": loanid, "total_paid": total_principal_paid}
-#     await database.execute(update_query, update_values)
-#
-#     # Optionally, return the total principal paid or any other relevant information
-#     return total_principal_paid
-
 
 
 @app.put("/api/update-payment")
@@ -358,21 +329,16 @@ async def update_payment(record: Payment):
 
 
 
+
 @app.get("/api/user-info")
 async def user_info(client_id: str):
     query = f"""
             SELECT
-                c.ClientName,
-                cr.LoanId,
-                cr.LoanAmount,
-                cr.ActiveStatus,
-                cr.LoanLength,
-                cr.PaymentFrequency,
-                cr.InterestAmount,
-                p.PaymentDueAmount,
-                p.PaymentRecAmount,
-                p.PaidStatus,
-                p.PrincipalPaymentRec
+                c.ClientName AS Name,
+                SUM(p.PaymentRecAmount) AS TotalInterestPaid,
+                SUM(p.PrincipalPaymentRec) AS TotalPrincipalPaid,
+                SUM(p.PrincipalRemaining) AS TotalPrincipalDue,
+                GROUP_CONCAT(DISTINCT cr.LoanId) AS AllLoanID
             FROM
                 {CLIENT_TABLE_NAME} AS c
             JOIN
@@ -380,16 +346,26 @@ async def user_info(client_id: str):
             JOIN
                 {PAYMENT_TABLE_NAME} AS p ON cr.LoanId = p.LoanId
             WHERE
-                c.ClientId = :client_id;
+                c.ClientId = :client_id
+            GROUP BY
+                c.ClientName;
             """
     values = {"client_id": client_id}
-    rows = await database.fetch_all(query, values)  # Using fetch_all to get all matching records
+    rows = await database.fetch_all(query, values)
 
-        # Convert row objects to a list of dictionaries
-    results = [dict(row) for row in rows]
-    if not results:
+    if not rows:
         raise HTTPException(status_code=404, detail="User not found")
-    return {"data": results}
+
+    # Since we're grouping by ClientName, we expect at most one row per client.
+    # Adjust the row to split the AllLoanID string into an array if needed.
+    result = dict(rows[0]) if rows else {}
+    if result:
+        # Split the AllLoanID string into an array, assuming comma as the separator.
+        result['AllLoanID'] = result['AllLoanID'].split(',') if result.get('AllLoanID') else []
+
+    return {"data": result}
+
+
 
 @app.delete("/api/delete-payment")
 async def delete_payment(record: DeletePayment):
