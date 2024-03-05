@@ -93,7 +93,10 @@ function NewPaymentForm() {
 
                             <div className="form-group">
                                 <label>Client Name</label>
+                                
+                                <div className="clientdrop">
                                 <ClientDropdown onSelectClient={handleClientSelection}/>
+                                </div>
                             </div>
 
 

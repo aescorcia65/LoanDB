@@ -64,7 +64,7 @@ const ClientDropdown: React.FC<ClientDropdownProps> = ({ onSelectClient }) => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 value={searchTerm}
                 placeholder="Search clients..."
-                style={{ width: '200px', marginLeft: "3px" }}
+                style={{ width: '150px', marginLeft: "3px" }}
             />
             {dropdownOpen && (
                 <ul style={{

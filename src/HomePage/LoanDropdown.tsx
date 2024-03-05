@@ -34,11 +34,12 @@ const LoanDropdown: React.FC<LoanDropdownProps> = ({ onSelectLoan, clientId }) =
 
     return (
         <div>
-            <select value={selectedLoanId} onChange={handleDropdownChange}>
+            <select value={selectedLoanId} onChange={handleDropdownChange} >
                 <option value="*">--Select a LoanID--</option> {/* Add the initial "All" option */}
                 {Loans.map((Loan, index) => (
                     <option key={index} value={Loan.id}>{Loan.id}</option>
                 ))}
+                
             </select>
         </div>
     );
